@@ -43,22 +43,23 @@ artefatos do diagnóstico ficam guardados para comparação no fim do segundo an
 ---
 
 ## Fase 1 · A fundação que falta
-**Meses 1 a 6**
+**Meses 1 a 6 · Teoria: 1.4 e 2.1 · Prática: Trilha 1**
 
 | Estudo | Livro | Portal |
 |---|---|---|
 | Trilha 1 — Skiena como espinha; CSAPP e OSTEP de apoio; interpretador como projeto | **1.4 Cognição e metacognição** e **2.1 Paradigmas de programação** | Migração para Astro com o schema Zod da ficha; a compilação passa a falhar sem data de revisão |
 
-Por que estes dois capítulos: 1.4 se apoia direto no *The Programmer's Brain*, lido na
-trilha; 2.1 exige a experiência de escrever um interpretador para falar de paradigmas sem
-repetir manual.
+Por que estes dois capítulos, e não os da Camada 1: o 1.1 e o 1.2 já estão escritos, e o
+que a trilha de fato destrava é outra coisa. O 1.4 se apoia direto no *The Programmer's
+Brain*, lido na trilha; e o 2.1 exige a experiência de escrever um interpretador para falar
+de paradigmas sem repetir manual.
 
 **Marco:** prever por escrito onde uma função sua quebra por volume, e acertar.
 
 ---
 
 ## Fase 2 · Dados e sistemas distribuídos
-**Meses 7 a 12**
+**Meses 7 a 12 · Teoria: 2.2 e 2.3 · Prática: Trilha 2**
 
 | Estudo | Livro | Portal |
 |---|---|---|
@@ -74,7 +75,7 @@ que está vencendo.
 ---
 
 ## Fase 3 · Projeto e arquitetura
-**Meses 13 a 18**
+**Meses 13 a 18 · Teoria: 3.1 e 1.5 · Prática: Trilha 3**
 
 | Estudo | Livro | Portal |
 |---|---|---|
@@ -89,7 +90,7 @@ pressão de um sistema real.
 ---
 
 ## Fase 4 · Qualidade e testes
-**Meses 19 a 22**
+**Meses 19 a 22 · Teoria: 3.3 · Prática: Trilha 4**
 
 | Estudo | Livro | Portal |
 |---|---|---|
@@ -101,7 +102,7 @@ sabe apresentar o argumento contrário, que é o que 3.3.6 exige.
 ---
 
 ## Fase 5 · Plataforma, confiabilidade e segurança
-**Meses 23 a 26**
+**Meses 23 a 26 · Teoria: 4.1 e 4.2 · Prática: Trilha 5**
 
 | Estudo | Livro | Portal |
 |---|---|---|
@@ -117,7 +118,7 @@ base nele.
 ---
 
 ## Fase 6 · Os capítulos sem trilha
-**Meses 27 a 32**
+**Meses 27 a 32 · Teoria: 2.4, 2.5, 2.6 e 3.2 · Prática: Trilha 6, contínua**
 
 | Estudo | Livro | Portal |
 |---|---|---|
@@ -130,7 +131,7 @@ travessia do RUP ao ágil dentro de banco.
 ---
 
 ## Fase 7 · A camada contextual
-**Meses 33 a 36**
+**Meses 33 a 36 · Teoria: 3.4 a 3.7 · Prática: pesquisa de fonte primária**
 
 | Estudo | Livro | Portal |
 |---|---|---|
@@ -143,7 +144,7 @@ trabalho que se faz melhor com o resto do argumento já de pé.
 ---
 
 ## Fase 8 · O capítulo perecível e o fechamento
-**Meses 37 a 39**
+**Meses 37 a 39 · Teoria: 4.3 · Prática: revisão e publicação**
 
 | Estudo | Livro | Portal |
 |---|---|---|
@@ -154,6 +155,26 @@ declarada de um a dois anos e data de revisão já marcada na ficha. É a única
 honesta de publicá-lo.
 
 ---
+
+## Conceito e prática, lado a lado
+
+A linha do tempo diz *quando*. Esta tabela diz *o que corresponde a quê* — o capítulo do
+livro à esquerda, a exigência prática que o sustenta à direita.
+
+| No livro | Na prática |
+|---|---|
+| **1.1 a 1.3 — Fundação e invariantes.** Os alicerces que sobrevivem a mudanças de paradigma: Conway, Lehman, Brooks, Parnas, e o critério que separa o perene do que só parece. | **Trilha 1 — a base cognitiva.** Os dez atemporais lidos antes do avanço técnico, e um interpretador escrito do zero como prova de que a fundação é operacional, não decorativa. |
+| **1.4 — Cognição e metacognição.** Carga cognitiva, níveis de abstração, depuração como método científico, a habilidade de desaprender. | **Trilha 1 — o marco.** Prever por escrito em que volume uma função real quebra, e conferir a previsão contra a medição. |
+| **2.2 e 2.3 — Dados e sistemas distribuídos.** As regras duradouras de persistência e rede, com o CAP lido como ele é e o "exactly-once" desmontado. | **Trilha 2 — engenharia de resiliência.** Um serviço com dependência instável: idempotência, backoff, circuit breaker, e um teste de partição que confirma o comportamento previsto. |
+| **3.1 — Arquitetura de software.** A evolução dos sistemas, do monolito ao estrangulamento de legado, com a decisão registrada em ADR. | **Trilha 3 — refatoração estrutural.** Estrangular uma capacidade do legado VB6/Sybase, com fachada, coexistência, caminho de volta e três ADRs. |
+| **3.3 — Qualidade e débito técnico.** A degradação inevitável, a definição de Feathers, e a cobertura tratada como armadilha e não como meta. | **Trilha 4 — ação corretiva.** Cobrir um módulo antigo com testes de caracterização até poder refatorá-lo, e defender a forma da própria pirâmide com dados. |
+| **4.1 e 4.2 — Segurança, plataforma e confiabilidade.** A operação como disciplina: SLI, SLO, orçamento de erro, cadeia de suprimentos, post-mortem sem culpado. | **Trilha 5 — simulação e processo.** SLO publicado, falha controlada executada, e um post-mortem escrito sobre o processo, sem nomes. |
+| **1.5 — Comunicação e escrita técnica.** A escrita como artefato de engenharia: ADR, RFC, Diátaxis, diagramas que explicam. | **Trilha 6 — influência contínua.** A escrita como exercício perpétuo, com o marco de maturidade sendo um texto seu citado por quem você não conhece. |
+| **2.6 — Comportamento e carreira.** A gestão do envelhecimento da própria carreira, e por que comportamento é infraestrutura. | **Trilha 6 — o projeto.** O próprio livro: ele consome as cinco trilhas anteriores e é a prova de que elas aconteceram. |
+
+A leitura da tabela nos dois sentidos é deliberada. Da esquerda para a direita, ela diz o
+que estudar para poder escrever. Da direita para a esquerda, diz o que se está de fato
+aprendendo ao executar cada projeto — e é essa direção que sustenta a regra de abertura.
 
 ## O quadro completo
 

@@ -154,6 +154,7 @@ HTML = HEAD + EXTRA + f"""
       <a href="#fase-6-os-cap-tulos-sem-trilha">6 · Capítulos sem trilha</a>
       <a href="#fase-7-a-camada-contextual">7 · A camada contextual</a>
       <a href="#fase-8-o-cap-tulo-perec-vel-e-o-fechamento">8 · Fechamento</a>
+      <a href="#conceito-e-pr-tica-lado-a-lado">Conceito e prática</a>
       <a href="#o-quadro-completo">O quadro completo</a>
       <a href="#o-que-fazer-se-atrasar">Se atrasar</a></div>
   </nav>
