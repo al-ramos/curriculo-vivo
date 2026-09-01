@@ -26,7 +26,7 @@ jobs:
       - name: Montar o site
         run: |
           mkdir -p _site
-          cp index.html estudos.html _site/
+          cp index.html livro.html estudos.html _site/
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site

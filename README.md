@@ -29,12 +29,22 @@ concentra em 14% do currículo.
 ## Estrutura
 
 ```
-index.html              página publicada (GitHub Pages)
-conteudo/indice-v3.md   índice completo, 21 capítulos
-conteudo/texto/         texto do livro por camada
-conteudo/plano.md       plano editorial e técnico
-ferramentas/            geração da página a partir do markdown
+index.html                    portal — a linha do tempo que costura tudo
+livro.html                    o livro
+estudos.html                  o plano mestre de estudos
+conteudo/linha-do-tempo.md    as 8 fases, 39 meses
+conteudo/indice-v3.md         índice do livro, 21 capítulos
+conteudo/texto/               texto do livro por camada
+conteudo/plano-estudos.md     as 6 trilhas e a bibliografia
+conteudo/plano.md             plano editorial e técnico do site
+ferramentas/                  geração das páginas a partir do markdown
 ```
+
+## A regra que costura tudo
+
+Cada capítulo do livro é escrito **depois** da trilha de estudo que o sustenta, nunca
+antes. O capítulo é o entregável escrito da trilha — e é por isso que escrever o livro
+não compete com estudar, mas faz parte do estudo.
 
 ## Publicação
 

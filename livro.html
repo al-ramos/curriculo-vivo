@@ -1,0 +1,784 @@
+<title>Currículo Vivo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,500;1,6..72,300&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --ground:#F2F4F0; --surface:#FAFBF8; --ink:#1B201D; --muted:#5C645E; --faint:#88908A;
+  --rule:#DCE1D8; --rule-soft:#E8EBE4; --accent:#33604F; --accent-soft:#E2ECE5;
+  --s1:#22403A; --s2:#3E6B5B; --s3:#6F9481; --s4:#A9C0B0; --alert:#9A6B22;
+  --maxw:38rem;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ground:#0F1312; --surface:#161B19; --ink:#DCE3DB; --muted:#98A19A; --faint:#79827C;
+    --rule:#28302C; --rule-soft:#1E2522; --accent:#7FBCA1; --accent-soft:#1C2A24;
+    --s1:#9FC9B5; --s2:#79AE95; --s3:#54836E; --s4:#3A5B4C; --alert:#C79B4E;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0F1312; --surface:#161B19; --ink:#DCE3DB; --muted:#98A19A; --faint:#79827C;
+  --rule:#28302C; --rule-soft:#1E2522; --accent:#7FBCA1; --accent-soft:#1C2A24;
+  --s1:#9FC9B5; --s2:#79AE95; --s3:#54836E; --s4:#3A5B4C; --alert:#C79B4E;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--ground);color:var(--ink);margin:0;
+  font-family:"Source Serif 4",Georgia,"Times New Roman",serif;
+  font-size:16.5px;line-height:1.68;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+@media(min-width:40rem){body{font-size:17.5px;line-height:1.72}}
+@media(min-width:90rem){body{font-size:18px}}
+img,svg{max-width:100%;height:auto}
+article p,article li,article h4{overflow-wrap:break-word}
+article table{width:100%;border-collapse:collapse}
+.wrap{max-width:76rem;margin:0 auto;padding:0 1.1rem}
+@media(min-width:40rem){.wrap{padding:0 1.5rem}}
+h1,h2,h3,h4{text-wrap:balance;font-family:"Newsreader",Georgia,serif;font-weight:500;margin:0}
+code,.mono,.ficha,.snum,.num,.cnum,.eyebrow,.strata,.rm-meta{font-family:"IBM Plex Mono",ui-monospace,monospace}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+
+/* ---------- cabeçalho ---------- */
+header.masthead{border-bottom:1px solid var(--rule);background:var(--surface)}
+.mast-in{display:grid;grid-template-columns:1fr;gap:2rem;padding:2.4rem 1.1rem 2.2rem;max-width:76rem;margin:0 auto}
+@media(min-width:40rem){.mast-in{gap:2.5rem;padding:3.5rem 1.5rem 3rem}}
+@media(min-width:62rem){.mast-in{grid-template-columns:1.15fr .85fr;align-items:start;gap:4rem}}
+.eyebrow{font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-bottom:1.1rem}
+.eyebrow a{color:var(--accent);text-decoration:none}
+.eyebrow a:hover{text-decoration:underline}
+h1.book{font-size:clamp(2.4rem,5.5vw,3.9rem);line-height:1.02;letter-spacing:-.02em;font-weight:300}
+h1.book em{font-style:italic;color:var(--accent)}
+.dek{margin-top:1.4rem;color:var(--muted);font-size:1.05rem;max-width:34rem}
+.status{margin-top:1.8rem;display:flex;flex-wrap:wrap;gap:.5rem}
+.chip{font-family:"IBM Plex Mono",monospace;font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;
+  padding:.32rem .6rem;border:1px solid var(--rule);border-radius:2px;color:var(--muted)}
+.chip.on{background:var(--accent-soft);border-color:transparent;color:var(--accent)}
+
+/* ---------- controles ---------- */
+.ctrls{display:flex;flex-wrap:wrap;gap:1.1rem;margin-top:1.6rem}
+.ctrl{display:flex;align-items:center;gap:.5rem}
+.ctrl>span{font-family:"IBM Plex Mono",monospace;font-size:.6rem;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--faint)}
+.seg{display:flex;border:1px solid var(--rule);border-radius:2px;overflow:hidden}
+.seg button{font-family:"IBM Plex Mono",monospace;font-size:.66rem;letter-spacing:.04em;
+  padding:.3rem .55rem;background:none;border:0;border-right:1px solid var(--rule);
+  color:var(--muted);cursor:pointer;line-height:1.4}
+.seg button:last-child{border-right:0}
+.seg button:hover{color:var(--ink)}
+.seg button[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent)}
+body.sem-ficha .ficha{display:none}
+body.largo{--maxw:45rem}
+
+/* ---------- coluna estratigráfica ---------- */
+.strata{border:1px solid var(--rule);background:var(--ground);padding:1.1rem}
+.strata h2{font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);
+  font-family:"IBM Plex Mono",monospace;font-weight:400;margin-bottom:.9rem}
+.band{display:grid;grid-template-columns:4.6rem minmax(0,1fr) auto;align-items:center;gap:.6rem;padding:.3rem 0}
+@media(min-width:40rem){.band{grid-template-columns:5.5rem minmax(0,1fr) auto;gap:.75rem}}
+.band .lab{font-size:.72rem;color:var(--ink);line-height:1.25}
+.band .lab em{display:block;font-style:normal;font-size:.62rem;color:var(--faint)}
+.band .bar{height:100%;min-height:1.5rem;border-radius:1px}
+.band .hv{font-size:.62rem;color:var(--faint);white-space:nowrap}
+@media(min-width:40rem){.band .hv{font-size:.66rem}}
+.strata .note{margin-top:.9rem;padding-top:.8rem;border-top:1px solid var(--rule-soft);
+  font-family:"Source Serif 4",serif;font-size:.85rem;color:var(--muted);line-height:1.5}
+.strata .note b{color:var(--ink);font-weight:600}
+
+/* ---------- corpo ---------- */
+.layout{display:grid;grid-template-columns:minmax(0,1fr);gap:2rem;padding:2.4rem 0 3.5rem}
+@media(min-width:40rem){.layout{padding:3.5rem 0 5rem;gap:3rem}}
+@media(min-width:62rem){
+  .layout{grid-template-columns:13.5rem minmax(0,var(--maxw));justify-content:center;
+    column-gap:4.5rem;padding:4rem 0 6rem}
+}
+@media(min-width:100rem){.layout{column-gap:6rem}}
+details.toc{border:1px solid var(--rule);background:var(--surface);border-radius:2px;padding:.7rem .9rem;margin-bottom:.5rem}
+details.toc summary{cursor:pointer;font-family:"IBM Plex Mono",monospace;font-size:.7rem;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+details.toc a{display:block;color:var(--muted);text-decoration:none;font-size:.9rem;padding:.28rem 0}
+details.toc a:first-of-type{margin-top:.7rem;border-top:1px solid var(--rule-soft);padding-top:.7rem}
+@media(min-width:62rem){details.toc{display:none}}
+nav.rail{display:none}
+@media(min-width:62rem){
+  nav.rail{display:block;position:sticky;top:2rem;align-self:start;max-height:calc(100vh - 4rem);overflow:auto}
+}
+nav.rail h2{font-family:"IBM Plex Mono",monospace;font-size:.66rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--faint);font-weight:400;margin-bottom:.7rem}
+nav.rail a{display:block;text-decoration:none;color:var(--muted);font-size:.85rem;padding:.22rem 0;
+  border-left:2px solid transparent;padding-left:.7rem;margin-left:-.7rem}
+nav.rail a:hover{color:var(--ink)}
+nav.rail a.at{color:var(--ink);border-left-color:var(--accent)}
+nav.rail .grp{margin-bottom:1.3rem}
+nav.rail .grp>span{font-family:"IBM Plex Mono",monospace;font-size:.66rem;color:var(--faint);
+  letter-spacing:.08em;display:block;margin-bottom:.3rem}
+
+article{min-width:0}
+h2.camada,section.chapter h3,h4,#roteiro{scroll-margin-top:2.5rem}
+article p+h4{margin-top:2.7rem}
+h2.camada{margin:5rem 0 .4rem;display:flex;flex-direction:column;gap:.15rem;
+  padding-top:1.6rem;border-top:2px solid var(--ink)}
+h2.camada:first-child{margin-top:0}
+.cnum{font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
+.cname{font-size:clamp(1.6rem,1.1rem + 2.2vw,2rem);font-weight:300;letter-spacing:-.01em}
+h2.camada + p em{color:var(--muted);font-size:.92rem;font-style:italic}
+
+section.chapter{margin-top:3.8rem}
+section.chapter h3{display:flex;gap:.85rem;align-items:baseline;margin-bottom:.9rem}
+section.chapter h3 .num{font-size:.82rem;color:var(--accent);flex:none;padding-top:.2rem}
+section.chapter h3 .ttl{font-size:clamp(1.28rem,1rem + 1.4vw,1.55rem);font-weight:500;letter-spacing:-.01em;line-height:1.2}
+h4{margin:2.4rem 0 .7rem;font-size:1.08rem;font-weight:600;color:var(--ink);
+  font-family:"Source Serif 4",serif}
+h4 .snum{color:var(--faint);font-size:.78rem;margin-right:.45rem;font-weight:400}
+article p{margin:0 0 1.15rem}
+article p strong{font-weight:600}
+article em{font-style:italic}
+
+.ficha{display:flex;flex-wrap:wrap;gap:.35rem 1.7rem;margin:0 0 2.2rem;padding:.6rem 0;
+  border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.ficha>div{display:flex;gap:.45rem;align-items:baseline;min-width:0}
+.ficha dt{font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);flex:none}
+.ficha dd{margin:0;font-size:.74rem;color:var(--muted);overflow-wrap:break-word}
+.ficha code{font-size:.72rem;color:var(--accent)}
+
+/* ---------- roteiro ---------- */
+.roadmap{border-top:2px solid var(--ink);margin-top:5rem;padding-top:1.6rem}
+.rm-cam{margin-top:2.2rem}
+.rm-cam>summary{cursor:pointer;list-style:none;margin-bottom:.9rem}
+.rm-cam>summary::-webkit-details-marker{display:none}
+.rm-cam>summary::before{content:"–";color:var(--faint);margin-right:.5rem;
+  font-family:"IBM Plex Mono",monospace;font-size:.8rem}
+.rm-cam:not([open])>summary::before{content:"+"}
+.rm-cam h4{display:inline-flex;align-items:baseline;gap:.7rem;margin:0;
+  font-family:"Newsreader",serif;font-size:1.25rem;font-weight:500}
+.rm-cam>h4 .hv{font-family:"IBM Plex Mono",monospace;font-size:.68rem;color:var(--faint);letter-spacing:.04em}
+.rm-list{display:grid;gap:0;border-top:1px solid var(--rule-soft)}
+.rm-item{display:grid;grid-template-columns:2.4rem minmax(0,1fr);gap:.2rem .7rem;align-items:baseline;
+  padding:.6rem .2rem;border-bottom:1px solid var(--rule-soft)}
+.rm-item .rm-meta{grid-column:2}
+@media(min-width:34rem){
+  .rm-item{grid-template-columns:2.6rem minmax(0,1fr) auto;gap:.8rem}
+  .rm-item .rm-meta{grid-column:auto}
+}
+.rm-item .n{font-family:"IBM Plex Mono",monospace;font-size:.76rem;color:var(--accent)}
+.rm-item .t{font-size:.98rem}
+.rm-meta{font-size:.66rem;color:var(--faint);letter-spacing:.04em;white-space:nowrap}
+.rm-item.vol .n,.rm-item.vol .rm-meta{color:var(--alert)}
+
+footer{border-top:1px solid var(--rule);color:var(--muted);font-size:.85rem;
+  padding:2.2rem 1.1rem 3.5rem;max-width:76rem;margin:0 auto}
+@media(min-width:40rem){footer{padding:2.5rem 1.5rem 4rem}}
+footer p{margin:0 0 .6rem;max-width:44rem}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+<header class="masthead">
+  <div class="mast-in">
+    <div>
+      <div class="eyebrow"><a href="index.html">&larr; Portal</a> &nbsp;·&nbsp; volume um &nbsp;·&nbsp; <a href="estudos.html">Plano de estudos &rarr;</a></div>
+      <h1 class="book">Engenharia de Software:<br><em>Envelhecimento Macro</em></h1>
+      <p class="dek">Um currículo organizado por uma pergunta só — em quanto tempo cada
+      conhecimento envelhece. Vinte e um capítulos distribuídos em quatro camadas de
+      velocidade, cada seção com data de revisão e gatilho declarados.</p>
+      <div class="ctrls">
+        <div class="ctrl"><span>Tema</span>
+          <div class="seg" role="group" aria-label="Tema">
+            <button type="button" data-tema="auto">Auto</button>
+            <button type="button" data-tema="light">Claro</button>
+            <button type="button" data-tema="dark">Escuro</button>
+          </div></div>
+        <div class="ctrl"><span>Coluna</span>
+          <div class="seg" role="group" aria-label="Largura da coluna">
+            <button type="button" data-larg="normal">Normal</button>
+            <button type="button" data-larg="largo">Larga</button>
+          </div></div>
+        <div class="ctrl"><span>Fichas</span>
+          <div class="seg" role="group" aria-label="Fichas de envelhecimento">
+            <button type="button" data-ficha="on">Mostrar</button>
+            <button type="button" data-ficha="off">Ocultar</button>
+          </div></div>
+      </div>
+      <div class="status">
+        <span class="chip on">Camadas 0 e 1 escritas</span>
+        <span class="chip">~5.800 palavras</span>
+        <span class="chip">Índice v3</span>
+        <span class="chip">01·09·2026</span>
+      </div>
+    </div>
+    <div class="strata">
+      <h2>Coluna estratigráfica</h2>
+      <div class="band"><div class="lab">Permanente</div><div class="bar" style="background:var(--s1);height:4.6rem"><span>5 capítulos</span></div><div class="hv">sem erosão observada</div></div><div class="band"><div class="lab">Geracional</div><div class="bar" style="background:var(--s2);height:5.22rem"><span>6 capítulos</span></div><div class="hv">15–20 anos</div></div><div class="band"><div class="lab">Cíclico</div><div class="bar" style="background:var(--s3);height:5.84rem"><span>7 capítulos</span></div><div class="hv">5–15 anos</div></div><div class="band"><div class="lab">Sazonal</div><div class="bar" style="background:var(--s4);height:3.36rem"><span>3 capítulos</span></div><div class="hv">1–5 anos</div></div>
+      <p class="note">A espessura de cada faixa é o número de capítulos. Três dos vinte e
+      um estão na camada sazonal: <b>a ansiedade que o mercado produz se concentra em 14%
+      do currículo.</b></p>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+ <div class="layout">
+  <nav class="rail" aria-label="Sumário">
+<div class="grp"><span>Camada 0 · A Lente</span>
+<a href="#c0">0 Como ler este livro</a></div>
+<div class="grp"><span>Camada 1 · Permanente</span>
+<a href="#c1-1">1.1 Fundação conceitual</a>
+<a href="#c1-2">1.2 Os invariantes nomeados</a>
+<a href="#c1-3">1.3 O teste de perenidade</a>
+<a href="#cFontes">Fontes</a></div>
+<div class="grp"><span>A escrever</span>
+<a href="#roteiro">Camadas 2 a 4</a></div>
+</nav>
+  <article>
+   <details class="toc"><summary>Sumário</summary>
+     <a href="#c0">0 · Como ler este livro</a>
+     <a href="#c1-1">1.1 · Fundação conceitual</a>
+     <a href="#c1-2">1.2 · Os invariantes nomeados</a>
+     <a href="#c1-3">1.3 · O teste de perenidade</a>
+     <a href="#cFontes">Fontes</a>
+     <a href="#roteiro">Camadas 2 a 4 · a escrever</a>
+   </details>
+   <h2 class="camada" id="camada-0"><span class="cnum">Camada 0</span><span class="cname">A Lente</span></h2>
+<p><em>Sem meia-vida: é o instrumento de leitura das camadas 1 a 4</em></p>
+<section class="chapter"><h3 id="c0"><span class="num">0</span><span class="ttl">Como ler este livro</span></h3><dl class="ficha"><div><dt>meia-vida</dt><dd>sem meia-vida</dd></div><div><dt>estado</dt><dd>instrumento</dd></div><div><dt>etiquetas</dt><dd>meta</dd></div><div><dt>slug</dt><dd><code>/como-ler</code></dd></div></dl>
+<h4><span class="snum">0.1</span> O modelo em quatro fases</h4>
+<p>Todo conhecimento técnico percorre o mesmo arco. Ele nasce como uma proposta esquisita
+defendida por poucos, vira consenso, começa a ser questionado, e termina como assunto de
+manutenção — mantido vivo não por convicção, mas por sistemas que dependem dele. Chamo
+essas quatro etapas de Emergência, Consolidação, Erosão e Arqueologia.</p>
+<p>Na <strong>Emergência</strong>, uma ideia aparece resolvendo um problema que a prática dominante não
+resolvia. Ela é minoritária, mal documentada, e seus defensores são mais entusiastas do
+que rigorosos. A literatura desse período é feita de manifestos e relatos de experiência,
+não de evidência. Microsserviços em 2012, contêineres em 2014, ágil em 1999, orientação
+a objetos em 1985 — todos passaram por aqui. Do ponto de vista de quem ensina, a fase de
+emergência é a mais perigosa: é quando o professor sente mais pressão para atualizar a
+grade, e quando tem menos base para decidir o que vai sobrar.</p>
+<p>Na <strong>Consolidação</strong>, a ideia vira padrão. Surgem livros de referência, ferramentas maduras,
+vagas que exigem a competência pelo nome, e — o marcador mais confiável — a ideia começa a
+ser adotada por quem não a entende. É a fase em que a tecnologia é ensinada sem ressalva,
+como se fosse a forma natural de fazer as coisas. Também é a fase em que o custo real
+começa a aparecer, porque agora existe volume suficiente de projetos fracassados para
+alguém contar a história.</p>
+<p>Na <strong>Erosão</strong>, o consenso racha. Ninguém anuncia o fim; o que acontece é mais sutil.
+Aparecem artigos com títulos na forma &ldquo;quando não usar X&rdquo;. Empresas grandes publicam
+relatos de migração de volta. A comunidade se divide entre quem defende a versão ortodoxa
+e quem defende uma versão diluída. O vocabulário sobrevive mais que a prática: as pessoas
+continuam dizendo &ldquo;somos ágeis&rdquo; e &ldquo;usamos microsserviços&rdquo; enquanto fazem outra coisa. É
+aqui que mora a maior parte do conteúdo que as universidades brasileiras ensinam hoje.</p>
+<p>Na <strong>Arqueologia</strong>, o conhecimento sai do centro e vira especialidade. Não desaparece — e
+essa é a parte que quase todo currículo erra. COBOL não morreu; ele saiu da grade e
+continuou rodando folha de pagamento. Mainframe não morreu. VB6 não morreu. O que muda é
+que o conhecimento deixa de ser formação e passa a ser nicho, geralmente bem pago e mal
+ensinado, sustentado por profissionais que envelhecem junto com o sistema.</p>
+<p>Duas observações sobre o modelo, para que ele não seja usado de forma ingênua.</p>
+<p>A primeira: <strong>as fases não são um julgamento de qualidade</strong>. Uma tecnologia em erosão não
+é pior do que uma em emergência. Frequentemente é o contrário — ela erodiu justamente
+porque foi usada o bastante para revelar limites que a novidade ainda esconde. Um
+currículo que persegue apenas a fase de emergência forma profissionais que sabem o que
+ainda não foi testado.</p>
+<p>A segunda: <strong>o arco não é irreversível</strong>. Programação funcional passou décadas em
+arqueologia acadêmica e voltou por absorção — não como paradigma dominante, mas como
+conjunto de ideias incorporadas por linguagens imperativas. Monolitos foram declarados
+mortos e voltaram como &ldquo;monolito modular&rdquo;. A oscilação é frequente o bastante para merecer
+nome próprio, e ela reaparece em 3.1.10 como o pêndulo entre centralizar e distribuir.</p>
+<h4><span class="snum">0.2</span> As quatro camadas</h4>
+<p>Se todo conhecimento envelhece, a pergunta útil não é <em>se</em>, mas <em>em quanto tempo</em>. Este
+livro é organizado por essa resposta, e por nenhuma outra. Não há bloco de conteúdo
+&ldquo;técnico&rdquo; separado de um bloco &ldquo;humano&rdquo;: há quatro camadas de velocidade, e o assunto de
+cada capítulo é uma etiqueta na ficha, não uma divisão estrutural.</p>
+<p>A escolha é deliberada, e vale explicar o que ela custa. Classificar por assunto é mais
+confortável — é como toda ementa é escrita — mas obriga a decidir se ética é um tema humano
+ou contextual, e a resposta honesta é que é os dois. Classificar por velocidade obriga a uma
+única decisão por capítulo, e é uma decisão que o livro precisa defender de qualquer forma.</p>
+<p><strong>Camada 1 — Permanente.</strong> Não observamos erosão em nenhum ciclo tecnológico desde que a
+disciplina existe. Lógica, abstração, decomposição, a relação entre estrutura organizacional
+e estrutura de sistema, a forma como uma pessoa aprende e escreve. O capítulo 1.3 existe
+para submeter essa afirmação a um teste, em vez de pedir que você acredite nela.</p>
+<p><strong>Camada 2 — Geracional.</strong> Meia-vida de quinze a vinte anos. Paradigmas de programação,
+fundamentos de dados, fundamentos de sistemas distribuídos, requisitos, carreira. Coisas que
+mudam de vocabulário mais rápido do que mudam de substância. Quem aprendeu modelagem
+relacional em 2005 continua competente em 2026; quem aprendeu uma ferramenta de ETL de 2005,
+não.</p>
+<p><strong>Camada 3 — Cíclico.</strong> Meia-vida de cinco a quinze anos. Arquitetura, metodologia,
+qualidade, ética aplicada, ensino, mercado, custo. Aqui a mudança é real, mas deixa legado:
+quem viveu a transição do RUP para o ágil entende melhor o pós-ágil do que quem chegou já
+dentro dele. É também a camada onde mora a maior parte do que se ensina hoje no Brasil.</p>
+<p><strong>Camada 4 — Sazonal.</strong> Meia-vida de um a cinco anos. Segurança, ferramentas e
+infraestrutura, inteligência artificial no ciclo de desenvolvimento. É a camada que domina a
+ansiedade profissional e que menos deveria dominar um currículo. Cada capítulo aqui é
+escrito sob uma regra: nenhuma ferramenta é apresentada sem o princípio que sobrevive a ela.</p>
+<p>Dentro da camada sazonal há um caso extremo que merece nome próprio. O capítulo 4.3, sobre
+inteligência artificial, se declara <strong>volátil</strong>: meia-vida de um a dois anos. Escrever um
+capítulo com prazo de validade assumido é desconfortável, e é exatamente o que este livro
+está defendendo.</p>
+<p>Vale reparar na distribuição, porque ela é o achado mais tranquilizador do livro para quem
+está começando: de vinte e um capítulos, <strong>três</strong> estão na camada sazonal. A ansiedade que o
+mercado produz se concentra em algo próximo de quinze por cento do currículo. Os outros
+oitenta e cinco por cento envelhecem devagar o bastante para que aprendê-los bem seja um
+investimento, e não uma corrida.</p>
+<p>A meia-vida não é um número decorativo. Ela é o que define a frequência de revisão de cada
+capítulo, registrada na ficha da seção seguinte.</p>
+<h4><span class="snum">0.3</span> A ficha de envelhecimento</h4>
+<p>Um livro que afirma que o conhecimento envelhece, mas não diz quando cada parte dele
+envelhece, é um livro que se refuta na prática. Por isso cada seção deste texto carrega
+uma ficha, e a ficha não é prosa: são campos.</p>
+<p>São eles: os <strong>objetivos de aprendizagem</strong>, escritos como verbos verificáveis, porque
+&ldquo;entender microsserviços&rdquo; não é avaliável e &ldquo;justificar por escrito a decisão de não usar
+microsserviços em um caso dado&rdquo; é; os <strong>pré-requisitos</strong>, que tornam explícita a ordem de
+leitura e alimentam a matriz do apêndice; o <strong>instrumento de avaliação</strong>, porque um
+currículo sem avaliação é um índice; a <strong>velocidade</strong> e a <strong>meia-vida</strong>, da seção anterior;
+o <strong>estado atual</strong> no arco de quatro fases; a <strong>data da última revisão</strong> e a <strong>data da
+próxima</strong>; os <strong>gatilhos</strong>, que são eventos capazes de forçar revisão antes do prazo — a
+publicação de um novo relatório DORA, uma mudança de licença relevante, a saída de uma
+versão que quebra compatibilidade; e as <strong>fontes</strong>, obrigatórias em toda afirmação datada.</p>
+<p>O campo mais incomum é o de gatilhos, e é o mais importante. Data de revisão sozinha
+produz revisão burocrática: chega o prazo, alguém relê e não muda nada. Gatilho produz
+revisão quando há motivo. Um capítulo bem escrito sabe dizer o que precisaria acontecer no
+mundo para que ele estivesse errado.</p>
+<p>Quando este material for publicado como site, essas fichas deixam de ser convenção
+editorial e viram schema validado na compilação: capítulo sem data de revisão não compila,
+e capítulo com data vencida gera uma pendência automática. A promessa de &ldquo;currículo vivo&rdquo;
+passa a ter um mecanismo, e não apenas uma intenção.</p>
+<h4><span class="snum">0.4</span> A armadilha do currículo estático</h4>
+<p>A ementa de uma disciplina universitária brasileira é aprovada em colegiado, registrada em
+projeto pedagógico e revista, no melhor caso, a cada renovação de reconhecimento do curso.
+O intervalo típico é de três a cinco anos. Para a camada permanente, isso é irrelevante.
+Para a camada sazonal, é a diferença entre ensinar a prática vigente e ensinar arqueologia
+sem avisar ao aluno que é arqueologia.</p>
+<p>A armadilha não está no atraso. Está na <strong>ausência de sinalização do atraso</strong>. Um aluno
+que aprende uma ferramenta descontinuada sabendo que ela está descontinuada aprendeu
+história da computação, o que é legítimo e útil. O mesmo aluno, aprendendo a mesma
+ferramenta como se fosse prática corrente, aprendeu algo pior do que nada: aprendeu um
+mapa errado do território, e vai levar anos para descobrir.</p>
+<p>O sintoma clássico no Brasil é a disciplina de Engenharia de Software que dedica metade da
+carga a diagramas UML como artefato de documentação — não como ferramenta de pensamento,
+o que ainda faz sentido, mas como entregável a ser mantido em sincronia com o código, o
+que praticamente ninguém faz há quinze anos. O aluno não sai mal informado por ter
+aprendido UML. Sai mal informado por não ter sido avisado de que aquilo está na fase de
+erosão desde meados dos anos 2000.</p>
+<p>A saída não é atualizar mais rápido — nenhuma estrutura acadêmica vai competir em
+velocidade com o mercado, e tentar isso produz grades que perseguem moda. A saída é
+<strong>estratificar</strong>: dizer ao aluno, para cada conteúdo, em que camada de velocidade ele está.
+Um curso que ensina Kubernetes avisando que a orquestração específica tem meia-vida de
+poucos anos, mas que o problema que ela resolve é permanente, forma alguém capaz de
+sobreviver à próxima substituição. Um curso que ensina Kubernetes como se fosse um
+invariante forma alguém que vai precisar ser resgatado.</p>
+<h4><span class="snum">0.5</span> O professor como arqueólogo e futurista</h4>
+<p>Ensinar tecnologia exige duas competências que raramente moram na mesma pessoa.</p>
+<p>A primeira é <strong>arqueológica</strong>: saber por que as coisas são como são. Por que o Git venceu
+o Subversion, por que o REST venceu o SOAP, por que o ágil surgiu como reação a algo
+concreto e não como preferência estética. Sem isso, o professor transmite práticas como
+arbitrariedades a serem decoradas, e o aluno não desenvolve critério — apenas repertório.
+Repertório envelhece; critério, não.</p>
+<p>A segunda é <strong>prospectiva</strong>: saber distinguir o que está emergindo do que está apenas
+fazendo barulho. Essa competência é mais difícil e menos ensinável, e a honestidade aqui
+importa: ninguém acerta consistentemente. O que se pode fazer é reduzir o erro usando
+sinais — a tecnologia resolve um problema que as pessoas já tinham antes dela existir? Ela
+tem adoção fora do círculo de quem a criou? Existe caso documentado de uso em escala e em
+produção, não apenas em conferência? Há gente publicando sobre os limites dela, o que é
+sinal de maturidade, e não de fraqueza?</p>
+<p>O professor que só é arqueólogo forma profissionais competentes e desatualizados. O que só
+é futurista forma profissionais atualizados e sem fundação, que trocam de stack a cada dois
+anos sem acumular nada. As duas competências não se somam: elas se corrigem mutuamente. O
+arqueólogo impede o futurista de vender moda como avanço; o futurista impede o arqueólogo
+de transformar a aula em museu.</p>
+<h4><span class="snum">0.6</span> Três modos de leitura</h4>
+<p>Este livro tem três leitores previstos, e eles não devem lê-lo do mesmo jeito.</p>
+<p>O <strong>aluno</strong> deve ler na ordem, e deve prestar atenção especial à Camada 1 e ao capítulo 1.4,
+sobre cognição. A tentação natural de quem está começando é pular direto para a camada sazonal,
+porque é ela que aparecem nas vagas. É um erro previsível e caro: a camada
+sazonal é a única que o aluno vai ter que reaprender inteira três ou quatro vezes ao longo
+da carreira, e a fundação é o que torna cada reaprendizado barato.</p>
+<p>O <strong>professor</strong> deve ler primeiro a Camada 0 e o capítulo 3.5, sobre ensino formal, e depois
+usar as fichas como instrumento de auditoria da própria ementa. A pergunta operacional é:
+quanto da minha carga horária está em conteúdo sazonal, e esse conteúdo está
+sinalizado como tal para o aluno?</p>
+<p>O <strong>profissional em transição</strong> — e este é o leitor mais numeroso no Brasil de 2026 — deve
+ler pelo diagnóstico. Vá ao apêndice de radar, identifique em que camadas está a sua
+experiência atual, e procure as lacunas nas camadas 1 e 2, não na 4. Quem trabalha
+há dez anos com sustentação de legado normalmente tem uma fundação melhor do que imagina e
+uma defasagem menor do que teme; o que costuma faltar não é a ferramenta da moda, e sim
+um dos capítulos geracionais que nunca foi formalizado — quase sempre 2.3, sistemas distribuídos,
+ou 1.5, escrita técnica.</p>
+</section>
+<h2 class="camada" id="camada-1"><span class="cnum">Camada 1</span><span class="cname">Permanente</span></h2>
+<p><em>Meia-vida: sem erosão observada em nenhum ciclo tecnológico da disciplina</em></p>
+<section class="chapter"><h3 id="c1-1"><span class="num">1.1</span><span class="ttl">Fundação conceitual</span></h3><dl class="ficha"><div><dt>meia-vida</dt><dd>sem erosão observada</dd></div><div><dt>estado</dt><dd>permanente</dd></div><div><dt>etiquetas</dt><dd>técnico · teórico</dd></div><div><dt>slug</dt><dd><code>/fundacao</code></dd></div></dl>
+<h4><span class="snum">1.1.1</span> Pensamento lógico e abstração</h4>
+<p>Abstração é a operação de decidir o que ignorar. Essa definição, deliberadamente
+desconfortável, é mais útil do que a versão de manual — &ldquo;representar o essencial ocultando
+o detalhe&rdquo; — porque deixa explícito que abstrair é sempre uma perda deliberada de
+informação, e que a qualidade de uma abstração se mede pelo que ela permite esquecer sem
+consequência.</p>
+<p>Uma boa abstração tem uma propriedade verificável: quem a usa não precisa saber o que há
+embaixo para usá-la corretamente. Uma abstração ruim vaza — obriga o usuário a conhecer a
+implementação para prever o comportamento. A diferença entre as duas não é estética; é
+econômica, e se paga em tempo de depuração.</p>
+<p>O pensamento lógico associado a isso é menos glamouroso do que a palavra sugere. Na prática
+diária, ele se reduz a três hábitos: distinguir o que foi observado do que foi inferido;
+saber o que tornaria falsa a hipótese que se está defendendo; e resistir à conclusão que
+explica os fatos disponíveis mas não foi testada contra os fatos ausentes. São hábitos que
+aparecem de novo em 1.4.3, quando o assunto for depuração — porque depurar é a atividade em
+que a fragilidade lógica de um profissional fica mais visível.</p>
+<p>Nada disso depende de linguagem, paradigma, década ou ferramenta. É o exemplo mais limpo
+de conteúdo invariante que a disciplina tem.</p>
+<h4><span class="snum">1.1.2</span> Matemática subjacente</h4>
+<p>A relação entre matemática e programação é mal contada nas duas direções. Há quem diga que
+programar exige matemática avançada, o que é falso para a maioria do trabalho profissional,
+e há quem diga que não exige nenhuma, o que é falso de um jeito mais caro.</p>
+<p>O que efetivamente se usa é um conjunto pequeno e estável.</p>
+<p><strong>Lógica proposicional e de predicados</strong> aparece em toda condicional, em toda cláusula
+<code>WHERE</code>, em toda regra de negócio. O erro mais comum e mais caro do ofício — a negação
+malfeita de uma condição composta — é um erro de lógica elementar, e ele custa horas de
+produção todo mês em algum lugar do mundo.</p>
+<p><strong>Matemática discreta e teoria dos conjuntos</strong> sustentam bancos de dados relacionais de
+forma tão direta que quem entende álgebra relacional escreve SQL melhor sem ter estudado
+SQL a mais.</p>
+<p><strong>Grafos</strong> aparecem em dependências de build, em roteamento, em modelagem de relacionamentos,
+em detecção de ciclo de importação. É a estrutura mais reutilizada e menos reconhecida da
+prática.</p>
+<p><strong>Probabilidade e estatística</strong> ficaram obrigatórias com observabilidade e com sistemas
+distribuídos: quem não entende a diferença entre média e percentil não sabe ler um painel
+de latência, e vai otimizar o caso que não importa.</p>
+<p><strong>Complexidade assintótica</strong> importa menos do que as entrevistas sugerem e mais do que os
+céticos admitem. Ninguém calcula ordens no dia a dia; mas quem não tem a intuição de que
+um laço aninhado sobre uma coleção que cresce vai um dia derrubar o sistema comete esse
+erro pelo menos uma vez.</p>
+<p>O que muda ao longo das décadas é a ênfase — probabilidade ganhou peso, autômatos perderam
+— mas o conjunto em si não erodiu em cinquenta anos.</p>
+<h4><span class="snum">1.1.3</span> Computabilidade e limites</h4>
+<p>Existe uma classe de problemas que nenhum programa resolve, em nenhuma linguagem, em
+nenhum hardware, por mais tempo que se dê. Turing demonstrou isso em 1936, antes de existir
+computador no sentido moderno, e a demonstração continua valendo — é provavelmente o
+resultado mais robusto que a computação possui.</p>
+<p>O caso canônico é o problema da parada: não existe programa capaz de, dado um programa
+qualquer e uma entrada qualquer, decidir sempre se aquela execução termina. A consequência
+prática é frequentemente subestimada. Ela é o motivo pelo qual nenhum analisador estático
+pode ser simultaneamente completo e correto; por isso toda ferramenta de análise de código
+escolhe entre deixar passar problemas reais ou apontar problemas inexistentes. Quando um
+desenvolvedor reclama que o SonarQube &ldquo;dá falso positivo&rdquo;, está encostando, sem saber, num
+limite matemático, e não numa deficiência do produto.</p>
+<p>Ensinar isso tem um efeito colateral valioso: alunos que sabem que existem limites teóricos
+param de procurar a ferramenta perfeita e passam a escolher entre trade-offs conhecidos.
+É formação de julgamento, não de repertório — e é por isso que uma disciplina de teoria da
+computação, que parece a mais distante da prática, é uma das que menos envelhece.</p>
+<h4><span class="snum">1.1.4</span> Princípios universais de engenharia</h4>
+<p>Engenharia de software é jovem, mas engenharia não é. Alguns princípios vieram prontos das
+disciplinas mais velhas e nunca precisaram ser revistos.</p>
+<p>O primeiro é que <strong>toda decisão é um trade-off</strong>. Não existe escolha arquitetural sem custo;
+existe escolha cujo custo ainda não apareceu. Quando alguém apresenta uma tecnologia listando
+apenas benefícios, o que falta não é honestidade — é experiência com ela em produção.</p>
+<p>O segundo é que <strong>restrições são informação, não obstáculo</strong>. Prazo, orçamento, equipe,
+regulação e compatibilidade não atrapalham o projeto: eles o definem. Um projeto sem
+restrição declarada não tem critério para escolher entre duas soluções corretas.</p>
+<p>O terceiro é a <strong>margem</strong>. Nenhuma outra engenharia dimensiona um sistema para exatamente a
+carga esperada; todas trabalham com folga. Software é a única disciplina em que se considera
+normal dimensionar para o caso médio e descobrir o pico em produção.</p>
+<p>O quarto é que <strong>falha é um estado de projeto, não um acidente</strong>. A pergunta correta nunca
+foi &ldquo;como impedir que falhe&rdquo;, e sim &ldquo;como ele se comporta quando falhar&rdquo;. Esse princípio
+reaparece inteiro em 2.3.3 e 2.3.6, e é a diferença entre um sistema distribuído que degrada
+e um que desaba.</p>
+<h4><span class="snum">1.1.5</span> O evento que fundou a disciplina</h4>
+<p>Em outubro de 1968, cerca de cinquenta pessoas se reuniram em Garmisch, na Alemanha, numa
+conferência patrocinada pelo Comitê de Ciência da OTAN. O termo escolhido para o título —
+&ldquo;software engineering&rdquo; — foi deliberadamente provocativo: a intenção era sugerir que a
+produção de software deveria se comportar como uma engenharia, e a provocação estava
+justamente no fato de que ela não se comportava.</p>
+<p>O relatório da conferência, editado por Peter Naur e Brian Randell, é um documento
+desconfortável de ler hoje. Os problemas relatados são: projetos que estouram prazo e
+orçamento de forma sistemática, sistemas entregues sem confiabilidade aceitável, dificuldade
+de estimar, dificuldade de manter, e a percepção de que a complexidade cresce mais rápido
+que a capacidade de gerenciá-la. A expressão que ficou foi &ldquo;crise do software&rdquo;.</p>
+<p>Duas leituras erradas circulam sobre esse evento, e vale desfazer as duas.</p>
+<p>A primeira é que 1968 inventou a disciplina. Não inventou; nomeou. Havia software complexo
+sendo feito havia mais de uma década, e o próprio diagnóstico da conferência veio da
+experiência acumulada de quem já estava fracassando.</p>
+<p>A segunda, mais interessante, é que a crise foi resolvida. Não foi. O que aconteceu foi que
+a indústria aprendeu a operar dentro dela. Os números de fracasso de projeto melhoraram,
+mas o padrão descrito em Garmisch — estimativa não confiável, complexidade crescente,
+manutenção cara — continua reconhecível em qualquer empresa em 2026.</p>
+<h4><span class="snum">1.1.6</span> O que 1968 já sabia e ainda não resolvemos</h4>
+<p>Este é o teste de fogo do livro inteiro, e ele merece ser aplicado logo no começo: quanto do
+diagnóstico de cinquenta e oito anos atrás ainda está aberto?</p>
+<p><strong>A estimativa continua não confiável.</strong> Todas as tentativas de resolver o problema por
+método — pontos de função, COCOMO, planning poker, story points — mudaram o vocabulário sem
+mudar o resultado. O movimento mais honesto da última década, o #NoEstimates, não resolveu
+o problema: propôs parar de fingir que ele estava resolvido.</p>
+<p><strong>A complexidade continua crescendo mais rápido que a capacidade de gerenciá-la.</strong> Cada
+geração de ferramenta reduz a complexidade acidental e a indústria imediatamente consome o
+ganho aumentando o escopo. Um sistema típico de 2026 tem mais partes móveis, não menos, do
+que um de 1998 — a diferença é que agora elas estão distribuídas por rede.</p>
+<p><strong>A manutenção continua sendo a maior parte do custo e a menor parte do currículo.</strong> Este é
+o descompasso mais gritante entre o que a disciplina sabe desde 1968 e o que ela ensina em
+2026, e é o tema do capítulo 3.5.6.</p>
+<p>O que efetivamente melhorou foi concreto e não trivial: controle de versão, testes
+automatizados, integração contínua e observabilidade tornaram o trabalho reversível e
+visível. Nenhuma dessas quatro coisas reduz a complexidade — todas reduzem o custo de errar
+dentro dela. É uma vitória real, e é uma vitória de natureza diferente da que Garmisch
+esperava.</p>
+</section>
+<section class="chapter"><h3 id="c1-2"><span class="num">1.2</span><span class="ttl">Os invariantes nomeados</span></h3><dl class="ficha"><div><dt>meia-vida</dt><dd>sem erosão observada</dd></div><div><dt>estado</dt><dd>permanente</dd></div><div><dt>etiquetas</dt><dd>técnico · teórico</dd></div><div><dt>slug</dt><dd><code>/invariantes</code></dd></div></dl>
+<p>Um capítulo sobre invariantes que não lista invariantes é uma promessa vazia. Estes são os
+candidatos, cada um com o enunciado, o que ele realmente afirma, e onde ele reaparece no
+livro. O capítulo 1.3 os submete a um teste; aqui eles são apenas apresentados.</p>
+<h4><span class="snum">1.2.1</span> Lei de Conway</h4>
+<p>Melvin Conway, em 1968, num artigo que a <em>Harvard Business Review</em> recusou e a <em>Datamation</em>
+publicou: organizações que projetam sistemas produzem projetos que copiam a estrutura de
+comunicação da própria organização.</p>
+<p>O que torna essa observação um invariante, e não uma metáfora, é que ela se sustenta
+independentemente de tecnologia. Quatro times que não conversam vão produzir quatro
+componentes com integração ruim, seja em COBOL nos anos 1970, em CORBA nos 1990 ou em
+microsserviços em 2026. A lei não descreve uma tendência cultural; descreve uma restrição
+de fluxo de informação.</p>
+<p>A consequência prática é a chamada manobra inversa: se a estrutura do sistema vai imitar a
+estrutura do time, então mudar a arquitetura sem mudar a organização é caro e geralmente
+fracassa. Metade dos fracassos de migração para microsserviços que aparecem em 3.1.4 são
+casos de organização inalterada. O tema volta com nome próprio em 3.1.9, Team Topologies.</p>
+<h4><span class="snum">1.2.2</span> As leis de Lehman</h4>
+<p>Manny Lehman, ao longo dos anos 1970 e 1980, estudou a evolução de sistemas reais ao longo
+de várias versões e formulou um conjunto de leis. Duas delas bastam para o argumento deste
+livro.</p>
+<p>A <strong>lei da mudança contínua</strong> diz que um sistema usado em um ambiente real precisa mudar
+continuamente, ou se torna progressivamente menos útil. A obsolescência não é causada por
+degradação do software — bits não enferrujam — mas pelo movimento do mundo ao redor dele.
+Um sistema parado num mundo em movimento fica errado sem ter mudado uma linha.</p>
+<p>A <strong>lei da complexidade crescente</strong> diz que, à medida que um sistema evolui, sua
+complexidade aumenta, a menos que se trabalhe deliberadamente para reduzi-la. Note a
+condicional: a complexidade não cresce por fatalidade, cresce por omissão. Esse é o
+fundamento teórico do que 3.3 vai chamar de refatoração contínua, e é o motivo pelo qual
+&ldquo;não mexer no que está funcionando&rdquo; é uma estratégia que funciona até o dia em que para
+de funcionar de uma vez.</p>
+<p>Uma ressalva de honestidade intelectual: as leis de Lehman foram formuladas a partir de um
+conjunto limitado de sistemas, e a base empírica é mais estreita do que a confiança com que
+elas costumam ser citadas. Elas são apresentadas aqui como generalizações bem sustentadas
+pela experiência, não como resultado com força de teorema.</p>
+<h4><span class="snum">1.2.3</span> Brooks</h4>
+<p>Fred Brooks contribuiu com três ideias que sobreviveram intactas.</p>
+<p>O <strong>mítico homem-mês</strong>, de 1975: adicionar pessoas a um projeto atrasado atrasa mais o
+projeto. O mecanismo é aritmético — os canais de comunicação crescem com o quadrado do
+número de pessoas, e cada novo integrante consome tempo de quem já estava produzindo. Não
+existe conserto tecnológico para isso; é um resultado sobre pessoas.</p>
+<p>A <strong>ausência de bala de prata</strong>, de 1986: nenhuma inovação isolada produzirá uma melhoria de
+uma ordem de grandeza em produtividade, confiabilidade e simplicidade dentro de uma década.
+O argumento vale a pena reconstruir porque a conclusão é frequentemente citada sem ele.</p>
+<p>Brooks separa a dificuldade de construir software em duas partes. A <strong>complexidade
+essencial</strong> está no problema: entender o domínio, especificar o comportamento correto,
+lidar com requisitos que se contradizem. A <strong>complexidade acidental</strong> está nas ferramentas:
+gerenciar memória manualmente, escrever assembly, compilar por meia hora. A tese é que as
+ferramentas só podem atacar a parte acidental, e que essa parte já havia encolhido o
+bastante para que eliminá-la completamente não produzisse ganho de ordem de grandeza.</p>
+<p>Trinta e nove anos depois, o argumento continua sendo o teste mais afiado disponível para
+avaliar qualquer promessa de revolução na produtividade — inclusive, e principalmente, as
+do capítulo 4.3.</p>
+<h4><span class="snum">1.2.4</span> Parnas</h4>
+<p>David Parnas, em 1972, respondeu a uma pergunta que parecia trivial: quando decomponho um
+sistema em módulos, qual critério uso?</p>
+<p>A resposta corrente na época era decompor por etapas de processamento — um módulo para
+cada fase do fluxo. Parnas mostrou, com um exemplo trabalhado, que essa decomposição produz
+módulos que mudam juntos, o que é o oposto do objetivo. E propôs outro critério: cada módulo
+deve <strong>esconder uma decisão de projeto</strong> que pode mudar. A fronteira do módulo é o contorno
+do que pode ser trocado sem afetar o resto.</p>
+<p>Esse único artigo é a origem intelectual de encapsulamento, de interface, de API, do
+princípio de inversão de dependência e da arquitetura hexagonal. Praticamente tudo em 3.1.2
+é aplicação de Parnas com nomes diferentes. É provavelmente o texto de maior densidade por
+página da disciplina, e a maior parte dos profissionais aplica suas conclusões sem nunca
+tê-lo lido.</p>
+<h4><span class="snum">1.2.5</span> Entropia de software</h4>
+<p>Software não se degrada fisicamente, mas se degrada organizacionalmente. Cada alteração
+feita sob pressão, cada exceção acrescentada sem revisão da estrutura, cada correção que
+trata sintoma, empurra o sistema na direção de menos ordem. O efeito é cumulativo e não
+tem reversão espontânea.</p>
+<p>O que torna isso um invariante é que o mecanismo não é técnico, é econômico: a alteração
+correta é sempre mais cara no curto prazo do que a alteração suficiente, e o incentivo de
+quem entrega prazo é sempre o curto prazo. Mude a linguagem, a arquitetura e o processo — o
+incentivo permanece. É por isso que a solução para entropia nunca foi ferramenta, e sim
+prática deliberada e contínua, tema de 3.3.9.</p>
+<h4><span class="snum">1.2.6</span> Acoplamento e coesão</h4>
+<p>Coesão alta dentro do módulo, acoplamento baixo entre módulos. A formulação é dos anos
+1970, veio da programação estruturada, e sobreviveu a toda mudança de paradigma desde então
+sem alteração de conteúdo — apenas de escala.</p>
+<p>Isso é o que a torna especialmente interessante para este livro: os mesmos dois conceitos
+descrevem a relação entre funções, entre classes, entre módulos, entre serviços e entre
+times. Quando alguém diz que um microsserviço &ldquo;não deveria compartilhar banco com outro&rdquo;,
+está reenunciando acoplamento. Quando alguém diz que um time deveria conseguir entregar sem
+depender de outro, está reenunciando a mesma coisa em 2.6.</p>
+<p>Um princípio que atravessa cinco ordens de grandeza sem perder validade não é uma regra de
+estilo. É estrutura.</p>
+<h4><span class="snum">1.2.7</span> O custo da mudança tardia — e a controvérsia sobre ele</h4>
+<p>O gráfico é conhecido: o custo de corrigir um defeito cresce exponencialmente conforme ele
+avança pelas fases do projeto, sendo ordens de grandeza mais caro em produção do que em
+requisitos. Ele aparece em incontáveis apresentações, quase sempre atribuído a Barry Boehm,
+e é o argumento padrão para justificar teste antecipado, revisão de código e &ldquo;shift left&rdquo;.</p>
+<p>Este livro inclui essa curva com uma ressalva importante, e a ressalva é o motivo de a
+seção existir.</p>
+<p>A base empírica original é mais estreita e mais antiga do que o uso que se faz dela. Os
+dados vêm de projetos grandes, de metodologia sequencial, dos anos 1970 e 1980 — um contexto
+em que o ciclo entre escrever e implantar era medido em meses. A crítica sistemática mais
+conhecida a esse tipo de citação é a de Laurent Bossavit, que rastreou várias &ldquo;verdades
+consagradas&rdquo; da engenharia de software até fontes que não sustentam a afirmação na forma
+em que ela circula.</p>
+<p>A posição defensável é intermediária. A direção do efeito é sólida e coerente com qualquer
+experiência prática: defeito descoberto tarde custa mais. A magnitude específica — os
+multiplicadores de 10, 100, 1000 — não tem base para ser citada como fato, e o próprio
+mecanismo mudou: onde há entrega contínua, a distância entre escrever e implantar é de
+minutos, e a curva que descrevia meses não se aplica sem tradução.</p>
+<p>Manter esse caso no livro é deliberado. Ele é o exemplo mais didático disponível de um
+conhecimento que envelheceu <strong>sem que ninguém percebesse</strong>, porque continuou sendo citado
+com a mesma confiança enquanto o contexto que o gerava desaparecia.</p>
+<h4><span class="snum">1.2.8</span> O que isso significa para o professor</h4>
+<p>Os sete invariantes acima têm uma característica pedagógica em comum: nenhum deles é
+ensinável como conteúdo isolado. Não existe aula de Lei de Conway. Eles funcionam como
+lente — são apresentados uma vez, e depois aplicados repetidamente sobre o conteúdo das camadas seguintes.</p>
+<p>Isso sugere uma estrutura de curso diferente da usual. Em vez de uma disciplina introdutória
+que &ldquo;passa&rdquo; os princípios no primeiro semestre e nunca mais volta a eles, o mais eficaz é
+retomar cada invariante toda vez que um capítulo sazonal o exemplificar. Conway aparece
+quando o aluno estuda microsserviços. Parnas aparece quando ele estuda API. Brooks aparece
+quando ele estuda assistentes de IA. O invariante é reforçado pelo conteúdo perecível, e o
+conteúdo perecível ganha um lugar na estrutura em vez de flutuar como novidade.</p>
+<p>É o inverso do que a maioria das grades faz, e é a recomendação central desta camada.</p>
+</section>
+<section class="chapter"><h3 id="c1-3"><span class="num">1.3</span><span class="ttl">O teste de perenidade</span></h3><dl class="ficha"><div><dt>meia-vida</dt><dd>sem erosão observada</dd></div><div><dt>estado</dt><dd>permanente</dd></div><div><dt>etiquetas</dt><dd>teórico · meta</dd></div><div><dt>slug</dt><dd><code>/perenidade</code></dd></div></dl>
+<h4><span class="snum">1.3.1</span> O critério</h4>
+<p>Afirmar que algo é eterno é a afirmação mais forte que um livro sobre envelhecimento pode
+fazer, e é a que mais precisa de critério. O que se propõe aqui é simples e verificável:</p>
+<blockquote>
+<p>Um conhecimento é candidato a invariante se permaneceu válido, sem reformulação de
+conteúdo, através de pelo menos três rupturas de paradigma independentes entre si.</p>
+</blockquote>
+<p>Três detalhes importam. <strong>Sem reformulação de conteúdo</strong> exclui princípios que sobrevivem
+apenas porque foram reescritos de forma cada vez mais vaga — a vagueza é a forma mais comum
+de falsa perenidade. <strong>Rupturas independentes</strong> exclui o caso de um princípio que atravessou
+três mudanças que eram, na verdade, a mesma mudança. E <strong>candidato</strong> é intencional: o teste
+elimina, mas não prova. Um invariante é uma hipótese que ainda não foi refutada.</p>
+<h4><span class="snum">1.3.2</span> Os três eixos de ruptura</h4>
+<p>As rupturas que valem como teste são as que mudaram as premissas econômicas ou físicas da
+computação, não as que mudaram sintaxe ou moda.</p>
+<p>O <strong>eixo de hardware</strong> contém a passagem do processamento em lote para o interativo, do
+mainframe para o cliente-servidor, do desktop para o móvel, e do aumento de frequência de
+relógio para o aumento de núcleos. Cada uma dessas invalidou práticas que pareciam
+fundamentais na véspera.</p>
+<p>O <strong>eixo de escala</strong> vai do sistema de um único usuário ao de milhares, ao de milhões, e à
+operação global com replicação geográfica. Escala é o eixo que mais quebra abstrações:
+quase tudo o que funciona com mil usuários falha de forma qualitativamente diferente com
+dez milhões.</p>
+<p>O <strong>eixo de modelo de custo</strong> é o menos discutido e o mais decisivo. Quando o recurso caro
+era o tempo de máquina, otimizar código era racional e a legibilidade era luxo. Quando o
+recurso caro passou a ser o tempo de programador, a hierarquia se inverteu. Com a nuvem, o
+custo voltou a ser variável e mensurável por requisição, o que reabriu discussões que
+pareciam encerradas — e é a razão de existir o capítulo 3.7.</p>
+<h4><span class="snum">1.3.3</span> O cemitério dos falsos invariantes</h4>
+<p>Aplicar o teste tem um custo, e ele deve ser pago publicamente. Estes são conhecimentos que
+foram ensinados como fundamentos e não sobreviveram.</p>
+<p><strong>Orientação a objetos como forma natural de organizar qualquer programa.</strong> Ensinada nos
+anos 1990 e 2000 como se fosse o modo correto de pensar software. Não sobreviveu ao eixo de
+escala — hierarquias profundas de herança se mostraram frágeis — nem à absorção de ideias
+funcionais pelas linguagens mainstream. O que sobrou de OO é real e continua útil:
+encapsulamento, que é Parnas com outro nome, e polimorfismo. O que caiu foi a pretensão de
+universalidade.</p>
+<p><strong>SOLID como lei.</strong> Um conjunto de heurísticas úteis, formulado num contexto específico de
+OO empresarial, que foi promovido a princípio universal e recitado como se cada letra
+tivesse a mesma solidez. Não passa no critério de &ldquo;sem reformulação&rdquo;: cada princípio hoje é
+defendido em versão consideravelmente mais fraca do que a original.</p>
+<p><strong>A pirâmide de testes.</strong> Continua sendo a heurística padrão, mas está em erosão aberta —
+disputada por modelos alternativos que deslocam o peso para testes de integração, motivados
+justamente por mudanças de arquitetura e de custo de execução. Ensiná-la como consenso, em
+2026, é impreciso. O tema é tratado em 3.3.6.</p>
+<p><strong>Requisitos congelados como pré-condição de qualidade.</strong> Premissa central dos processos
+pesados. Morreu no eixo de modelo de custo: quando implantar passou a custar minutos em vez
+de meses, congelar requisito deixou de ser prudência e virou desperdício.</p>
+<p><strong>UML como documentação viva.</strong> Sobreviveu como ferramenta de pensamento e de comunicação
+pontual; não sobreviveu como artefato mantido em sincronia com o código. Continua ocupando
+carga horária desproporcional em grades brasileiras.</p>
+<p><strong>&ldquo;A nuvem é mais barata&rdquo;.</strong> Nunca foi um invariante, mas foi ensinada como se fosse. É uma
+afirmação sobre modelo de custo, e portanto é exatamente o tipo de coisa que muda quando o
+modelo de custo muda.</p>
+<h4><span class="snum">1.3.4</span> Como o leitor deve duvidar deste livro</h4>
+<p>O Camada 1 afirma sete invariantes. É estatisticamente improvável que todos os sete resistam
+às próximas décadas, e seria desonesto encerrá-lo sem dizer isso.</p>
+<p>Meu candidato a primeiro a cair é 1.2.7, a curva de custo da mudança tardia — e ela já entrou
+neste livro com a ressalva. O segundo candidato é a lei de Conway, não por estar errada, mas
+porque o pressuposto que a sustenta é que a comunicação humana é o gargalo do projeto; se
+uma parte substancial da produção de código deixar de passar por comunicação entre pessoas,
+o mecanismo da lei muda de natureza. Não afirmo que isso vai acontecer; afirmo que é o
+gatilho a vigiar, e ele está registrado na ficha deste capítulo.</p>
+<p>O teste que proponho ao leitor é o mesmo que apliquei: quando encontrar neste livro uma
+afirmação de perenidade, procure a ruptura que a testaria. Se não conseguir imaginar
+nenhuma, desconfie — de mim, não do conceito. Uma afirmação que nada poderia falsificar não
+é um invariante. É uma opinião bem escrita.</p>
+</section>
+<section class="chapter"><h3 id="cFontes"><span class="num">Fontes</span><span class="ttl">referências primárias</span></h3>
+<p>As referências primárias citadas são, na ordem em que aparecem: Naur, P. e Randell, B.
+(eds.), <em>Software Engineering: Report on a Conference Sponsored by the NATO Science
+Committee</em>, Garmisch, 1968 · Conway, M., &ldquo;How Do Committees Invent?&rdquo;, <em>Datamation</em>, 1968 ·
+Lehman, M., &ldquo;Programs, Life Cycles, and Laws of Software Evolution&rdquo;, <em>Proceedings of the
+IEEE</em>, 1980 · Brooks, F., <em>The Mythical Man-Month</em>, 1975, e &ldquo;No Silver Bullet: Essence and
+Accidents of Software Engineering&rdquo;, 1986 · Parnas, D., &ldquo;On the Criteria To Be Used in
+Decomposing Systems into Modules&rdquo;, <em>Communications of the ACM</em>, 1972 · Turing, A., &ldquo;On
+Computable Numbers, with an Application to the Entscheidungsproblem&rdquo;, 1936 · Boehm, B.,
+<em>Software Engineering Economics</em>, 1981 · Bossavit, L., <em>The Leprechauns of Software
+Engineering</em>, 2015.</p>
+<p><em>Datas e atribuições devem ser conferidas contra as fontes primárias antes da publicação.</em></p></section>
+   <div class="roadmap" id="roteiro">
+     <h2 class="camada" style="border:0;padding:0;margin:0 0 .5rem">
+       <span class="cnum">A escrever</span><span class="cname">Camadas 2 a 4</span></h2>
+     <p style="color:var(--muted);font-size:.95rem">Dezesseis capítulos com a ficha definida
+     e o texto pendente. A ordem de escrita segue a regra do plano: fichas antes de prosa.</p>
+     <details class="rm-cam" open><summary><h4>Camada 2 · Geracional <span class="hv">15–20 anos</span></h4></summary><div class="rm-list"><div class="rm-item"><span class="n">2.1</span><span class="t">Paradigmas de programação</span><span class="rm-meta">7 seções</span></div><div class="rm-item"><span class="n">2.2</span><span class="t">Dados e persistência</span><span class="rm-meta">8 seções</span></div><div class="rm-item"><span class="n">2.3</span><span class="t">Sistemas distribuídos: fundamentos</span><span class="rm-meta">7 seções</span></div><div class="rm-item"><span class="n">2.4</span><span class="t">Linguagens de programação</span><span class="rm-meta">6 seções</span></div><div class="rm-item"><span class="n">2.5</span><span class="t">Requisitos, produto e IHC</span><span class="rm-meta">7 seções</span></div><div class="rm-item"><span class="n">2.6</span><span class="t">Comportamento e carreira</span><span class="rm-meta">7 seções</span></div></div></details><details class="rm-cam" open><summary><h4>Camada 3 · Cíclico <span class="hv">5–15 anos</span></h4></summary><div class="rm-list"><div class="rm-item"><span class="n">3.1</span><span class="t">Arquitetura de software</span><span class="rm-meta">10 seções</span></div><div class="rm-item"><span class="n">3.2</span><span class="t">Processos e metodologias</span><span class="rm-meta">erosão · 8 seções</span></div><div class="rm-item"><span class="n">3.3</span><span class="t">Qualidade, testes e débito técnico</span><span class="rm-meta">9 seções</span></div><div class="rm-item"><span class="n">3.4</span><span class="t">Ética, legislação e impacto</span><span class="rm-meta">7 seções</span></div><div class="rm-item"><span class="n">3.5</span><span class="t">O ensino formal</span><span class="rm-meta">7 seções</span></div><div class="rm-item"><span class="n">3.6</span><span class="t">Contexto brasileiro</span><span class="rm-meta">8 seções</span></div><div class="rm-item"><span class="n">3.7</span><span class="t">Economia da decisão</span><span class="rm-meta">6 seções</span></div></div></details><details class="rm-cam" open><summary><h4>Camada 4 · Sazonal <span class="hv">1–5 anos</span></h4></summary><div class="rm-list"><div class="rm-item"><span class="n">4.1</span><span class="t">Segurança e cadeia de suprimentos</span><span class="rm-meta">~4 anos · 8 seções</span></div><div class="rm-item"><span class="n">4.2</span><span class="t">Ferramentas e infraestrutura</span><span class="rm-meta">2–5 anos · 10 seções</span></div><div class="rm-item vol"><span class="n">4.3</span><span class="t">IA no ciclo de desenvolvimento</span><span class="rm-meta">volátil · 1–2 anos</span></div></div></details>
+   </div>
+  </article>
+ </div>
+</div>
+
+<footer>
+  <p><strong>Estado desta publicação.</strong> Texto integral das camadas 0 e 1; índice
+  completo das camadas 2 a 4. As datas e atribuições das fontes primárias ainda não foram
+  conferidas contra as edições originais.</p>
+  <p>Classificação por eixo único de velocidade (índice v3). O assunto de cada capítulo é
+  etiqueta na ficha, não divisão estrutural. Cada capítulo tem slug estável — a numeração
+  é apenas exibição, para que renumerações futuras não quebrem links.</p>
+</footer>
+
+<script>
+(function(){
+  var links=[].slice.call(document.querySelectorAll('nav.rail a'));
+  var alvos=links.map(function(a){return document.querySelector(a.getAttribute('href'));}).filter(Boolean);
+  if(!alvos.length||!('IntersectionObserver' in window))return;
+  var vistos=new Map();
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){vistos.set(e.target, e.isIntersecting?e.intersectionRatio:0);});
+    var melhor=null,r=-1;
+    vistos.forEach(function(v,k){ if(v>r){r=v;melhor=k;} });
+    if(!melhor||r<=0)return;
+    links.forEach(function(a){a.classList.toggle('at', a.getAttribute('href')==='#'+melhor.id);});
+  },{rootMargin:'-8% 0px -72% 0px',threshold:[0,0.5,1]});
+  alvos.forEach(function(t){io.observe(t);});
+})();
+</script>
+
+<script>
+(function(){
+  var raiz=document.documentElement, corpo=document.body;
+  function ler(k,p){ try{ return localStorage.getItem(k)||p; }catch(e){ return p; } }
+  function salvar(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
+  function marcar(attr,valor){
+    [].forEach.call(document.querySelectorAll('[data-'+attr+']'),function(b){
+      b.setAttribute('aria-pressed', b.getAttribute('data-'+attr)===valor ? 'true':'false');
+    });
+  }
+  function tema(v){
+    if(v==='auto'){ raiz.removeAttribute('data-theme'); } else { raiz.setAttribute('data-theme',v); }
+    marcar('tema',v); salvar('cv-tema',v);
+  }
+  function largura(v){ corpo.classList.toggle('largo', v==='largo'); marcar('larg',v); salvar('cv-larg',v); }
+  function fichas(v){ corpo.classList.toggle('sem-ficha', v==='off'); marcar('ficha',v); salvar('cv-ficha',v); }
+
+  tema(ler('cv-tema','auto'));
+  largura(ler('cv-larg','normal'));
+  fichas(ler('cv-ficha','on'));
+
+  document.addEventListener('click',function(e){
+    var b=e.target.closest && e.target.closest('button[data-tema],button[data-larg],button[data-ficha]');
+    if(!b)return;
+    if(b.hasAttribute('data-tema'))  tema(b.getAttribute('data-tema'));
+    if(b.hasAttribute('data-larg'))  largura(b.getAttribute('data-larg'));
+    if(b.hasAttribute('data-ficha')) fichas(b.getAttribute('data-ficha'));
+  });
+})();
+</script>
