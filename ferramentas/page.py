@@ -6,20 +6,20 @@ HEAD = """<title>Currículo Vivo</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,500;1,6..72,300&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
 :root{
-  --ground:#F4F6F2; --surface:#FCFDFB; --ink:#181C1A; --muted:#59615C; --faint:#868E88;
+  --ground:#F2F4F0; --surface:#FAFBF8; --ink:#1B201D; --muted:#5C645E; --faint:#88908A;
   --rule:#DCE1D8; --rule-soft:#E8EBE4; --accent:#33604F; --accent-soft:#E2ECE5;
   --s1:#22403A; --s2:#3E6B5B; --s3:#6F9481; --s4:#A9C0B0; --alert:#9A6B22;
-  --maxw:37rem;
+  --maxw:38rem;
 }
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
-    --ground:#101413; --surface:#161B19; --ink:#E7ECE7; --muted:#9BA49D; --faint:#7C857F;
+    --ground:#0F1312; --surface:#161B19; --ink:#DCE3DB; --muted:#98A19A; --faint:#79827C;
     --rule:#28302C; --rule-soft:#1E2522; --accent:#7FBCA1; --accent-soft:#1C2A24;
     --s1:#9FC9B5; --s2:#79AE95; --s3:#54836E; --s4:#3A5B4C; --alert:#C79B4E;
   }
 }
 :root[data-theme="dark"]{
-  --ground:#101413; --surface:#161B19; --ink:#E7ECE7; --muted:#9BA49D; --faint:#7C857F;
+  --ground:#0F1312; --surface:#161B19; --ink:#DCE3DB; --muted:#98A19A; --faint:#79827C;
   --rule:#28302C; --rule-soft:#1E2522; --accent:#7FBCA1; --accent-soft:#1C2A24;
   --s1:#9FC9B5; --s2:#79AE95; --s3:#54836E; --s4:#3A5B4C; --alert:#C79B4E;
 }
@@ -27,8 +27,9 @@ HEAD = """<title>Currículo Vivo</title>
 html{-webkit-text-size-adjust:100%}
 body{background:var(--ground);color:var(--ink);margin:0;
   font-family:"Source Serif 4",Georgia,"Times New Roman",serif;
-  font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
-@media(min-width:40rem){body{font-size:17px;line-height:1.62}}
+  font-size:16.5px;line-height:1.68;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+@media(min-width:40rem){body{font-size:17.5px;line-height:1.72}}
+@media(min-width:90rem){body{font-size:18px}}
 img,svg{max-width:100%;height:auto}
 article p,article li,article h4{overflow-wrap:break-word}
 article table{width:100%;border-collapse:collapse}
@@ -71,7 +72,11 @@ h1.book em{font-style:italic;color:var(--accent)}
 /* ---------- corpo ---------- */
 .layout{display:grid;grid-template-columns:minmax(0,1fr);gap:2rem;padding:2.4rem 0 3.5rem}
 @media(min-width:40rem){.layout{padding:3.5rem 0 5rem;gap:3rem}}
-@media(min-width:62rem){.layout{grid-template-columns:13rem minmax(0,var(--maxw)) 1fr;gap:3.5rem}}
+@media(min-width:62rem){
+  .layout{grid-template-columns:13.5rem minmax(0,var(--maxw));justify-content:center;
+    column-gap:4.5rem;padding:4rem 0 6rem}
+}
+@media(min-width:100rem){.layout{column-gap:6rem}}
 details.toc{border:1px solid var(--rule);background:var(--surface);border-radius:2px;padding:.7rem .9rem;margin-bottom:.5rem}
 details.toc summary{cursor:pointer;font-family:"IBM Plex Mono",monospace;font-size:.7rem;
   letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
@@ -86,20 +91,23 @@ nav.rail h2{font-family:"IBM Plex Mono",monospace;font-size:.66rem;letter-spacin
   text-transform:uppercase;color:var(--faint);font-weight:400;margin-bottom:.7rem}
 nav.rail a{display:block;text-decoration:none;color:var(--muted);font-size:.85rem;padding:.22rem 0;
   border-left:2px solid transparent;padding-left:.7rem;margin-left:-.7rem}
-nav.rail a:hover{color:var(--ink);border-left-color:var(--accent)}
+nav.rail a:hover{color:var(--ink)}
+nav.rail a.at{color:var(--ink);border-left-color:var(--accent)}
 nav.rail .grp{margin-bottom:1.3rem}
 nav.rail .grp>span{font-family:"IBM Plex Mono",monospace;font-size:.66rem;color:var(--faint);
   letter-spacing:.08em;display:block;margin-bottom:.3rem}
 
 article{min-width:0}
-h2.camada{margin:3.4rem 0 .4rem;display:flex;flex-direction:column;gap:.15rem;
+h2.camada,section.chapter h3,h4,#roteiro{scroll-margin-top:2.5rem}
+article p+h4{margin-top:2.7rem}
+h2.camada{margin:5rem 0 .4rem;display:flex;flex-direction:column;gap:.15rem;
   padding-top:1.6rem;border-top:2px solid var(--ink)}
 h2.camada:first-child{margin-top:0}
 .cnum{font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
 .cname{font-size:clamp(1.6rem,1.1rem + 2.2vw,2rem);font-weight:300;letter-spacing:-.01em}
 h2.camada + p em{color:var(--muted);font-size:.92rem;font-style:italic}
 
-section.chapter{margin-top:3rem}
+section.chapter{margin-top:3.8rem}
 section.chapter h3{display:flex;gap:.85rem;align-items:baseline;margin-bottom:.9rem}
 section.chapter h3 .num{font-size:.82rem;color:var(--accent);flex:none;padding-top:.2rem}
 section.chapter h3 .ttl{font-size:clamp(1.28rem,1rem + 1.4vw,1.55rem);font-weight:500;letter-spacing:-.01em;line-height:1.2}
@@ -110,14 +118,12 @@ article p{margin:0 0 1.15rem}
 article p strong{font-weight:600}
 article em{font-style:italic}
 
-.ficha{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;margin:0 0 1.9rem;
-  border:1px solid var(--rule);background:var(--rule-soft);border-radius:2px;overflow:hidden}
-@media(min-width:34rem){.ficha{grid-template-columns:repeat(4,minmax(0,1fr))}}
-.ficha>div{padding:.55rem .8rem;background:var(--surface);min-width:0}
-.ficha dd{overflow-wrap:break-word}
-.ficha dt{font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin-bottom:.18rem}
-.ficha dd{margin:0;font-size:.76rem;color:var(--ink)}
-.ficha code{font-size:.74rem;color:var(--accent)}
+.ficha{display:flex;flex-wrap:wrap;gap:.35rem 1.7rem;margin:0 0 2.2rem;padding:.6rem 0;
+  border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.ficha>div{display:flex;gap:.45rem;align-items:baseline;min-width:0}
+.ficha dt{font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);flex:none}
+.ficha dd{margin:0;font-size:.74rem;color:var(--muted);overflow-wrap:break-word}
+.ficha code{font-size:.72rem;color:var(--accent)}
 
 /* ---------- roteiro ---------- */
 .roadmap{border-top:2px solid var(--ink);margin-top:5rem;padding-top:1.6rem}
@@ -246,7 +252,6 @@ HTML = HEAD + f"""
      {rm}
    </div>
   </article>
-  <div></div>
  </div>
 </div>
 
@@ -259,5 +264,24 @@ HTML = HEAD + f"""
   é apenas exibição, para que renumerações futuras não quebrem links.</p>
 </footer>
 """
+SPY = """
+<script>
+(function(){
+  var links=[].slice.call(document.querySelectorAll('nav.rail a'));
+  var alvos=links.map(function(a){return document.querySelector(a.getAttribute('href'));}).filter(Boolean);
+  if(!alvos.length||!('IntersectionObserver' in window))return;
+  var vistos=new Map();
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){vistos.set(e.target, e.isIntersecting?e.intersectionRatio:0);});
+    var melhor=null,r=-1;
+    vistos.forEach(function(v,k){ if(v>r){r=v;melhor=k;} });
+    if(!melhor||r<=0)return;
+    links.forEach(function(a){a.classList.toggle('at', a.getAttribute('href')==='#'+melhor.id);});
+  },{rootMargin:'-8% 0px -72% 0px',threshold:[0,0.5,1]});
+  alvos.forEach(function(t){io.observe(t);});
+})();
+</script>
+"""
+HTML += SPY
 open('curriculo-vivo.html','w').write(HTML)
 print(len(HTML))
