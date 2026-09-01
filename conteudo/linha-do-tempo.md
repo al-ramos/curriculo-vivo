@@ -35,7 +35,7 @@ dimensionada para caber ao lado do estudo, não para competir com ele.
 
 | Estudo | Livro | Portal |
 |---|---|---|
-| Trilha 0 — diagnóstico, cinco artefatos guardados | Fichas de todos os 21 capítulos preenchidas, sem prosa | Três páginas no ar, navegação entre elas |
+| Trilha 0 — diagnóstico, cinco artefatos guardados | Fichas dos 22 capítulos preenchidas, sem prosa | Três páginas no ar, navegação entre elas |
 
 **Entregável:** o portal navegável e um retrato honesto do ponto de partida. Os cinco
 artefatos do diagnóstico ficam guardados para comparação no fim do segundo ano.
@@ -159,15 +159,15 @@ honesta de publicá-lo.
 
 | Fase | Meses | Trilha | Capítulos escritos | Acumulado |
 |---|---|---|---|---|
-| 0 | 0–0,5 | 0 | — (fichas) | 4 de 21 |
+| 0 | 0–0,5 | 0 | — (fichas) | 4 de 22 |
 | 1 | 1–6 | 1 | 1.4, 2.1 | 6 |
 | 2 | 7–12 | 2 | 2.2, 2.3 | 8 |
 | 3 | 13–18 | 3 | 3.1, 1.5 | 10 |
 | 4 | 19–22 | 4 | 3.3 | 11 |
 | 5 | 23–26 | 5 | 4.1, 4.2 | 13 |
 | 6 | 27–32 | 6 | 2.4, 2.5, 2.6, 3.2 | 17 |
-| 7 | 33–36 | pesquisa | 3.4, 3.5, 3.6, 3.7 | 21 |
-| 8 | 37–39 | — | 4.3 + revisão | 21 + v1.0 |
+| 7 | 33–36 | pesquisa | 3.4, 3.5, 3.6, 3.7 | 22 |
+| 8 | 37–39 | — | 4.3 + revisão | 22 + v1.0 |
 
 Trinta e nove meses. Pouco mais de três anos, no ritmo de seis a oito horas por semana —
 e ao fim deles existem duas coisas que não existiam: uma formação que cobre as lacunas

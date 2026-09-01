@@ -94,7 +94,8 @@ capítulo com prazo de validade assumido é desconfortável, e é exatamente o q
 está defendendo.
 
 Vale reparar na distribuição, porque ela é o achado mais tranquilizador do livro para quem
-está começando: de vinte e um capítulos, **três** estão na camada sazonal. A ansiedade que o
+está começando: dos **vinte e um capítulos de conteúdo** — a Camada 0 é o instrumento de
+leitura, não uma matéria —, apenas **três** estão na camada sazonal. A ansiedade que o
 mercado produz se concentra em algo próximo de quinze por cento do currículo. Os outros
 oitenta e cinco por cento envelhecem devagar o bastante para que aprendê-los bem seja um
 investimento, e não uma corrida.

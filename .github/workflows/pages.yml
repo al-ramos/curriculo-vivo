@@ -10,9 +10,11 @@ permissions:
   pages: write
   id-token: write
 
+# Deploy não se cancela no meio: o ambiente github-pages é serializado e uma
+# publicação interrompida pode deixar estado intermediário. Push novo entra na fila.
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   publicar:

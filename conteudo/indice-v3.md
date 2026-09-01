@@ -3,10 +3,11 @@
 
 > Classificação por **velocidade de envelhecimento**, eixo único. O assunto de cada
 > capítulo (técnico, humano, contextual) é etiqueta na ficha, não divisão estrutural.
-> Numeração decimal, sem letras. 21 capítulos, ~160 seções.
+> Numeração decimal, sem letras. **22 capítulos** — 21 de conteúdo nas camadas 1 a 4,
+> mais a Camada 0, que é instrumento de leitura e não matéria — e ~160 seções.
 > URL canônica de cada capítulo é um slug estável; o número é apenas exibição.
 
-| Camada | Meia-vida | Capítulos | Fatia do livro |
+| Camada | Meia-vida | Capítulos | Fatia do conteúdo |
 |---|---|---|---|
 | **0 · A Lente** | — | 1 | instrumento |
 | **1 · Permanente** | sem erosão observada | 5 | 24% |
@@ -14,8 +15,10 @@
 | **3 · Cíclico** | 5–15 anos | 7 | 33% |
 | **4 · Sazonal** | 1–5 anos | 3 | **14%** |
 
-O último número é o achado da reclassificação: apenas três dos vinte e um capítulos são
-de fato perecíveis. A ansiedade que o mercado produz se concentra em 14% do currículo.
+O último número é o achado da reclassificação: apenas três dos **vinte e um capítulos de
+conteúdo** são de fato perecíveis. A ansiedade que o mercado produz se concentra em pouco
+mais de 14% do currículo. (A Camada 0 fica fora dessa conta: ela ensina a ler o livro,
+não uma matéria.)
 
 ---
 
@@ -261,7 +264,7 @@ há cinquenta anos.
 ---
 
 # CAMADA 4 — SAZONAL
-*Meia-vida de 1 a 5 anos · 14% do livro · nenhuma ferramenta sem o princípio que sobrevive a ela*
+*Meia-vida de 1 a 5 anos · 14% dos capítulos de conteúdo · nenhuma ferramenta sem o princípio que sobrevive a ela*
 
 ## 4.1 · Segurança e cadeia de suprimentos
 `/seguranca` · *etiquetas: técnico, prática* · meia-vida ~4 anos
@@ -326,7 +329,7 @@ geracional, com a justificativa incorporada ao capítulo. Slug estável por cap�
 que renumerações futuras não quebrem links — um livro sobre envelhecimento não pode ter
 URL que apodrece.
 
-**v2 (01/09/2026) — enriquecimento.** De ~60 para ~160 seções. Sete capítulos novos:
+**v2 (01/09/2026) — enriquecimento.** De ~60 para ~160 seções. Oito capítulos novos:
 teste de perenidade, dados e persistência, sistemas distribuídos, segurança e cadeia de
 suprimentos, IA no ciclo de desenvolvimento, requisitos/produto/IHC, comunicação e escrita
 técnica, economia da decisão. Invariantes nomeados um a um. Postura editorial nova:
