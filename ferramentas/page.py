@@ -85,14 +85,11 @@ details.sec>summary h4{margin:0;flex:1}
 details.sec:not([open])>summary{margin-bottom:.3rem}
 .sec-corpo{padding-left:1.4rem;border-left:1px solid var(--rule-soft)}
 .copiar{flex:none;align-self:center;font-family:"IBM Plex Mono",monospace;font-size:.6rem;
-  letter-spacing:.08em;text-transform:uppercase;color:var(--faint);background:none;
-  border:1px solid transparent;border-radius:2px;padding:.15rem .4rem;cursor:pointer;
-  opacity:0;transition:opacity .15s}
-details.sec>summary:hover .copiar,details.sec>summary:focus-within .copiar,
-.copiar:focus-visible,.copiar.ok{opacity:1}
-.copiar:hover{color:var(--accent);border-color:var(--rule)}
-.copiar.ok{color:var(--accent);border-color:transparent}
-@media (hover:none){.copiar{opacity:1}}
+  letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:var(--surface);
+  border:1px solid var(--rule);border-radius:2px;padding:.18rem .45rem;cursor:pointer;
+  transition:color .15s,border-color .15s,background .15s;white-space:nowrap}
+.copiar:hover{color:var(--accent);border-color:var(--accent)}
+.copiar.ok{color:var(--ground);background:var(--accent);border-color:var(--accent)}
 .marcar{flex:none;align-self:center;width:1.05rem;height:1.05rem;border-radius:50%;
   border:1.5px solid var(--rule);background:none;cursor:pointer;padding:0;position:relative}
 .marcar:hover{border-color:var(--accent)}
