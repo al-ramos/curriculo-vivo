@@ -53,7 +53,7 @@ partes = body.split('@@SEC@@')
 saida = [partes[0]]
 for p in partes[1:]:
     corte = len(p)
-    for marca in ('<section class="chapter">', '<h2 class="camada"', '</section>'):
+    for marca in ('<section class="chapter">', '<h2 class="camada"', '</section>', '<hr />'):
         k = p.find(marca)
         if k != -1: corte = min(corte, k)
     saida.append(p[:corte] + '</div></details>' + p[corte:])
@@ -61,5 +61,22 @@ body = ''.join(saida)
 
 body = body.replace('<hr />','</section>')
 body += '</section>'
+# guarda: aninhamento inválido quebrava o layout silenciosamente (menu sumia
+# no meio da página). Falha alto em vez de gerar HTML torto.
+from html.parser import HTMLParser
+class _V(HTMLParser):
+    VAZIAS = {'br','img','hr','input','meta','link'}
+    def __init__(self):
+        super().__init__(); self.pilha=[]; self.erros=[]
+    def handle_starttag(self, t, a):
+        if t not in self.VAZIAS: self.pilha.append(t)
+    def handle_endtag(self, t):
+        if not self.pilha: self.erros.append('fecha sem abrir: </%s>' % t); return
+        if self.pilha[-1] != t: self.erros.append('esperava </%s>, veio </%s>' % (self.pilha[-1], t))
+        else: self.pilha.pop()
+_v = _V(); _v.feed(body)
+if _v.erros or _v.pilha:
+    raise SystemExit('HTML mal aninhado: %s | tags abertas: %s' % (_v.erros[:3], _v.pilha[:3]))
+
 open('_body.html','w').write(body)
 print(body[:400])

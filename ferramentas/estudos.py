@@ -24,6 +24,37 @@ article td{padding:.5rem .7rem .5rem 0;border-bottom:1px solid var(--rule-soft);
 article td:first-child{font-family:"IBM Plex Mono",monospace;font-size:.8rem;color:var(--accent);white-space:nowrap}
 </style>"""
 
+def fechar_secoes(html):
+    """Fecha cada <section> imediatamente antes da próxima abrir, e no fim.
+    Substitui o fechamento por <hr />, que quebrava quando as contagens
+    divergiam e derrubava o layout silenciosamente."""
+    html = html.replace('<hr />', '')
+    pedacos = html.split('<section class=')
+    fora = pedacos[0]
+    corpo = ''
+    for i, p in enumerate(pedacos[1:]):
+        if i: corpo += '</section>'
+        corpo += '<section class=' + p
+    if corpo: corpo += '</section>'
+    return fora + corpo
+
+def validar(html):
+    from html.parser import HTMLParser
+    class V(HTMLParser):
+        VAZIAS = {'br','img','hr','input','meta','link'}
+        def __init__(self):
+            super().__init__(); self.pilha=[]; self.erros=[]
+        def handle_starttag(self, t, a):
+            if t not in self.VAZIAS: self.pilha.append(t)
+        def handle_endtag(self, t):
+            if not self.pilha: self.erros.append('fecha sem abrir </%s>' % t); return
+            if self.pilha[-1] != t: self.erros.append('esperava </%s>, veio </%s>' % (self.pilha[-1], t))
+            else: self.pilha.pop()
+    v = V(); v.feed(html)
+    if v.erros or v.pilha:
+        raise SystemExit('HTML mal aninhado: %s | abertas: %s' % (v.erros[:3], v.pilha[:3]))
+    return html
+
 md = open('plano-estudos.md').read()
 md = md.split('---', 1)[1].strip()
 body = markdown.markdown(md, extensions=['tables','smarty'])
@@ -39,7 +70,7 @@ def h2(m):
     return f'<section class="trilha"><h3 id="{idd}"><span class="ttl">{t}</span></h3>'
 body = re.sub(r'<h2>(.*?)</h2>', h2, body)
 body = re.sub(r'<h3>(.*?)</h3>', r'<h4>\1</h4>', body)
-body = body.replace('<hr />','</section>') + '</section>'
+body = validar(fechar_secoes(body))
 body = body.replace('<table>','<div class="tabelinha"><table>').replace('</table>','</table></div>')
 
 RAIL = """<nav class="rail" aria-label="Sumário">
