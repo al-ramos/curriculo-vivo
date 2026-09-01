@@ -31,7 +31,7 @@ body{background:var(--ground);color:var(--ink);margin:0;
 img,svg{max-width:100%;height:auto}
 article p,article li,article h4{overflow-wrap:break-word}
 article table{width:100%;border-collapse:collapse}
-.wrap{max-width:76rem;margin:0 auto;padding:0 1.1rem}
+.wrap{max-width:88rem;margin:0 auto;padding:0 1.1rem}
 @media(min-width:40rem){.wrap{padding:0 1.5rem}}
 h1,h2,h3,h4{text-wrap:balance;font-family:"Newsreader",Georgia,serif;font-weight:500;margin:0}
 code,.mono,.ficha,.snum,.num,.cnum,.eyebrow,.strata,.rm-meta{font-family:"IBM Plex Mono",ui-monospace,monospace}
@@ -106,6 +106,46 @@ nav.rail a.sub-a:hover{color:var(--ink)}
 nav.rail a.sub-a.at{color:var(--accent);border-left-color:var(--accent)}
 nav.rail a.sub-a.lida{color:var(--rule);text-decoration:line-through;text-decoration-color:var(--rule)}
 
+/* coluna de apoio */
+aside.lado{display:none}
+@media(min-width:82rem){
+  aside.lado{display:block;position:sticky;top:2.5rem;align-self:start;
+    max-height:calc(100vh - 5rem);overflow-y:auto;scrollbar-width:thin;
+    scrollbar-color:var(--rule) transparent}
+}
+aside.lado h2{font-family:"IBM Plex Mono",monospace;font-size:.62rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--faint);font-weight:400;margin:0 0 .7rem}
+aside.lado .cx{border-left:1px solid var(--rule);padding:0 0 0 1rem;margin-bottom:1.8rem}
+aside.lado .lin{display:flex;justify-content:space-between;gap:.6rem;padding:.22rem 0;
+  font-size:.78rem;color:var(--muted)}
+aside.lado .lin b{font-family:"IBM Plex Mono",monospace;font-size:.74rem;
+  font-weight:500;color:var(--ink);font-variant-numeric:tabular-nums}
+aside.lado button.acao{width:100%;text-align:left;font-family:"IBM Plex Mono",monospace;
+  font-size:.64rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);
+  background:none;border:1px solid var(--rule);border-radius:2px;padding:.35rem .5rem;
+  cursor:pointer;margin-top:.5rem}
+aside.lado button.acao:hover{color:var(--accent);border-color:var(--accent)}
+aside.lado button.acao[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent);
+  border-color:transparent}
+body.so-nao-lidas details.sec.lida{display:none}
+
+/* tempo de leitura e notas */
+.tempo{flex:none;align-self:center;font-family:"IBM Plex Mono",monospace;font-size:.6rem;
+  color:var(--faint);letter-spacing:.04em;white-space:nowrap}
+.nota-btn{flex:none;align-self:center;font-family:"IBM Plex Mono",monospace;font-size:.6rem;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:var(--surface);
+  border:1px solid var(--rule);border-radius:2px;padding:.18rem .45rem;cursor:pointer}
+.nota-btn:hover{color:var(--accent);border-color:var(--accent)}
+.nota-btn.tem{color:var(--accent);border-color:var(--accent)}
+.nota{display:none;margin:.9rem 0 0}
+.nota.aberta{display:block}
+.nota textarea{width:100%;min-height:5.5rem;resize:vertical;background:var(--surface);
+  color:var(--ink);border:1px solid var(--rule);border-radius:2px;padding:.6rem .7rem;
+  font-family:"Source Serif 4",serif;font-size:.92rem;line-height:1.5}
+.nota textarea:focus{outline:none;border-color:var(--accent)}
+.nota .dica{font-family:"IBM Plex Mono",monospace;font-size:.58rem;color:var(--faint);
+  letter-spacing:.06em;margin-top:.25rem}
+
 /* progresso */
 .prog{margin-bottom:1.1rem;padding-bottom:.8rem;border-bottom:1px solid var(--rule-soft)}
 .prog .barra{height:3px;background:var(--rule-soft);border-radius:2px;overflow:hidden;margin-bottom:.4rem}
@@ -132,10 +172,13 @@ nav.rail a.sub-a.lida{color:var(--rule);text-decoration:line-through;text-decora
 .layout{display:grid;grid-template-columns:minmax(0,1fr);gap:2rem;padding:2.4rem 0 3.5rem}
 @media(min-width:40rem){.layout{padding:3.5rem 0 5rem;gap:3rem}}
 @media(min-width:62rem){
-  .layout{grid-template-columns:13.5rem minmax(0,var(--maxw));justify-content:center;
-    column-gap:4.5rem;padding:4rem 0 6rem}
+  .layout{grid-template-columns:14rem minmax(0,var(--maxw));justify-content:start;
+    column-gap:3.5rem;padding:3.5rem 0 6rem}
 }
-@media(min-width:100rem){.layout{column-gap:6rem}}
+@media(min-width:82rem){
+  .layout{grid-template-columns:15rem minmax(0,var(--maxw)) minmax(0,16rem);column-gap:4rem}
+}
+@media(min-width:104rem){.layout{--maxw:42rem;column-gap:5rem}}
 details.toc{border:1px solid var(--rule);background:var(--surface);border-radius:2px;padding:.7rem .9rem;margin-bottom:.5rem}
 details.toc summary{cursor:pointer;font-family:"IBM Plex Mono",monospace;font-size:.7rem;
   letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
@@ -842,8 +885,50 @@ desatualizado na publicação, e o livro perde exatamente o argumento que veio d
       e.preventDefault(); e.stopPropagation();
       var corpo = d.querySelector('.sec-corpo');
       var cab = '## ' + d.getAttribute('data-num') + ' ' + d.getAttribute('data-tit');
-      copiar(cab + '\n\n' + (corpo ? paraTexto(corpo) : ''), c);
+      var txt = cab + '\n\n' + (corpo ? paraTexto(corpo) : '');
+      var nt = '';
+      try{ nt = localStorage.getItem(chave + '-nota-' + d.id) || ''; }catch(e){}
+      if(nt.trim()) txt += '\n\n> **Nota:** ' + nt.trim().replace(/\n+/g, ' ');
+      copiar(txt, c);
     });
+    // tempo estimado de leitura
+    var corpoEl = d.querySelector('.sec-corpo');
+    var palavras = corpoEl ? corpoEl.textContent.trim().split(/\s+/).length : 0;
+    var min = Math.max(1, Math.round(palavras / 200));
+    d.setAttribute('data-min', min);
+    var t = document.createElement('span');
+    t.className = 'tempo'; t.textContent = min + ' min';
+    sum.appendChild(t);
+
+    // nota pessoal
+    var nb = document.createElement('button');
+    nb.type = 'button'; nb.className = 'nota-btn'; nb.textContent = 'nota';
+    nb.title = 'Anotar sobre esta seção';
+    var cx = document.createElement('div');
+    cx.className = 'nota';
+    var ta = document.createElement('textarea');
+    ta.placeholder = 'Sua anotação sobre ' + d.getAttribute('data-num') + '…';
+    var dica = document.createElement('div');
+    dica.className = 'dica'; dica.textContent = 'salvo neste navegador · entra junto no copiar';
+    cx.appendChild(ta); cx.appendChild(dica);
+    if(corpoEl) corpoEl.appendChild(cx);
+    try{ ta.value = localStorage.getItem(chave + '-nota-' + d.id) || ''; }catch(e){}
+    if(ta.value) nb.classList.add('tem');
+    ta.addEventListener('input', function(){
+      try{
+        if(ta.value.trim()) localStorage.setItem(chave + '-nota-' + d.id, ta.value);
+        else localStorage.removeItem(chave + '-nota-' + d.id);
+      }catch(e){}
+      nb.classList.toggle('tem', !!ta.value.trim());
+      resumo();
+    });
+    nb.addEventListener('click', function(e){
+      e.preventDefault(); e.stopPropagation();
+      d.open = true;
+      cx.classList.toggle('aberta');
+      if(cx.classList.contains('aberta')) ta.focus();
+    });
+    sum.appendChild(nb);
     sum.appendChild(c);
     var b = document.createElement('button');
     b.type = 'button';
@@ -872,6 +957,80 @@ desatualizado na publicação, e o livro perde exatamente o argumento que veio d
   document.addEventListener('click', function(e){
     var b = e.target.closest && e.target.closest('button[data-secs]');
     if(b) secoes(b.getAttribute('data-secs'));
+  });
+
+  // painel de apoio
+  function resumo(){
+    var lidasN = 0, restante = 0, notas = 0;
+    secs.forEach(function(d){
+      var m = parseInt(d.getAttribute('data-min') || '0', 10);
+      if(lidas.has(d.id)) lidasN++; else restante += m;
+      try{ if((localStorage.getItem(chave + '-nota-' + d.id) || '').trim()) notas++; }catch(e){}
+    });
+    var el;
+    if(el = document.getElementById('ap-lidas')) el.textContent = lidasN + ' / ' + secs.length;
+    if(el = document.getElementById('ap-tempo'))
+      el.textContent = restante >= 60
+        ? Math.floor(restante/60) + ' h ' + (restante%60) + ' min'
+        : restante + ' min';
+    if(el = document.getElementById('ap-notas')) el.textContent = String(notas);
+  }
+  var pintarAntes = pintar;
+  pintar = function(){ pintarAntes(); resumo(); };
+  pintar();
+
+  var filtro = document.getElementById('ap-filtro');
+  if(filtro) filtro.addEventListener('click', function(){
+    var on = document.body.classList.toggle('so-nao-lidas');
+    filtro.setAttribute('aria-pressed', on ? 'true' : 'false');
+    filtro.textContent = on ? 'Mostrar todas as seções' : 'Mostrar só as não lidas';
+  });
+
+  var exportar = document.getElementById('ap-exportar');
+  if(exportar) exportar.addEventListener('click', function(){
+    var linhas = [];
+    secs.forEach(function(d){
+      var n = '';
+      try{ n = localStorage.getItem(chave + '-nota-' + d.id) || ''; }catch(e){}
+      if(n.trim()) linhas.push('## ' + d.getAttribute('data-num') + ' ' +
+        d.getAttribute('data-tit') + '\n\n' + n.trim());
+    });
+    copiar(linhas.length ? linhas.join('\n\n---\n\n') : 'Nenhuma nota ainda.', exportar);
+  });
+
+  var zerar = document.getElementById('ap-zerar');
+  if(zerar) zerar.addEventListener('click', function(){
+    if(!lidas.size) return;
+    lidas.clear(); pintar();
+  });
+
+  // atalhos de teclado
+  document.addEventListener('keydown', function(e){
+    if(e.metaKey || e.ctrlKey || e.altKey) return;
+    var alvo = e.target;
+    if(alvo && (alvo.tagName === 'TEXTAREA' || alvo.tagName === 'INPUT')) return;
+    var k = e.key.toLowerCase();
+    if(['j','k','m','c'].indexOf(k) === -1) return;
+    var visiveis = secs.filter(function(d){ return d.offsetParent !== null; });
+    var atualIdx = 0;
+    for(var i = 0; i < visiveis.length; i++){
+      if(visiveis[i].getBoundingClientRect().top <= 120) atualIdx = i;
+    }
+    var atual = visiveis[atualIdx];
+    if(!atual) return;
+    if(k === 'j' || k === 'k'){
+      e.preventDefault();
+      var alvoSec = visiveis[Math.min(visiveis.length - 1, Math.max(0, atualIdx + (k === 'j' ? 1 : -1)))];
+      if(alvoSec) alvoSec.scrollIntoView({behavior: 'smooth', block: 'start'});
+    } else if(k === 'm'){
+      e.preventDefault();
+      if(lidas.has(atual.id)) lidas.delete(atual.id); else lidas.add(atual.id);
+      pintar();
+    } else if(k === 'c'){
+      e.preventDefault();
+      var b = atual.querySelector('.copiar');
+      if(b) b.click();
+    }
   });
 
   // marcador de página: guarda a última seção vista e oferece o retorno
