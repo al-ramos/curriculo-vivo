@@ -439,7 +439,7 @@ SPY = """
 })();
 </script>
 """
-PROG = """
+PROG = r"""
 <script>
 (function(){
   var chave = 'cv-' + (location.pathname.split('/').pop() || 'index');
@@ -592,7 +592,21 @@ PROG = """
 })();
 </script>
 """
+def validar_js(html):
+    """Um \\n mal escapado já quebrou os três scripts de uma vez, em silêncio.
+    Verifica a sintaxe com node quando ele estiver disponível."""
+    import re, shutil, subprocess, tempfile, os
+    if not shutil.which('node'): return html
+    for i, b in enumerate(re.findall(r'<script>(.*?)</script>', html, re.S)):
+        f = os.path.join(tempfile.gettempdir(), '_cv%d.js' % i)
+        open(f, 'w').write(b)
+        r = subprocess.run(['node', '--check', f], capture_output=True, text=True)
+        if r.returncode != 0:
+            raise SystemExit('JavaScript inválido no bloco %d:\\n%s' % (i, r.stderr[:400]))
+    return html
+
 HTML += SPY + CTRL + PROG
+HTML = validar_js(HTML)
 open('_head.html','w').write(HEAD)
 open('curriculo-vivo.html','w').write(HTML)
 print(len(HTML))

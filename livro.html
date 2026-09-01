@@ -891,9 +891,7 @@ Engineering</em>, 2015.</p>
         if(s2) out.push(s2);
       }
     });
-    return out.join('
-
-');
+    return out.join('\n\n');
   }
 
   function copiar(txt, botao){
@@ -929,9 +927,7 @@ Engineering</em>, 2015.</p>
       e.preventDefault(); e.stopPropagation();
       var corpo = d.querySelector('.sec-corpo');
       var cab = '## ' + d.getAttribute('data-num') + ' ' + d.getAttribute('data-tit');
-      copiar(cab + '
-
-' + (corpo ? paraTexto(corpo) : ''), c);
+      copiar(cab + '\n\n' + (corpo ? paraTexto(corpo) : ''), c);
     });
     sum.appendChild(c);
     var b = document.createElement('button');
