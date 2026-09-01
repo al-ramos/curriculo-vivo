@@ -52,6 +52,21 @@ h1.book em{font-style:italic;color:var(--accent)}
   padding:.32rem .6rem;border:1px solid var(--rule);border-radius:2px;color:var(--muted)}
 .chip.on{background:var(--accent-soft);border-color:transparent;color:var(--accent)}
 
+/* ---------- controles ---------- */
+.ctrls{display:flex;flex-wrap:wrap;gap:1.1rem;margin-top:1.6rem}
+.ctrl{display:flex;align-items:center;gap:.5rem}
+.ctrl>span{font-family:"IBM Plex Mono",monospace;font-size:.6rem;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--faint)}
+.seg{display:flex;border:1px solid var(--rule);border-radius:2px;overflow:hidden}
+.seg button{font-family:"IBM Plex Mono",monospace;font-size:.66rem;letter-spacing:.04em;
+  padding:.3rem .55rem;background:none;border:0;border-right:1px solid var(--rule);
+  color:var(--muted);cursor:pointer;line-height:1.4}
+.seg button:last-child{border-right:0}
+.seg button:hover{color:var(--ink)}
+.seg button[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent)}
+body.sem-ficha .ficha{display:none}
+body.largo{--maxw:45rem}
+
 /* ---------- coluna estratigráfica ---------- */
 .strata{border:1px solid var(--rule);background:var(--ground);padding:1.1rem}
 .strata h2{font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);
@@ -126,7 +141,12 @@ article em{font-style:italic}
 /* ---------- roteiro ---------- */
 .roadmap{border-top:2px solid var(--ink);margin-top:5rem;padding-top:1.6rem}
 .rm-cam{margin-top:2.2rem}
-.rm-cam>h4{display:flex;align-items:baseline;gap:.7rem;margin:0 0 .9rem;
+.rm-cam>summary{cursor:pointer;list-style:none;margin-bottom:.9rem}
+.rm-cam>summary::-webkit-details-marker{display:none}
+.rm-cam>summary::before{content:"–";color:var(--faint);margin-right:.5rem;
+  font-family:"IBM Plex Mono",monospace;font-size:.8rem}
+.rm-cam:not([open])>summary::before{content:"+"}
+.rm-cam h4{display:inline-flex;align-items:baseline;gap:.7rem;margin:0;
   font-family:"Newsreader",serif;font-size:1.25rem;font-weight:500}
 .rm-cam>h4 .hv{font-family:"IBM Plex Mono",monospace;font-size:.68rem;color:var(--faint);letter-spacing:.04em}
 .rm-list{display:grid;gap:0;border-top:1px solid var(--rule-soft)}
@@ -156,6 +176,24 @@ footer p{margin:0 0 .6rem;max-width:44rem}
       <p class="dek">Um currículo organizado por uma pergunta só — em quanto tempo cada
       conhecimento envelhece. Vinte e um capítulos distribuídos em quatro camadas de
       velocidade, cada seção com data de revisão e gatilho declarados.</p>
+      <div class="ctrls">
+        <div class="ctrl"><span>Tema</span>
+          <div class="seg" role="group" aria-label="Tema">
+            <button type="button" data-tema="auto">Auto</button>
+            <button type="button" data-tema="light">Claro</button>
+            <button type="button" data-tema="dark">Escuro</button>
+          </div></div>
+        <div class="ctrl"><span>Coluna</span>
+          <div class="seg" role="group" aria-label="Largura da coluna">
+            <button type="button" data-larg="normal">Normal</button>
+            <button type="button" data-larg="largo">Larga</button>
+          </div></div>
+        <div class="ctrl"><span>Fichas</span>
+          <div class="seg" role="group" aria-label="Fichas de envelhecimento">
+            <button type="button" data-ficha="on">Mostrar</button>
+            <button type="button" data-ficha="off">Ocultar</button>
+          </div></div>
+      </div>
       <div class="status">
         <span class="chip on">Camadas 0 e 1 escritas</span>
         <span class="chip">~5.800 palavras</span>
@@ -680,7 +718,7 @@ Engineering</em>, 2015.</p>
        <span class="cnum">A escrever</span><span class="cname">Camadas 2 a 4</span></h2>
      <p style="color:var(--muted);font-size:.95rem">Dezesseis capítulos com a ficha definida
      e o texto pendente. A ordem de escrita segue a regra do plano: fichas antes de prosa.</p>
-     <div class="rm-cam"><h4>Camada 2 · Geracional <span class="hv">15–20 anos</span></h4><div class="rm-list"><div class="rm-item"><span class="n">2.1</span><span class="t">Paradigmas de programação</span><span class="rm-meta">7 seções</span></div><div class="rm-item"><span class="n">2.2</span><span class="t">Dados e persistência</span><span class="rm-meta">8 seções</span></div><div class="rm-item"><span class="n">2.3</span><span class="t">Sistemas distribuídos: fundamentos</span><span class="rm-meta">7 seções</span></div><div class="rm-item"><span class="n">2.4</span><span class="t">Linguagens de programação</span><span class="rm-meta">6 seções</span></div><div class="rm-item"><span class="n">2.5</span><span class="t">Requisitos, produto e IHC</span><span class="rm-meta">7 seções</span></div><div class="rm-item"><span class="n">2.6</span><span class="t">Comportamento e carreira</span><span class="rm-meta">7 seções</span></div></div></div><div class="rm-cam"><h4>Camada 3 · Cíclico <span class="hv">5–15 anos</span></h4><div class="rm-list"><div class="rm-item"><span class="n">3.1</span><span class="t">Arquitetura de software</span><span class="rm-meta">10 seções</span></div><div class="rm-item"><span class="n">3.2</span><span class="t">Processos e metodologias</span><span class="rm-meta">erosão · 8 seções</span></div><div class="rm-item"><span class="n">3.3</span><span class="t">Qualidade, testes e débito técnico</span><span class="rm-meta">9 seções</span></div><div class="rm-item"><span class="n">3.4</span><span class="t">Ética, legislação e impacto</span><span class="rm-meta">7 seções</span></div><div class="rm-item"><span class="n">3.5</span><span class="t">O ensino formal</span><span class="rm-meta">7 seções</span></div><div class="rm-item"><span class="n">3.6</span><span class="t">Contexto brasileiro</span><span class="rm-meta">8 seções</span></div><div class="rm-item"><span class="n">3.7</span><span class="t">Economia da decisão</span><span class="rm-meta">6 seções</span></div></div></div><div class="rm-cam"><h4>Camada 4 · Sazonal <span class="hv">1–5 anos</span></h4><div class="rm-list"><div class="rm-item"><span class="n">4.1</span><span class="t">Segurança e cadeia de suprimentos</span><span class="rm-meta">~4 anos · 8 seções</span></div><div class="rm-item"><span class="n">4.2</span><span class="t">Ferramentas e infraestrutura</span><span class="rm-meta">2–5 anos · 10 seções</span></div><div class="rm-item vol"><span class="n">4.3</span><span class="t">IA no ciclo de desenvolvimento</span><span class="rm-meta">volátil · 1–2 anos</span></div></div></div>
+     <details class="rm-cam" open><summary><h4>Camada 2 · Geracional <span class="hv">15–20 anos</span></h4></summary><div class="rm-list"><div class="rm-item"><span class="n">2.1</span><span class="t">Paradigmas de programação</span><span class="rm-meta">7 seções</span></div><div class="rm-item"><span class="n">2.2</span><span class="t">Dados e persistência</span><span class="rm-meta">8 seções</span></div><div class="rm-item"><span class="n">2.3</span><span class="t">Sistemas distribuídos: fundamentos</span><span class="rm-meta">7 seções</span></div><div class="rm-item"><span class="n">2.4</span><span class="t">Linguagens de programação</span><span class="rm-meta">6 seções</span></div><div class="rm-item"><span class="n">2.5</span><span class="t">Requisitos, produto e IHC</span><span class="rm-meta">7 seções</span></div><div class="rm-item"><span class="n">2.6</span><span class="t">Comportamento e carreira</span><span class="rm-meta">7 seções</span></div></div></details><details class="rm-cam" open><summary><h4>Camada 3 · Cíclico <span class="hv">5–15 anos</span></h4></summary><div class="rm-list"><div class="rm-item"><span class="n">3.1</span><span class="t">Arquitetura de software</span><span class="rm-meta">10 seções</span></div><div class="rm-item"><span class="n">3.2</span><span class="t">Processos e metodologias</span><span class="rm-meta">erosão · 8 seções</span></div><div class="rm-item"><span class="n">3.3</span><span class="t">Qualidade, testes e débito técnico</span><span class="rm-meta">9 seções</span></div><div class="rm-item"><span class="n">3.4</span><span class="t">Ética, legislação e impacto</span><span class="rm-meta">7 seções</span></div><div class="rm-item"><span class="n">3.5</span><span class="t">O ensino formal</span><span class="rm-meta">7 seções</span></div><div class="rm-item"><span class="n">3.6</span><span class="t">Contexto brasileiro</span><span class="rm-meta">8 seções</span></div><div class="rm-item"><span class="n">3.7</span><span class="t">Economia da decisão</span><span class="rm-meta">6 seções</span></div></div></details><details class="rm-cam" open><summary><h4>Camada 4 · Sazonal <span class="hv">1–5 anos</span></h4></summary><div class="rm-list"><div class="rm-item"><span class="n">4.1</span><span class="t">Segurança e cadeia de suprimentos</span><span class="rm-meta">~4 anos · 8 seções</span></div><div class="rm-item"><span class="n">4.2</span><span class="t">Ferramentas e infraestrutura</span><span class="rm-meta">2–5 anos · 10 seções</span></div><div class="rm-item vol"><span class="n">4.3</span><span class="t">IA no ciclo de desenvolvimento</span><span class="rm-meta">volátil · 1–2 anos</span></div></div></details>
    </div>
   </article>
  </div>
@@ -709,5 +747,36 @@ Engineering</em>, 2015.</p>
     links.forEach(function(a){a.classList.toggle('at', a.getAttribute('href')==='#'+melhor.id);});
   },{rootMargin:'-8% 0px -72% 0px',threshold:[0,0.5,1]});
   alvos.forEach(function(t){io.observe(t);});
+})();
+</script>
+
+<script>
+(function(){
+  var raiz=document.documentElement, corpo=document.body;
+  function ler(k,p){ try{ return localStorage.getItem(k)||p; }catch(e){ return p; } }
+  function salvar(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
+  function marcar(attr,valor){
+    [].forEach.call(document.querySelectorAll('[data-'+attr+']'),function(b){
+      b.setAttribute('aria-pressed', b.getAttribute('data-'+attr)===valor ? 'true':'false');
+    });
+  }
+  function tema(v){
+    if(v==='auto'){ raiz.removeAttribute('data-theme'); } else { raiz.setAttribute('data-theme',v); }
+    marcar('tema',v); salvar('cv-tema',v);
+  }
+  function largura(v){ corpo.classList.toggle('largo', v==='largo'); marcar('larg',v); salvar('cv-larg',v); }
+  function fichas(v){ corpo.classList.toggle('sem-ficha', v==='off'); marcar('ficha',v); salvar('cv-ficha',v); }
+
+  tema(ler('cv-tema','auto'));
+  largura(ler('cv-larg','normal'));
+  fichas(ler('cv-ficha','on'));
+
+  document.addEventListener('click',function(e){
+    var b=e.target.closest && e.target.closest('button[data-tema],button[data-larg],button[data-ficha]');
+    if(!b)return;
+    if(b.hasAttribute('data-tema'))  tema(b.getAttribute('data-tema'));
+    if(b.hasAttribute('data-larg'))  largura(b.getAttribute('data-larg'));
+    if(b.hasAttribute('data-ficha')) fichas(b.getAttribute('data-ficha'));
+  });
 })();
 </script>

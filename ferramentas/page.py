@@ -54,6 +54,21 @@ h1.book em{font-style:italic;color:var(--accent)}
   padding:.32rem .6rem;border:1px solid var(--rule);border-radius:2px;color:var(--muted)}
 .chip.on{background:var(--accent-soft);border-color:transparent;color:var(--accent)}
 
+/* ---------- controles ---------- */
+.ctrls{display:flex;flex-wrap:wrap;gap:1.1rem;margin-top:1.6rem}
+.ctrl{display:flex;align-items:center;gap:.5rem}
+.ctrl>span{font-family:"IBM Plex Mono",monospace;font-size:.6rem;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--faint)}
+.seg{display:flex;border:1px solid var(--rule);border-radius:2px;overflow:hidden}
+.seg button{font-family:"IBM Plex Mono",monospace;font-size:.66rem;letter-spacing:.04em;
+  padding:.3rem .55rem;background:none;border:0;border-right:1px solid var(--rule);
+  color:var(--muted);cursor:pointer;line-height:1.4}
+.seg button:last-child{border-right:0}
+.seg button:hover{color:var(--ink)}
+.seg button[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent)}
+body.sem-ficha .ficha{display:none}
+body.largo{--maxw:45rem}
+
 /* ---------- coluna estratigráfica ---------- */
 .strata{border:1px solid var(--rule);background:var(--ground);padding:1.1rem}
 .strata h2{font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);
@@ -128,7 +143,12 @@ article em{font-style:italic}
 /* ---------- roteiro ---------- */
 .roadmap{border-top:2px solid var(--ink);margin-top:5rem;padding-top:1.6rem}
 .rm-cam{margin-top:2.2rem}
-.rm-cam>h4{display:flex;align-items:baseline;gap:.7rem;margin:0 0 .9rem;
+.rm-cam>summary{cursor:pointer;list-style:none;margin-bottom:.9rem}
+.rm-cam>summary::-webkit-details-marker{display:none}
+.rm-cam>summary::before{content:"–";color:var(--faint);margin-right:.5rem;
+  font-family:"IBM Plex Mono",monospace;font-size:.8rem}
+.rm-cam:not([open])>summary::before{content:"+"}
+.rm-cam h4{display:inline-flex;align-items:baseline;gap:.7rem;margin:0;
   font-family:"Newsreader",serif;font-size:1.25rem;font-weight:500}
 .rm-cam>h4 .hv{font-family:"IBM Plex Mono",monospace;font-size:.68rem;color:var(--faint);letter-spacing:.04em}
 .rm-list{display:grid;gap:0;border-top:1px solid var(--rule-soft)}
@@ -187,11 +207,12 @@ ROADMAP = [
 ]
 rm=""
 for num,nome,hv,itens in ROADMAP:
-    rm += f'<div class="rm-cam"><h4>Camada {num} · {nome} <span class="hv">{hv}</span></h4><div class="rm-list">'
+    rm += (f'<details class="rm-cam" open><summary><h4>Camada {num} · {nome} '
+           f'<span class="hv">{hv}</span></h4></summary><div class="rm-list">')
     for n,t,meta,vol in itens:
         rm += (f'<div class="rm-item{" vol" if vol else ""}"><span class="n">{n}</span>'
                f'<span class="t">{t}</span><span class="rm-meta">{meta}</span></div>')
-    rm += '</div></div>'
+    rm += '</div></details>'
 
 RAIL = """<nav class="rail" aria-label="Sumário">
 <div class="grp"><span>Camada 0 · A Lente</span>
@@ -214,6 +235,24 @@ HTML = HEAD + f"""
       <p class="dek">Um currículo organizado por uma pergunta só — em quanto tempo cada
       conhecimento envelhece. Vinte e um capítulos distribuídos em quatro camadas de
       velocidade, cada seção com data de revisão e gatilho declarados.</p>
+      <div class="ctrls">
+        <div class="ctrl"><span>Tema</span>
+          <div class="seg" role="group" aria-label="Tema">
+            <button type="button" data-tema="auto">Auto</button>
+            <button type="button" data-tema="light">Claro</button>
+            <button type="button" data-tema="dark">Escuro</button>
+          </div></div>
+        <div class="ctrl"><span>Coluna</span>
+          <div class="seg" role="group" aria-label="Largura da coluna">
+            <button type="button" data-larg="normal">Normal</button>
+            <button type="button" data-larg="largo">Larga</button>
+          </div></div>
+        <div class="ctrl"><span>Fichas</span>
+          <div class="seg" role="group" aria-label="Fichas de envelhecimento">
+            <button type="button" data-ficha="on">Mostrar</button>
+            <button type="button" data-ficha="off">Ocultar</button>
+          </div></div>
+      </div>
       <div class="status">
         <span class="chip on">Camadas 0 e 1 escritas</span>
         <span class="chip">~5.800 palavras</span>
@@ -264,6 +303,39 @@ HTML = HEAD + f"""
   é apenas exibição, para que renumerações futuras não quebrem links.</p>
 </footer>
 """
+CTRL = """
+<script>
+(function(){
+  var raiz=document.documentElement, corpo=document.body;
+  function ler(k,p){ try{ return localStorage.getItem(k)||p; }catch(e){ return p; } }
+  function salvar(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
+  function marcar(attr,valor){
+    [].forEach.call(document.querySelectorAll('[data-'+attr+']'),function(b){
+      b.setAttribute('aria-pressed', b.getAttribute('data-'+attr)===valor ? 'true':'false');
+    });
+  }
+  function tema(v){
+    if(v==='auto'){ raiz.removeAttribute('data-theme'); } else { raiz.setAttribute('data-theme',v); }
+    marcar('tema',v); salvar('cv-tema',v);
+  }
+  function largura(v){ corpo.classList.toggle('largo', v==='largo'); marcar('larg',v); salvar('cv-larg',v); }
+  function fichas(v){ corpo.classList.toggle('sem-ficha', v==='off'); marcar('ficha',v); salvar('cv-ficha',v); }
+
+  tema(ler('cv-tema','auto'));
+  largura(ler('cv-larg','normal'));
+  fichas(ler('cv-ficha','on'));
+
+  document.addEventListener('click',function(e){
+    var b=e.target.closest && e.target.closest('button[data-tema],button[data-larg],button[data-ficha]');
+    if(!b)return;
+    if(b.hasAttribute('data-tema'))  tema(b.getAttribute('data-tema'));
+    if(b.hasAttribute('data-larg'))  largura(b.getAttribute('data-larg'));
+    if(b.hasAttribute('data-ficha')) fichas(b.getAttribute('data-ficha'));
+  });
+})();
+</script>
+"""
+
 SPY = """
 <script>
 (function(){
@@ -282,6 +354,6 @@ SPY = """
 })();
 </script>
 """
-HTML += SPY
+HTML += SPY + CTRL
 open('curriculo-vivo.html','w').write(HTML)
 print(len(HTML))
