@@ -46,6 +46,8 @@ header.masthead{border-bottom:1px solid var(--rule);background:var(--surface)}
 @media(min-width:40rem){.mast-in{gap:2.5rem;padding:3.5rem 1.5rem 3rem}}
 @media(min-width:62rem){.mast-in{grid-template-columns:1.15fr .85fr;align-items:start;gap:4rem}}
 .eyebrow{font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-bottom:1.1rem}
+.eyebrow a{color:var(--accent);text-decoration:none}
+.eyebrow a:hover{text-decoration:underline}
 h1.book{font-size:clamp(2.4rem,5.5vw,3.9rem);line-height:1.02;letter-spacing:-.02em;font-weight:300}
 h1.book em{font-style:italic;color:var(--accent)}
 .dek{margin-top:1.4rem;color:var(--muted);font-size:1.05rem;max-width:34rem}
@@ -230,7 +232,7 @@ HTML = HEAD + f"""
 <header class="masthead">
   <div class="mast-in">
     <div>
-      <div class="eyebrow">Currículo vivo · volume um</div>
+      <div class="eyebrow">Currículo vivo · volume um &nbsp;·&nbsp; <a href="estudos.html">Plano de estudos &rarr;</a></div>
       <h1 class="book">Engenharia de Software:<br><em>Envelhecimento Macro</em></h1>
       <p class="dek">Um currículo organizado por uma pergunta só — em quanto tempo cada
       conhecimento envelhece. Vinte e um capítulos distribuídos em quatro camadas de
@@ -355,5 +357,6 @@ SPY = """
 </script>
 """
 HTML += SPY + CTRL
+open('_head.html','w').write(HEAD)
 open('curriculo-vivo.html','w').write(HTML)
 print(len(HTML))
