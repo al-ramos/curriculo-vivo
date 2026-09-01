@@ -81,6 +81,15 @@ details.sec>summary:hover::before{color:var(--accent)}
 details.sec>summary h4{margin:0;flex:1}
 details.sec:not([open])>summary{margin-bottom:.3rem}
 .sec-corpo{padding-left:1.4rem;border-left:1px solid var(--rule-soft)}
+.copiar{flex:none;align-self:center;font-family:"IBM Plex Mono",monospace;font-size:.6rem;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--faint);background:none;
+  border:1px solid transparent;border-radius:2px;padding:.15rem .4rem;cursor:pointer;
+  opacity:0;transition:opacity .15s}
+details.sec>summary:hover .copiar,details.sec>summary:focus-within .copiar,
+.copiar:focus-visible,.copiar.ok{opacity:1}
+.copiar:hover{color:var(--accent);border-color:var(--rule)}
+.copiar.ok{color:var(--accent);border-color:transparent}
+@media (hover:none){.copiar{opacity:1}}
 .marcar{flex:none;align-self:center;width:1.05rem;height:1.05rem;border-radius:50%;
   border:1.5px solid var(--rule);background:none;cursor:pointer;padding:0;position:relative}
 .marcar:hover{border-color:var(--accent)}
@@ -775,9 +784,74 @@ desatualizado na publicação, e o livro perde exatamente o argumento que veio d
     salvar('lidas', Array.from(lidas).join(','));
   }
 
+  // converte o corpo da seção em texto com marcação leve
+  function paraTexto(el){
+    var out = [];
+    [].forEach.call(el.children, function(n){
+      var t = n.tagName;
+      if(t === 'P' || t === 'BLOCKQUOTE'){
+        var s = '';
+        [].forEach.call(n.childNodes, function(c){
+          if(c.nodeType === 3) s += c.nodeValue;
+          else if(c.tagName === 'STRONG' || c.tagName === 'B') s += '**' + c.textContent + '**';
+          else if(c.tagName === 'EM' || c.tagName === 'I') s += '*' + c.textContent + '*';
+          else if(c.tagName === 'CODE') s += '`' + c.textContent + '`';
+          else s += c.textContent;
+        });
+        s = s.replace(/\s+/g, ' ').trim();
+        out.push(t === 'BLOCKQUOTE' ? '> ' + s : s);
+      } else if(t === 'UL' || t === 'OL'){
+        [].forEach.call(n.children, function(li){
+          out.push('- ' + li.textContent.replace(/\s+/g,' ').trim());
+        });
+      } else {
+        var s2 = n.textContent.replace(/\s+/g,' ').trim();
+        if(s2) out.push(s2);
+      }
+    });
+    return out.join('
+
+');
+  }
+
+  function copiar(txt, botao){
+    function feito(){
+      var antes = botao.textContent;
+      botao.textContent = 'copiado';
+      botao.classList.add('ok');
+      setTimeout(function(){ botao.textContent = antes; botao.classList.remove('ok'); }, 1600);
+    }
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(txt).then(feito, function(){ velho(txt, feito); });
+    } else { velho(txt, feito); }
+  }
+  function velho(txt, feito){
+    try{
+      var ta = document.createElement('textarea');
+      ta.value = txt; ta.setAttribute('readonly','');
+      ta.style.position = 'fixed'; ta.style.top = '-1000px';
+      document.body.appendChild(ta); ta.select();
+      document.execCommand('copy'); document.body.removeChild(ta);
+      feito();
+    }catch(e){}
+  }
+
   secs.forEach(function(d){
     var sum = d.querySelector('summary');
     if(!sum || sum.querySelector('.marcar')) return;
+
+    var c = document.createElement('button');
+    c.type = 'button'; c.className = 'copiar'; c.textContent = 'copiar';
+    c.title = 'Copiar o texto desta seção';
+    c.addEventListener('click', function(e){
+      e.preventDefault(); e.stopPropagation();
+      var corpo = d.querySelector('.sec-corpo');
+      var cab = '## ' + d.getAttribute('data-num') + ' ' + d.getAttribute('data-tit');
+      copiar(cab + '
+
+' + (corpo ? paraTexto(corpo) : ''), c);
+    });
+    sum.appendChild(c);
     var b = document.createElement('button');
     b.type = 'button';
     b.className = 'marcar';
