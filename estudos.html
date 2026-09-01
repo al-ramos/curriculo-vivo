@@ -90,16 +90,18 @@ details.sec:not([open])>summary{margin-bottom:.3rem}
   transform:rotate(45deg)}
 details.sec.lida>summary h4{color:var(--faint)}
 
-/* trilho com subtópicos */
-nav.rail a.cap{font-size:.86rem}
-nav.rail .sub{margin:.1rem 0 .55rem}
-nav.rail a.sub-a{font-size:.75rem;padding:.13rem 0 .13rem 1.4rem;color:var(--faint);line-height:1.35}
+/* trilho com subtópicos — só o capítulo ativo se abre */
+nav.rail a.cap{font-size:.84rem;line-height:1.35;padding:.26rem 0 .26rem .7rem}
+nav.rail a.cap.at{color:var(--ink);border-left-color:var(--accent);font-weight:600}
+nav.rail .sub{display:none;margin:.05rem 0 .45rem}
+nav.rail .sub.aberta{display:block}
+nav.rail a.sub-a{font-size:.76rem;padding:.16rem 0 .16rem 1.5rem;color:var(--faint);line-height:1.3}
 nav.rail a.sub-a:hover{color:var(--ink)}
 nav.rail a.sub-a.at{color:var(--accent);border-left-color:var(--accent)}
-nav.rail a.sub-a.lida{text-decoration:line-through;text-decoration-color:var(--rule)}
+nav.rail a.sub-a.lida{color:var(--rule);text-decoration:line-through;text-decoration-color:var(--rule)}
 
 /* progresso */
-.prog{margin-bottom:1.4rem;padding-bottom:1rem;border-bottom:1px solid var(--rule-soft)}
+.prog{margin-bottom:1.1rem;padding-bottom:.8rem;border-bottom:1px solid var(--rule-soft)}
 .prog .barra{height:3px;background:var(--rule-soft);border-radius:2px;overflow:hidden;margin-bottom:.4rem}
 .prog .barra i{display:block;height:100%;background:var(--accent);width:0;transition:width .3s}
 .prog .txt{font-family:"IBM Plex Mono",monospace;font-size:.62rem;color:var(--faint);letter-spacing:.06em}
@@ -136,7 +138,13 @@ details.toc a:first-of-type{margin-top:.7rem;border-top:1px solid var(--rule-sof
 @media(min-width:62rem){details.toc{display:none}}
 nav.rail{display:none}
 @media(min-width:62rem){
-  nav.rail{display:block;position:sticky;top:2rem;align-self:start;max-height:calc(100vh - 4rem);overflow:auto}
+  nav.rail{display:block;position:sticky;top:2.5rem;align-self:start;
+    max-height:calc(100vh - 5rem);overflow-y:auto;overscroll-behavior:contain;
+    scrollbar-width:thin;scrollbar-color:var(--rule) transparent;
+    padding-right:.4rem}
+  nav.rail::-webkit-scrollbar{width:6px}
+  nav.rail::-webkit-scrollbar-thumb{background:var(--rule);border-radius:3px}
+  nav.rail::-webkit-scrollbar-track{background:transparent}
 }
 nav.rail h2{font-family:"IBM Plex Mono",monospace;font-size:.66rem;letter-spacing:.14em;
   text-transform:uppercase;color:var(--faint);font-weight:400;margin-bottom:.7rem}
@@ -645,6 +653,15 @@ antecedência.</p></section>
     vistos.forEach(function(v,k){ if(v>r){r=v;melhor=k;} });
     if(!melhor||r<=0)return;
     links.forEach(function(a){a.classList.toggle('at', a.getAttribute('href')==='#'+melhor.id);});
+    var ativo = document.querySelector('nav.rail a.at');
+    var bloco = ativo && ativo.closest('.sub');
+    var cap = bloco ? bloco.getAttribute('data-cap') : (ativo ? ativo.getAttribute('href').slice(1) : null);
+    [].forEach.call(document.querySelectorAll('nav.rail .sub'), function(d){
+      d.classList.toggle('aberta', d.getAttribute('data-cap') === cap);
+    });
+    [].forEach.call(document.querySelectorAll('nav.rail a.cap'), function(a){
+      a.classList.toggle('at', a.getAttribute('href') === '#' + cap);
+    });
   },{rootMargin:'-8% 0px -72% 0px',threshold:[0,0.5,1]});
   alvos.forEach(function(t){io.observe(t);});
 })();
