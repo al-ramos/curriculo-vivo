@@ -1,9 +1,12 @@
 import markdown, re, json, html, os
 
-try:
-    RECUP = json.load(open('recuperacao.json'))
-except FileNotFoundError:
-    RECUP = {}
+# as perguntas de recuperação são conteúdo: se sumirem, o livro sai mudo.
+# Falha alto em vez de gerar uma versão silenciosamente incompleta.
+for _p in ('recuperacao.json', '../conteudo/recuperacao.json', 'conteudo/recuperacao.json'):
+    if os.path.exists(_p):
+        RECUP = json.load(open(_p, encoding='utf-8')); break
+else:
+    raise SystemExit('recuperacao.json não encontrado — as perguntas de recuperação sumiriam do livro.')
 
 md = open('livro/camadas-0-1.md').read()
 md = md.split('---',1)[1].strip()   # drop the two title lines

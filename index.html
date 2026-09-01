@@ -1,4 +1,5 @@
 <title>Currículo Vivo</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,500;1,6..72,300&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
@@ -174,6 +175,30 @@ aside.lado .rev b{display:block;font-family:"IBM Plex Mono",monospace;font-size:
   color:var(--faint);letter-spacing:.06em;font-weight:400}
 aside.lado .rev:hover{color:var(--ink)}
 aside.lado .vazio{font-size:.78rem;color:var(--faint);font-style:italic}
+
+/* sincronização */
+.sinc-fundo{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;
+  align-items:center;justify-content:center;padding:1.2rem;z-index:50}
+.sinc-fundo.aberto{display:flex}
+.sinc{background:var(--surface);border:1px solid var(--rule);border-radius:3px;
+  padding:1.4rem;max-width:22rem;width:100%;text-align:center}
+.sinc h3{font-family:"Newsreader",serif;font-size:1.25rem;font-weight:500;margin:0 0 .5rem}
+.sinc p{margin:0 0 1rem;font-size:.86rem;color:var(--muted);line-height:1.5}
+.sinc .qr{display:flex;justify-content:center;margin-bottom:1rem;min-height:12rem;
+  align-items:center;background:#fff;padding:.8rem;border-radius:2px}
+.sinc .qr img,.sinc .qr canvas{display:block}
+.sinc .liga{font-family:"IBM Plex Mono",monospace;font-size:.6rem;color:var(--faint);
+  word-break:break-all;text-align:left;max-height:4.5rem;overflow:auto;
+  border:1px solid var(--rule-soft);padding:.5rem;border-radius:2px;margin-bottom:.8rem}
+.sinc .acoes{display:flex;gap:.5rem}
+.sinc .acoes button{flex:1;font-family:"IBM Plex Mono",monospace;font-size:.64rem;
+  letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:none;
+  border:1px solid var(--rule);border-radius:2px;padding:.4rem;cursor:pointer}
+.sinc .acoes button:hover{color:var(--accent);border-color:var(--accent)}
+.aviso-sinc{background:var(--accent-soft);color:var(--accent);border:0;
+  font-family:"IBM Plex Mono",monospace;font-size:.66rem;letter-spacing:.06em;
+  padding:.5rem .8rem;border-radius:2px;margin-bottom:1.2rem;display:none}
+.aviso-sinc.aberto{display:block}
 
 /* progresso */
 .prog{margin-bottom:1.1rem;padding-bottom:.8rem;border-bottom:1px solid var(--rule-soft)}
@@ -1126,6 +1151,141 @@ desatualizado na publicação, e o livro perde exatamente o argumento que veio d
       if(b) b.click();
     }
   });
+
+  // ---- sincronização e backup ----
+  var DIA = 86400000;
+  function lerData(id){
+    try{ return parseInt(localStorage.getItem(chave+'-em-'+id) || '0', 10); }catch(e){ return 0; }
+  }
+  function montarSinc(){
+    var partes = [];
+    secs.forEach(function(d){
+      if(!lidas.has(d.id)) return;
+      var t = lerData(d.id);
+      var dias = t ? Math.floor(t / DIA) : 0;
+      partes.push(d.id.replace(/^s/, '') + ':' + dias.toString(36));
+    });
+    return partes.join('|');
+  }
+  function aplicarSinc(txt){
+    if(!txt) return 0;
+    var n = 0;
+    txt.split('|').forEach(function(p){
+      if(!p) return;
+      var kv = p.split(':');
+      var id = 's' + kv[0];
+      if(!document.getElementById(id)) return;
+      if(!lidas.has(id)) n++;
+      lidas.add(id);
+      var dias = parseInt(kv[1] || '0', 36);
+      if(dias){ try{ localStorage.setItem(chave+'-em-'+id, String(dias * DIA)); }catch(e){} }
+    });
+    if(n || txt) pintar();
+    return n;
+  }
+
+  // chegada por link de sincronização
+  (function(){
+    var m = /[#&]sinc=([^&]+)/.exec(location.hash || '');
+    if(!m) return;
+    var n = aplicarSinc(decodeURIComponent(m[1]));
+    history.replaceState(null, '', location.pathname + location.search);
+    var av = document.createElement('div');
+    av.className = 'aviso-sinc aberto';
+    av.textContent = 'Progresso recebido: ' + n + ' seção(ões) marcada(s) como lida(s).';
+    var art = document.querySelector('article');
+    if(art) art.insertBefore(av, art.firstChild);
+    setTimeout(function(){ av.classList.remove('aberto'); }, 8000);
+  })();
+
+  var fundo = document.getElementById('sinc-fundo');
+  function abrirQR(){
+    if(!fundo) return;
+    var payload = montarSinc();
+    var url = location.origin + location.pathname + '#sinc=' + encodeURIComponent(payload);
+    var caixa = document.getElementById('sinc-qr');
+    var liga = document.getElementById('sinc-liga');
+    if(liga) liga.textContent = url;
+    if(caixa){
+      caixa.innerHTML = '';
+      if(window.QRCode){
+        try{
+          new QRCode(caixa, {text: url, width: 190, height: 190,
+                             correctLevel: QRCode.CorrectLevel.L});
+        }catch(e){
+          caixa.textContent = 'Não foi possível desenhar o código — use o link abaixo.';
+        }
+      } else {
+        caixa.textContent = 'Leitor de código indisponível — use o link abaixo.';
+      }
+    }
+    fundo.classList.add('aberto');
+  }
+  var bQR = document.getElementById('ap-qr');
+  if(bQR) bQR.addEventListener('click', abrirQR);
+  var bFechar = document.getElementById('sinc-fechar');
+  if(bFechar) bFechar.addEventListener('click', function(){ fundo.classList.remove('aberto'); });
+  if(fundo) fundo.addEventListener('click', function(e){
+    if(e.target === fundo) fundo.classList.remove('aberto');
+  });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && fundo && fundo.classList.contains('aberto')) fundo.classList.remove('aberto');
+  });
+  var bCopiarLink = document.getElementById('sinc-copiar');
+  if(bCopiarLink) bCopiarLink.addEventListener('click', function(){
+    var liga = document.getElementById('sinc-liga');
+    copiar(liga ? liga.textContent : '', bCopiarLink);
+  });
+
+  // backup completo em arquivo
+  var bBackup = document.getElementById('ap-backup');
+  if(bBackup) bBackup.addEventListener('click', function(){
+    var dados = {versao: 1, pagina: chave, gerado: new Date().toISOString(),
+                 lidas: [], datas: {}, notas: {}};
+    secs.forEach(function(d){
+      if(lidas.has(d.id)) dados.lidas.push(d.id);
+      var t = lerData(d.id); if(t) dados.datas[d.id] = t;
+      var n = ''; try{ n = localStorage.getItem(chave+'-nota-'+d.id) || ''; }catch(e){}
+      if(n.trim()) dados.notas[d.id] = n;
+    });
+    var blob = new Blob([JSON.stringify(dados, null, 2)], {type: 'application/json'});
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'curriculo-vivo-' + chave + '-' + new Date().toISOString().slice(0,10) + '.json';
+    document.body.appendChild(a); a.click();
+    setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 500);
+  });
+
+  var arq = document.getElementById('sinc-arquivo');
+  var bRest = document.getElementById('ap-restaurar');
+  if(bRest && arq){
+    bRest.addEventListener('click', function(){ arq.click(); });
+    arq.addEventListener('change', function(){
+      var f = arq.files && arq.files[0];
+      if(!f) return;
+      var fr = new FileReader();
+      fr.onload = function(){
+        try{
+          var dados = JSON.parse(fr.result);
+          (dados.lidas || []).forEach(function(id){ if(document.getElementById(id)) lidas.add(id); });
+          Object.keys(dados.datas || {}).forEach(function(id){
+            try{ localStorage.setItem(chave+'-em-'+id, String(dados.datas[id])); }catch(e){}
+          });
+          Object.keys(dados.notas || {}).forEach(function(id){
+            try{ localStorage.setItem(chave+'-nota-'+id, dados.notas[id]); }catch(e){}
+          });
+          pintar();
+          bRest.textContent = 'Backup restaurado — recarregando';
+          setTimeout(function(){ location.reload(); }, 900);
+        }catch(e){
+          bRest.textContent = 'Arquivo inválido';
+          setTimeout(function(){ bRest.textContent = 'Restaurar backup'; }, 2000);
+        }
+      };
+      fr.readAsText(f);
+      arq.value = '';
+    });
+  }
 
   // marcador de página: guarda a última seção vista e oferece o retorno
   var ultima = ler('ultima','');
