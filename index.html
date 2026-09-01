@@ -22,10 +22,16 @@
   --s1:#9FC9B5; --s2:#79AE95; --s3:#54836E; --s4:#3A5B4C; --alert:#C79B4E;
 }
 *{box-sizing:border-box}
-body{background:var(--ground);color:var(--ink);
+html{-webkit-text-size-adjust:100%}
+body{background:var(--ground);color:var(--ink);margin:0;
   font-family:"Source Serif 4",Georgia,"Times New Roman",serif;
-  font-size:17px;line-height:1.62;-webkit-font-smoothing:antialiased}
-.wrap{max-width:76rem;margin:0 auto;padding:0 1.5rem}
+  font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+@media(min-width:40rem){body{font-size:17px;line-height:1.62}}
+img,svg{max-width:100%;height:auto}
+article p,article li,article h4{overflow-wrap:break-word}
+article table{width:100%;border-collapse:collapse}
+.wrap{max-width:76rem;margin:0 auto;padding:0 1.1rem}
+@media(min-width:40rem){.wrap{padding:0 1.5rem}}
 h1,h2,h3,h4{text-wrap:balance;font-family:"Newsreader",Georgia,serif;font-weight:500;margin:0}
 code,.mono,.ficha,.snum,.num,.cnum,.eyebrow,.strata,.rm-meta{font-family:"IBM Plex Mono",ui-monospace,monospace}
 a{color:var(--accent)}
@@ -33,7 +39,8 @@ a{color:var(--accent)}
 
 /* ---------- cabeçalho ---------- */
 header.masthead{border-bottom:1px solid var(--rule);background:var(--surface)}
-.mast-in{display:grid;grid-template-columns:1fr;gap:2.5rem;padding:3.5rem 1.5rem 3rem;max-width:76rem;margin:0 auto}
+.mast-in{display:grid;grid-template-columns:1fr;gap:2rem;padding:2.4rem 1.1rem 2.2rem;max-width:76rem;margin:0 auto}
+@media(min-width:40rem){.mast-in{gap:2.5rem;padding:3.5rem 1.5rem 3rem}}
 @media(min-width:62rem){.mast-in{grid-template-columns:1.15fr .85fr;align-items:start;gap:4rem}}
 .eyebrow{font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-bottom:1.1rem}
 h1.book{font-size:clamp(2.4rem,5.5vw,3.9rem);line-height:1.02;letter-spacing:-.02em;font-weight:300}
@@ -48,19 +55,27 @@ h1.book em{font-style:italic;color:var(--accent)}
 .strata{border:1px solid var(--rule);background:var(--ground);padding:1.1rem}
 .strata h2{font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);
   font-family:"IBM Plex Mono",monospace;font-weight:400;margin-bottom:.9rem}
-.band{display:grid;grid-template-columns:5.5rem 1fr auto;align-items:center;gap:.75rem;padding:.3rem 0}
-.band .lab{font-size:.72rem;color:var(--ink)}
-.band .bar{height:100%;min-height:1.5rem;border-radius:1px;position:relative}
-.band .hv{font-size:.66rem;color:var(--faint);white-space:nowrap}
-.band .bar span{position:absolute;right:.45rem;top:50%;transform:translateY(-50%);
-  font-size:.64rem;color:var(--ground);letter-spacing:.04em}
+.band{display:grid;grid-template-columns:4.6rem minmax(0,1fr) auto;align-items:center;gap:.6rem;padding:.3rem 0}
+@media(min-width:40rem){.band{grid-template-columns:5.5rem minmax(0,1fr) auto;gap:.75rem}}
+.band .lab{font-size:.72rem;color:var(--ink);line-height:1.25}
+.band .lab em{display:block;font-style:normal;font-size:.62rem;color:var(--faint)}
+.band .bar{height:100%;min-height:1.5rem;border-radius:1px}
+.band .hv{font-size:.62rem;color:var(--faint);white-space:nowrap}
+@media(min-width:40rem){.band .hv{font-size:.66rem}}
 .strata .note{margin-top:.9rem;padding-top:.8rem;border-top:1px solid var(--rule-soft);
   font-family:"Source Serif 4",serif;font-size:.85rem;color:var(--muted);line-height:1.5}
 .strata .note b{color:var(--ink);font-weight:600}
 
 /* ---------- corpo ---------- */
-.layout{display:grid;grid-template-columns:1fr;gap:3rem;padding:3.5rem 0 5rem}
+.layout{display:grid;grid-template-columns:minmax(0,1fr);gap:2rem;padding:2.4rem 0 3.5rem}
+@media(min-width:40rem){.layout{padding:3.5rem 0 5rem;gap:3rem}}
 @media(min-width:62rem){.layout{grid-template-columns:13rem minmax(0,var(--maxw)) 1fr;gap:3.5rem}}
+details.toc{border:1px solid var(--rule);background:var(--surface);border-radius:2px;padding:.7rem .9rem;margin-bottom:.5rem}
+details.toc summary{cursor:pointer;font-family:"IBM Plex Mono",monospace;font-size:.7rem;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+details.toc a{display:block;color:var(--muted);text-decoration:none;font-size:.9rem;padding:.28rem 0}
+details.toc a:first-of-type{margin-top:.7rem;border-top:1px solid var(--rule-soft);padding-top:.7rem}
+@media(min-width:62rem){details.toc{display:none}}
 nav.rail{display:none}
 @media(min-width:62rem){
   nav.rail{display:block;position:sticky;top:2rem;align-self:start;max-height:calc(100vh - 4rem);overflow:auto}
@@ -75,17 +90,17 @@ nav.rail .grp>span{font-family:"IBM Plex Mono",monospace;font-size:.66rem;color:
   letter-spacing:.08em;display:block;margin-bottom:.3rem}
 
 article{min-width:0}
-h2.camada{margin:4.5rem 0 .4rem;display:flex;flex-direction:column;gap:.15rem;
+h2.camada{margin:3.4rem 0 .4rem;display:flex;flex-direction:column;gap:.15rem;
   padding-top:1.6rem;border-top:2px solid var(--ink)}
 h2.camada:first-child{margin-top:0}
 .cnum{font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
-.cname{font-size:2rem;font-weight:300;letter-spacing:-.01em}
+.cname{font-size:clamp(1.6rem,1.1rem + 2.2vw,2rem);font-weight:300;letter-spacing:-.01em}
 h2.camada + p em{color:var(--muted);font-size:.92rem;font-style:italic}
 
 section.chapter{margin-top:3rem}
 section.chapter h3{display:flex;gap:.85rem;align-items:baseline;margin-bottom:.9rem}
 section.chapter h3 .num{font-size:.82rem;color:var(--accent);flex:none;padding-top:.2rem}
-section.chapter h3 .ttl{font-size:1.55rem;font-weight:500;letter-spacing:-.01em;line-height:1.2}
+section.chapter h3 .ttl{font-size:clamp(1.28rem,1rem + 1.4vw,1.55rem);font-weight:500;letter-spacing:-.01em;line-height:1.2}
 h4{margin:2.4rem 0 .7rem;font-size:1.08rem;font-weight:600;color:var(--ink);
   font-family:"Source Serif 4",serif}
 h4 .snum{color:var(--faint);font-size:.78rem;margin-right:.45rem;font-weight:400}
@@ -93,10 +108,11 @@ article p{margin:0 0 1.15rem}
 article p strong{font-weight:600}
 article em{font-style:italic}
 
-.ficha{display:flex;flex-wrap:wrap;gap:0;margin:0 0 1.9rem;border:1px solid var(--rule);
-  background:var(--surface);border-radius:2px;overflow:hidden}
-.ficha>div{padding:.55rem .85rem;border-right:1px solid var(--rule-soft);flex:1 1 auto}
-.ficha>div:last-child{border-right:0}
+.ficha{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;margin:0 0 1.9rem;
+  border:1px solid var(--rule);background:var(--rule-soft);border-radius:2px;overflow:hidden}
+@media(min-width:34rem){.ficha{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.ficha>div{padding:.55rem .8rem;background:var(--surface);min-width:0}
+.ficha dd{overflow-wrap:break-word}
 .ficha dt{font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin-bottom:.18rem}
 .ficha dd{margin:0;font-size:.76rem;color:var(--ink)}
 .ficha code{font-size:.74rem;color:var(--accent)}
@@ -108,15 +124,21 @@ article em{font-style:italic}
   font-family:"Newsreader",serif;font-size:1.25rem;font-weight:500}
 .rm-cam>h4 .hv{font-family:"IBM Plex Mono",monospace;font-size:.68rem;color:var(--faint);letter-spacing:.04em}
 .rm-list{display:grid;gap:0;border-top:1px solid var(--rule-soft)}
-.rm-item{display:grid;grid-template-columns:2.6rem 1fr auto;gap:.8rem;align-items:baseline;
+.rm-item{display:grid;grid-template-columns:2.4rem minmax(0,1fr);gap:.2rem .7rem;align-items:baseline;
   padding:.6rem .2rem;border-bottom:1px solid var(--rule-soft)}
+.rm-item .rm-meta{grid-column:2}
+@media(min-width:34rem){
+  .rm-item{grid-template-columns:2.6rem minmax(0,1fr) auto;gap:.8rem}
+  .rm-item .rm-meta{grid-column:auto}
+}
 .rm-item .n{font-family:"IBM Plex Mono",monospace;font-size:.76rem;color:var(--accent)}
 .rm-item .t{font-size:.98rem}
 .rm-meta{font-size:.66rem;color:var(--faint);letter-spacing:.04em;white-space:nowrap}
 .rm-item.vol .n,.rm-item.vol .rm-meta{color:var(--alert)}
 
 footer{border-top:1px solid var(--rule);color:var(--muted);font-size:.85rem;
-  padding:2.5rem 1.5rem 4rem;max-width:76rem;margin:0 auto}
+  padding:2.2rem 1.1rem 3.5rem;max-width:76rem;margin:0 auto}
+@media(min-width:40rem){footer{padding:2.5rem 1.5rem 4rem}}
 footer p{margin:0 0 .6rem;max-width:44rem}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
@@ -159,6 +181,14 @@ footer p{margin:0 0 .6rem;max-width:44rem}
 <a href="#roteiro">Camadas 2 a 4</a></div>
 </nav>
   <article>
+   <details class="toc"><summary>Sumário</summary>
+     <a href="#c0">0 · Como ler este livro</a>
+     <a href="#c1-1">1.1 · Fundação conceitual</a>
+     <a href="#c1-2">1.2 · Os invariantes nomeados</a>
+     <a href="#c1-3">1.3 · O teste de perenidade</a>
+     <a href="#cFontes">Fontes</a>
+     <a href="#roteiro">Camadas 2 a 4 · a escrever</a>
+   </details>
    <h2 class="camada" id="camada-0"><span class="cnum">Camada 0</span><span class="cname">A Lente</span></h2>
 <p><em>Sem meia-vida: é o instrumento de leitura das camadas 1 a 4</em></p>
 <section class="chapter"><h3 id="c0"><span class="num">0</span><span class="ttl">Como ler este livro</span></h3><dl class="ficha"><div><dt>meia-vida</dt><dd>sem meia-vida</dd></div><div><dt>estado</dt><dd>instrumento</dd></div><div><dt>etiquetas</dt><dd>meta</dd></div><div><dt>slug</dt><dd><code>/como-ler</code></dd></div></dl>
