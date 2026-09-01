@@ -1,3 +1,4 @@
+import re
 body = open('_body.html').read()
 
 HEAD = """<title>Currículo Vivo</title>
@@ -70,6 +71,42 @@ h1.book em{font-style:italic;color:var(--accent)}
 .seg button[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent)}
 body.sem-ficha .ficha{display:none}
 body.largo{--maxw:45rem}
+
+/* seções recolhíveis */
+details.sec{margin:0}
+details.sec>summary{list-style:none;cursor:pointer;display:flex;align-items:baseline;gap:.5rem;
+  margin:2.7rem 0 .7rem}
+details.sec>summary::-webkit-details-marker{display:none}
+details.sec>summary::before{content:"−";font-family:"IBM Plex Mono",monospace;font-size:.8rem;
+  color:var(--faint);flex:none;width:.9rem;line-height:1.7}
+details.sec:not([open])>summary::before{content:"+"}
+details.sec>summary:hover::before{color:var(--accent)}
+details.sec>summary h4{margin:0;flex:1}
+details.sec:not([open])>summary{margin-bottom:.3rem}
+.sec-corpo{padding-left:1.4rem;border-left:1px solid var(--rule-soft)}
+.marcar{flex:none;align-self:center;width:1.05rem;height:1.05rem;border-radius:50%;
+  border:1.5px solid var(--rule);background:none;cursor:pointer;padding:0;position:relative}
+.marcar:hover{border-color:var(--accent)}
+.marcar[aria-pressed="true"]{background:var(--accent);border-color:var(--accent)}
+.marcar[aria-pressed="true"]::after{content:"";position:absolute;left:.28rem;top:.12rem;
+  width:.2rem;height:.42rem;border:solid var(--ground);border-width:0 1.5px 1.5px 0;
+  transform:rotate(45deg)}
+details.sec.lida>summary h4{color:var(--faint)}
+
+/* trilho com subtópicos */
+nav.rail a.cap{font-size:.86rem}
+nav.rail .sub{margin:.1rem 0 .55rem}
+nav.rail a.sub-a{font-size:.75rem;padding:.13rem 0 .13rem 1.4rem;color:var(--faint);line-height:1.35}
+nav.rail a.sub-a:hover{color:var(--ink)}
+nav.rail a.sub-a.at{color:var(--accent);border-left-color:var(--accent)}
+nav.rail a.sub-a.lida{text-decoration:line-through;text-decoration-color:var(--rule)}
+
+/* progresso */
+.prog{margin-bottom:1.4rem;padding-bottom:1rem;border-bottom:1px solid var(--rule-soft)}
+.prog .barra{height:3px;background:var(--rule-soft);border-radius:2px;overflow:hidden;margin-bottom:.4rem}
+.prog .barra i{display:block;height:100%;background:var(--accent);width:0;transition:width .3s}
+.prog .txt{font-family:"IBM Plex Mono",monospace;font-size:.62rem;color:var(--faint);letter-spacing:.06em}
+.chip.voltar{border-color:var(--accent);color:var(--accent);text-decoration:none;cursor:pointer}
 
 /* ---------- coluna estratigráfica ---------- */
 .strata{border:1px solid var(--rule);background:var(--ground);padding:1.1rem}
@@ -216,17 +253,35 @@ for num,nome,hv,itens in ROADMAP:
                f'<span class="t">{t}</span><span class="rm-meta">{meta}</span></div>')
     rm += '</div></details>'
 
-RAIL = """<nav class="rail" aria-label="Sumário">
-<div class="grp"><span>Camada 0 · A Lente</span>
-<a href="#c0">0 Como ler este livro</a></div>
-<div class="grp"><span>Camada 1 · Permanente</span>
-<a href="#c1-1">1.1 Fundação conceitual</a>
-<a href="#c1-2">1.2 Os invariantes nomeados</a>
-<a href="#c1-3">1.3 O teste de perenidade</a>
-<a href="#cFontes">Fontes</a></div>
-<div class="grp"><span>A escrever</span>
-<a href="#roteiro">Camadas 2 a 4</a></div>
-</nav>"""
+marcas = []
+for mm in re.finditer(r'<h2 class="camada" id="([^"]+)"><span class="cnum">([^<]*)</span><span class="cname">([^<]*)</span>', body):
+    marcas.append((mm.start(), 0, mm.group(1), mm.group(2), mm.group(3)))
+for mm in re.finditer(r'<h3 id="([^"]+)"><span class="num">([^<]*)</span><span class="ttl">([^<]*)</span>', body):
+    marcas.append((mm.start(), 1, mm.group(1), mm.group(2), mm.group(3)))
+for mm in re.finditer(r'<details class="sec" open id="([^"]+)" data-num="([^"]*)" data-tit="([^"]*)"', body):
+    marcas.append((mm.start(), 2, mm.group(1), mm.group(2), mm.group(3)))
+marcas.sort()
+
+partes = ['<nav class="rail" aria-label="Sum\u00e1rio">',
+          '<div class="prog"><div class="barra"><i></i></div><div class="txt">0 de 0 se\u00e7\u00f5es</div></div>']
+em_grupo = em_sub = False
+for _, tipo, idd, a, b in marcas:
+    if tipo == 0:
+        if em_sub: partes.append('</div>'); em_sub = False
+        if em_grupo: partes.append('</div>')
+        partes.append('<div class="grp"><span>' + a + ' \u00b7 ' + b + '</span>')
+        em_grupo = True
+    elif tipo == 1:
+        if em_sub: partes.append('</div>'); em_sub = False
+        partes.append('<a class="cap" href="#' + idd + '">' + a + ' ' + b + '</a>')
+        partes.append('<div class="sub">'); em_sub = True
+    else:
+        partes.append('<a class="sub-a" href="#' + idd + '">' + a + ' ' + b + '</a>')
+if em_sub: partes.append('</div>')
+if em_grupo: partes.append('</div>')
+partes.append('<div class="grp"><span>A escrever</span>'
+              '<a class="cap" href="#roteiro">Camadas 2 a 4</a></div></nav>')
+RAIL = ''.join(partes)
 
 HTML = HEAD + f"""
 <header class="masthead">
@@ -248,6 +303,11 @@ HTML = HEAD + f"""
           <div class="seg" role="group" aria-label="Largura da coluna">
             <button type="button" data-larg="normal">Normal</button>
             <button type="button" data-larg="largo">Larga</button>
+          </div></div>
+        <div class="ctrl"><span>Seções</span>
+          <div class="seg" role="group" aria-label="Seções do texto">
+            <button type="button" data-secs="abertas">Abertas</button>
+            <button type="button" data-secs="fechadas">Recolhidas</button>
           </div></div>
         <div class="ctrl"><span>Fichas</span>
           <div class="seg" role="group" aria-label="Fichas de envelhecimento">
@@ -356,7 +416,99 @@ SPY = """
 })();
 </script>
 """
-HTML += SPY + CTRL
+PROG = """
+<script>
+(function(){
+  var chave = 'cv-' + (location.pathname.split('/').pop() || 'index');
+  function ler(k,p){ try{ var v=localStorage.getItem(chave+'-'+k); return v===null?p:v; }catch(e){ return p; } }
+  function salvar(k,v){ try{ localStorage.setItem(chave+'-'+k, v); }catch(e){} }
+
+  var secs = [].slice.call(document.querySelectorAll('details.sec'));
+  if(!secs.length) return;
+  var lidas = new Set((ler('lidas','')||'').split(',').filter(Boolean));
+  var barra = document.querySelector('.prog .barra i');
+  var txt = document.querySelector('.prog .txt');
+
+  function pintar(){
+    secs.forEach(function(d){
+      var m = d.querySelector('.marcar');
+      var on = lidas.has(d.id);
+      d.classList.toggle('lida', on);
+      if(m) m.setAttribute('aria-pressed', on ? 'true' : 'false');
+      var link = document.querySelector('nav.rail a[href="#'+d.id+'"]');
+      if(link) link.classList.toggle('lida', on);
+    });
+    var n = 0;
+    secs.forEach(function(d){ if(lidas.has(d.id)) n++; });
+    if(barra) barra.style.width = (n / secs.length * 100) + '%';
+    if(txt) txt.textContent = n + ' de ' + secs.length + ' seções lidas';
+    salvar('lidas', Array.from(lidas).join(','));
+  }
+
+  secs.forEach(function(d){
+    var sum = d.querySelector('summary');
+    if(!sum || sum.querySelector('.marcar')) return;
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'marcar';
+    b.setAttribute('aria-pressed','false');
+    b.title = 'Marcar como lida';
+    b.setAttribute('aria-label','Marcar seção como lida');
+    b.addEventListener('click', function(e){
+      e.preventDefault(); e.stopPropagation();
+      if(lidas.has(d.id)) lidas.delete(d.id); else lidas.add(d.id);
+      pintar();
+    });
+    sum.appendChild(b);
+  });
+  pintar();
+
+  // recolher / expandir tudo
+  function secoes(v){
+    secs.forEach(function(d){ d.open = (v !== 'fechadas'); });
+    [].forEach.call(document.querySelectorAll('[data-secs]'), function(b){
+      b.setAttribute('aria-pressed', b.getAttribute('data-secs') === v ? 'true' : 'false');
+    });
+    salvar('secs', v);
+  }
+  secoes(ler('secs','abertas'));
+  document.addEventListener('click', function(e){
+    var b = e.target.closest && e.target.closest('button[data-secs]');
+    if(b) secoes(b.getAttribute('data-secs'));
+  });
+
+  // marcador de página: guarda a última seção vista e oferece o retorno
+  var ultima = ler('ultima','');
+  var t = null;
+  function anotar(){
+    var alvo = null;
+    for(var i=0;i<secs.length;i++){
+      var r = secs[i].getBoundingClientRect();
+      if(r.top <= 120) alvo = secs[i]; else break;
+    }
+    if(alvo && alvo.id !== ultima){ ultima = alvo.id; salvar('ultima', ultima); }
+  }
+  window.addEventListener('scroll', function(){
+    if(t) return;
+    t = setTimeout(function(){ t = null; anotar(); }, 400);
+  }, {passive:true});
+
+  if(ultima && !location.hash){
+    var d = document.getElementById(ultima);
+    if(d){
+      var rot = d.getAttribute('data-num') + ' ' + d.getAttribute('data-tit');
+      var a = document.createElement('a');
+      a.className = 'chip voltar';
+      a.href = '#' + ultima;
+      a.textContent = '↩ Retomar em ' + rot;
+      var st = document.querySelector('.status');
+      if(st) st.insertBefore(a, st.firstChild);
+    }
+  }
+})();
+</script>
+"""
+HTML += SPY + CTRL + PROG
 open('_head.html','w').write(HEAD)
 open('curriculo-vivo.html','w').write(HTML)
 print(len(HTML))

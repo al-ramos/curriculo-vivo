@@ -42,8 +42,22 @@ body = re.sub(r'<h2>(.*?)</h2>', h2, body)
 
 def h3(m):
     t = m.group(1); parts = t.split(' ',1)
-    return f'<h4><span class="snum">{parts[0]}</span> {parts[1]}</h4>'
+    num = parts[0]; tit = parts[1] if len(parts)>1 else ''
+    idd = 's' + num.replace('.','-')
+    return (f'@@SEC@@<details class="sec" open id="{idd}" data-num="{num}" data-tit="{tit}">'
+            f'<summary><h4><span class="snum">{num}</span> {tit}</h4></summary><div class="sec-corpo">')
 body = re.sub(r'<h3>(.*?)</h3>', h3, body)
+
+# fechar cada details antes do próximo marcador de seção/capítulo/camada e no fim
+partes = body.split('@@SEC@@')
+saida = [partes[0]]
+for p in partes[1:]:
+    corte = len(p)
+    for marca in ('<section class="chapter">', '<h2 class="camada"', '</section>'):
+        k = p.find(marca)
+        if k != -1: corte = min(corte, k)
+    saida.append(p[:corte] + '</div></details>' + p[corte:])
+body = ''.join(saida)
 
 body = body.replace('<hr />','</section>')
 body += '</section>'
