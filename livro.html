@@ -151,6 +151,30 @@ body.so-nao-lidas details.sec.lida{display:none}
 .nota .dica{font-family:"IBM Plex Mono",monospace;font-size:.58rem;color:var(--faint);
   letter-spacing:.06em;margin-top:.25rem}
 
+/* recuperação */
+.recup{margin:1.8rem 0 0;padding:.9rem 1rem;border:1px solid var(--rule);
+  border-left:2px solid var(--accent);border-radius:2px;background:var(--surface)}
+.recup h5{margin:0 0 .5rem;font-family:"IBM Plex Mono",monospace;font-size:.6rem;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:400}
+.recup .perg{margin:0 0 .7rem;font-size:.98rem;color:var(--ink)}
+.recup details.resp>summary{list-style:none;cursor:pointer;font-family:"IBM Plex Mono",monospace;
+  font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+  border:1px solid var(--rule);border-radius:2px;padding:.22rem .5rem;display:inline-block}
+.recup details.resp>summary::-webkit-details-marker{display:none}
+.recup details.resp>summary:hover{color:var(--accent);border-color:var(--accent)}
+.recup details.resp[open]>summary{color:var(--faint);border-color:transparent;padding-left:0}
+.recup details.resp p{margin:.7rem 0 0;font-size:.94rem;color:var(--muted);line-height:1.6}
+body.sem-recup .recup{display:none}
+
+/* fila de revisão */
+aside.lado .rev{display:block;font-size:.78rem;color:var(--muted);text-decoration:none;
+  padding:.28rem 0;border-bottom:1px solid var(--rule-soft)}
+aside.lado .rev:last-child{border-bottom:0}
+aside.lado .rev b{display:block;font-family:"IBM Plex Mono",monospace;font-size:.6rem;
+  color:var(--faint);letter-spacing:.06em;font-weight:400}
+aside.lado .rev:hover{color:var(--ink)}
+aside.lado .vazio{font-size:.78rem;color:var(--faint);font-style:italic}
+
 /* progresso */
 .prog{margin-bottom:1.1rem;padding-bottom:.8rem;border-bottom:1px solid var(--rule-soft)}
 .prog .barra{height:3px;background:var(--rule-soft);border-radius:2px;overflow:hidden;margin-bottom:.4rem}
@@ -293,6 +317,11 @@ footer p{margin:0 0 .6rem;max-width:44rem}
             <button type="button" data-secs="abertas">Abertas</button>
             <button type="button" data-secs="fechadas">Recolhidas</button>
           </div></div>
+        <div class="ctrl"><span>Recuperação</span>
+          <div class="seg" role="group" aria-label="Perguntas de recuperação">
+            <button type="button" data-recup="on">Mostrar</button>
+            <button type="button" data-recup="off">Ocultar</button>
+          </div></div>
         <div class="ctrl"><span>Fichas</span>
           <div class="seg" role="group" aria-label="Fichas de envelhecimento">
             <button type="button" data-ficha="on">Mostrar</button>
@@ -371,7 +400,7 @@ arqueologia acadêmica e voltou por absorção — não como paradigma dominante
 conjunto de ideias incorporadas por linguagens imperativas. Monolitos foram declarados
 mortos e voltaram como &ldquo;monolito modular&rdquo;. A oscilação é frequente o bastante para merecer
 nome próprio, e ela reaparece em 3.1.10 como o pêndulo entre centralizar e distribuir.</p>
-</div></details><details class="sec" open id="s0-2" data-num="0.2" data-tit="As quatro camadas"><summary><h4><span class="snum">0.2</span> As quatro camadas</h4></summary><div class="sec-corpo">
+<div class="recup"><h5>Recuperação</h5><p class="perg">Nomeie as quatro fases do arco e diga em qual delas está a maior parte do que as universidades brasileiras ensinam hoje.</p><details class="resp"><summary>Ver resposta</summary><p>Emergência, Consolidação, Erosão e Arqueologia. A maior parte do ensino brasileiro está na Erosão — o consenso já rachou, mas o vocabulário sobrevive à prática.</p></details></div></div></details><details class="sec" open id="s0-2" data-num="0.2" data-tit="As quatro camadas"><summary><h4><span class="snum">0.2</span> As quatro camadas</h4></summary><div class="sec-corpo">
 <p>Se todo conhecimento envelhece, a pergunta útil não é <em>se</em>, mas <em>em quanto tempo</em>. Este
 livro é organizado por essa resposta, e por nenhuma outra. Não há bloco de conteúdo
 &ldquo;técnico&rdquo; separado de um bloco &ldquo;humano&rdquo;: há quatro camadas de velocidade, e o assunto de
@@ -409,7 +438,7 @@ oitenta e cinco por cento envelhecem devagar o bastante para que aprendê-los be
 investimento, e não uma corrida.</p>
 <p>A meia-vida não é um número decorativo. Ela é o que define a frequência de revisão de cada
 capítulo, registrada na ficha da seção seguinte.</p>
-</div></details><details class="sec" open id="s0-3" data-num="0.3" data-tit="A ficha de envelhecimento"><summary><h4><span class="snum">0.3</span> A ficha de envelhecimento</h4></summary><div class="sec-corpo">
+<div class="recup"><h5>Recuperação</h5><p class="perg">Por que o livro classifica por velocidade e não por assunto? O que essa escolha custa?</p><details class="resp"><summary>Ver resposta</summary><p>Porque classificar por assunto obriga a decidir se ética é um tema humano ou contextual, e a resposta honesta é que é os dois. Classificar por velocidade obriga a uma única decisão por capítulo — decisão que o livro teria de defender de qualquer forma. O custo é abrir mão do conforto da ementa tradicional.</p></details></div></div></details><details class="sec" open id="s0-3" data-num="0.3" data-tit="A ficha de envelhecimento"><summary><h4><span class="snum">0.3</span> A ficha de envelhecimento</h4></summary><div class="sec-corpo">
 <p>Um livro que afirma que o conhecimento envelhece, mas não diz quando cada parte dele
 envelhece, é um livro que se refuta na prática. Por isso cada seção deste texto carrega
 uma ficha, e a ficha não é prosa: são campos.</p>
@@ -430,7 +459,7 @@ mundo para que ele estivesse errado.</p>
 editorial e viram schema validado na compilação: capítulo sem data de revisão não compila,
 e capítulo com data vencida gera uma pendência automática. A promessa de &ldquo;currículo vivo&rdquo;
 passa a ter um mecanismo, e não apenas uma intenção.</p>
-</div></details><details class="sec" open id="s0-4" data-num="0.4" data-tit="A armadilha do currículo estático"><summary><h4><span class="snum">0.4</span> A armadilha do currículo estático</h4></summary><div class="sec-corpo">
+<div class="recup"><h5>Recuperação</h5><p class="perg">Qual é o campo mais incomum da ficha de envelhecimento, e por que ele importa mais do que a data de revisão?</p><details class="resp"><summary>Ver resposta</summary><p>O campo de gatilhos. Data de revisão sozinha produz revisão burocrática — chega o prazo, alguém relê e não muda nada. Gatilho produz revisão quando há motivo: um capítulo bem escrito sabe dizer o que precisaria acontecer no mundo para que ele estivesse errado.</p></details></div></div></details><details class="sec" open id="s0-4" data-num="0.4" data-tit="A armadilha do currículo estático"><summary><h4><span class="snum">0.4</span> A armadilha do currículo estático</h4></summary><div class="sec-corpo">
 <p>A ementa de uma disciplina universitária brasileira é aprovada em colegiado, registrada em
 projeto pedagógico e revista, no melhor caso, a cada renovação de reconhecimento do curso.
 O intervalo típico é de três a cinco anos. Para a camada permanente, isso é irrelevante.
@@ -454,7 +483,7 @@ Um curso que ensina Kubernetes avisando que a orquestração específica tem mei
 poucos anos, mas que o problema que ela resolve é permanente, forma alguém capaz de
 sobreviver à próxima substituição. Um curso que ensina Kubernetes como se fosse um
 invariante forma alguém que vai precisar ser resgatado.</p>
-</div></details><details class="sec" open id="s0-5" data-num="0.5" data-tit="O professor como arqueólogo e futurista"><summary><h4><span class="snum">0.5</span> O professor como arqueólogo e futurista</h4></summary><div class="sec-corpo">
+<div class="recup"><h5>Recuperação</h5><p class="perg">A armadilha do currículo estático está no atraso? Se não, onde está?</p><details class="resp"><summary>Ver resposta</summary><p>Não está no atraso, e sim na ausência de sinalização do atraso. Quem aprende uma ferramenta descontinuada sabendo disso aprendeu história da computação; quem aprende a mesma coisa como prática corrente adquiriu um mapa errado do território.</p></details></div></div></details><details class="sec" open id="s0-5" data-num="0.5" data-tit="O professor como arqueólogo e futurista"><summary><h4><span class="snum">0.5</span> O professor como arqueólogo e futurista</h4></summary><div class="sec-corpo">
 <p>Ensinar tecnologia exige duas competências que raramente moram na mesma pessoa.</p>
 <p>A primeira é <strong>arqueológica</strong>: saber por que as coisas são como são. Por que o Git venceu
 o Subversion, por que o REST venceu o SOAP, por que o ágil surgiu como reação a algo
@@ -473,7 +502,7 @@ sinal de maturidade, e não de fraqueza?</p>
 anos sem acumular nada. As duas competências não se somam: elas se corrigem mutuamente. O
 arqueólogo impede o futurista de vender moda como avanço; o futurista impede o arqueólogo
 de transformar a aula em museu.</p>
-</div></details><details class="sec" open id="s0-6" data-num="0.6" data-tit="Três modos de leitura"><summary><h4><span class="snum">0.6</span> Três modos de leitura</h4></summary><div class="sec-corpo">
+<div class="recup"><h5>Recuperação</h5><p class="perg">Quais são as duas competências do professor, e o que acontece com quem tem só uma delas?</p><details class="resp"><summary>Ver resposta</summary><p>Arqueológica e prospectiva. Só arqueólogo forma profissionais competentes e desatualizados; só futurista forma profissionais atualizados e sem fundação. As duas não se somam — se corrigem mutuamente.</p></details></div></div></details><details class="sec" open id="s0-6" data-num="0.6" data-tit="Três modos de leitura"><summary><h4><span class="snum">0.6</span> Três modos de leitura</h4></summary><div class="sec-corpo">
 <p>Este livro tem três leitores previstos, e eles não devem lê-lo do mesmo jeito.</p>
 <p>O <strong>aluno</strong> deve ler na ordem, e deve prestar atenção especial à Camada 1 e ao capítulo 1.4,
 sobre cognição. A tentação natural de quem está começando é pular direto para a camada sazonal,
@@ -491,7 +520,7 @@ há dez anos com sustentação de legado normalmente tem uma fundação melhor d
 uma defasagem menor do que teme; o que costuma faltar não é a ferramenta da moda, e sim
 um dos capítulos geracionais que nunca foi formalizado — quase sempre 2.3, sistemas distribuídos,
 ou 1.5, escrita técnica.</p>
-</div></details></section>
+<div class="recup"><h5>Recuperação</h5><p class="perg">Para o profissional em transição, onde ficam as lacunas mais prováveis?</p><details class="resp"><summary>Ver resposta</summary><p>Nas camadas 1 e 2, não na 4. Quem vem de sustentação de legado costuma ter fundação melhor do que imagina; o que falta em geral não é a ferramenta da moda, e sim sistemas distribuídos (2.3) ou escrita técnica (1.5).</p></details></div></div></details></section>
 <h2 class="camada" id="camada-1"><span class="cnum">Camada 1</span><span class="cname">Permanente</span></h2>
 <p><em>Meia-vida: sem erosão observada em nenhum ciclo tecnológico da disciplina</em></p>
 <section class="chapter"><h3 id="c1-1"><span class="num">1.1</span><span class="ttl">Fundação conceitual</span></h3><dl class="ficha"><div><dt>meia-vida</dt><dd>sem erosão observada</dd></div><div><dt>estado</dt><dd>permanente</dd></div><div><dt>etiquetas</dt><dd>técnico · teórico</dd></div><div><dt>slug</dt><dd><code>/fundacao</code></dd></div></dl>
@@ -513,7 +542,7 @@ aparecem de novo em 1.4.3, quando o assunto for depuração — porque depurar �
 que a fragilidade lógica de um profissional fica mais visível.</p>
 <p>Nada disso depende de linguagem, paradigma, década ou ferramenta. É o exemplo mais limpo
 de conteúdo invariante que a disciplina tem.</p>
-</div></details><details class="sec" open id="s1-1-2" data-num="1.1.2" data-tit="Matemática subjacente"><summary><h4><span class="snum">1.1.2</span> Matemática subjacente</h4></summary><div class="sec-corpo">
+<div class="recup"><h5>Recuperação</h5><p class="perg">Defina abstração em uma frase que deixe explícito o que se perde nela. Como se mede uma boa abstração?</p><details class="resp"><summary>Ver resposta</summary><p>Abstração é a operação de decidir o que ignorar — sempre uma perda deliberada de informação. Mede-se pelo que ela permite esquecer sem consequência: uma boa abstração não obriga quem a usa a conhecer a implementação para prever o comportamento.</p></details></div></div></details><details class="sec" open id="s1-1-2" data-num="1.1.2" data-tit="Matemática subjacente"><summary><h4><span class="snum">1.1.2</span> Matemática subjacente</h4></summary><div class="sec-corpo">
 <p>A relação entre matemática e programação é mal contada nas duas direções. Há quem diga que
 programar exige matemática avançada, o que é falso para a maioria do trabalho profissional,
 e há quem diga que não exige nenhuma, o que é falso de um jeito mais caro.</p>
@@ -537,7 +566,7 @@ um laço aninhado sobre uma coleção que cresce vai um dia derrubar o sistema c
 erro pelo menos uma vez.</p>
 <p>O que muda ao longo das décadas é a ênfase — probabilidade ganhou peso, autômatos perderam
 — mas o conjunto em si não erodiu em cinquenta anos.</p>
-</div></details><details class="sec" open id="s1-1-3" data-num="1.1.3" data-tit="Computabilidade e limites"><summary><h4><span class="snum">1.1.3</span> Computabilidade e limites</h4></summary><div class="sec-corpo">
+<div class="recup"><h5>Recuperação</h5><p class="perg">Cite duas áreas da matemática que ganharam peso na prática recente e diga por quê.</p><details class="resp"><summary>Ver resposta</summary><p>Probabilidade e estatística, porque observabilidade e sistemas distribuídos exigem ler percentis em vez de médias — quem lê média otimiza o caso que não importa. E grafos, que sustentam dependências de build, roteamento e detecção de ciclos, sendo a estrutura mais reutilizada e menos reconhecida do ofício.</p></details></div></div></details><details class="sec" open id="s1-1-3" data-num="1.1.3" data-tit="Computabilidade e limites"><summary><h4><span class="snum">1.1.3</span> Computabilidade e limites</h4></summary><div class="sec-corpo">
 <p>Existe uma classe de problemas que nenhum programa resolve, em nenhuma linguagem, em
 nenhum hardware, por mais tempo que se dê. Turing demonstrou isso em 1936, antes de existir
 computador no sentido moderno, e a demonstração continua valendo — é provavelmente o
@@ -553,7 +582,7 @@ limite matemático, e não numa deficiência do produto.</p>
 param de procurar a ferramenta perfeita e passam a escolher entre trade-offs conhecidos.
 É formação de julgamento, não de repertório — e é por isso que uma disciplina de teoria da
 computação, que parece a mais distante da prática, é uma das que menos envelhece.</p>
-</div></details><details class="sec" open id="s1-1-4" data-num="1.1.4" data-tit="Princípios universais de engenharia"><summary><h4><span class="snum">1.1.4</span> Princípios universais de engenharia</h4></summary><div class="sec-corpo">
+<div class="recup"><h5>Recuperação</h5><p class="perg">Que limite teórico explica por que uma ferramenta de análise estática necessariamente erra?</p><details class="resp"><summary>Ver resposta</summary><p>A indecidibilidade, cujo caso canônico é o problema da parada, demonstrado por Turing em 1936. Nenhum analisador estático pode ser ao mesmo tempo completo e correto: toda ferramenta escolhe entre deixar passar problemas reais ou apontar problemas inexistentes.</p></details></div></div></details><details class="sec" open id="s1-1-4" data-num="1.1.4" data-tit="Princípios universais de engenharia"><summary><h4><span class="snum">1.1.4</span> Princípios universais de engenharia</h4></summary><div class="sec-corpo">
 <p>Engenharia de software é jovem, mas engenharia não é. Alguns princípios vieram prontos das
 disciplinas mais velhas e nunca precisaram ser revistos.</p>
 <p>O primeiro é que <strong>toda decisão é um trade-off</strong>. Não existe escolha arquitetural sem custo;
@@ -569,7 +598,7 @@ normal dimensionar para o caso médio e descobrir o pico em produção.</p>
 foi &ldquo;como impedir que falhe&rdquo;, e sim &ldquo;como ele se comporta quando falhar&rdquo;. Esse princípio
 reaparece inteiro em 2.3.3 e 2.3.6, e é a diferença entre um sistema distribuído que degrada
 e um que desaba.</p>
-</div></details><details class="sec" open id="s1-1-5" data-num="1.1.5" data-tit="O evento que fundou a disciplina"><summary><h4><span class="snum">1.1.5</span> O evento que fundou a disciplina</h4></summary><div class="sec-corpo">
+<div class="recup"><h5>Recuperação</h5><p class="perg">Qual é a pergunta correta sobre falha, e por que a outra formulação está errada?</p><details class="resp"><summary>Ver resposta</summary><p>A pergunta não é &quot;como impedir que falhe&quot;, e sim &quot;como ele se comporta quando falhar&quot;. Falha é um estado de projeto, não um acidente — princípio que reaparece inteiro em 2.3.3 e 2.3.6 e separa um sistema que degrada de um que desaba.</p></details></div></div></details><details class="sec" open id="s1-1-5" data-num="1.1.5" data-tit="O evento que fundou a disciplina"><summary><h4><span class="snum">1.1.5</span> O evento que fundou a disciplina</h4></summary><div class="sec-corpo">
 <p>Em outubro de 1968, cerca de cinquenta pessoas se reuniram em Garmisch, na Alemanha, numa
 conferência patrocinada pelo Comitê de Ciência da OTAN. O termo escolhido para o título —
 &ldquo;software engineering&rdquo; — foi deliberadamente provocativo: a intenção era sugerir que a
@@ -588,7 +617,7 @@ experiência acumulada de quem já estava fracassando.</p>
 a indústria aprendeu a operar dentro dela. Os números de fracasso de projeto melhoraram,
 mas o padrão descrito em Garmisch — estimativa não confiável, complexidade crescente,
 manutenção cara — continua reconhecível em qualquer empresa em 2026.</p>
-</div></details><details class="sec" open id="s1-1-6" data-num="1.1.6" data-tit="O que 1968 já sabia e ainda não resolvemos"><summary><h4><span class="snum">1.1.6</span> O que 1968 já sabia e ainda não resolvemos</h4></summary><div class="sec-corpo">
+<div class="recup"><h5>Recuperação</h5><p class="perg">O que a conferência de 1968 efetivamente fez, e quais são as duas leituras erradas mais comuns sobre ela?</p><details class="resp"><summary>Ver resposta</summary><p>Ela nomeou a disciplina, não a inventou — havia software complexo sendo feito havia mais de uma década. As duas leituras erradas são supor que ela fundou a prática, e supor que a crise do software foi resolvida: o padrão descrito em Garmisch continua reconhecível hoje.</p></details></div></div></details><details class="sec" open id="s1-1-6" data-num="1.1.6" data-tit="O que 1968 já sabia e ainda não resolvemos"><summary><h4><span class="snum">1.1.6</span> O que 1968 já sabia e ainda não resolvemos</h4></summary><div class="sec-corpo">
 <p>Este é o teste de fogo do livro inteiro, e ele merece ser aplicado logo no começo: quanto do
 diagnóstico de cinquenta e oito anos atrás ainda está aberto?</p>
 <p><strong>A estimativa continua não confiável.</strong> Todas as tentativas de resolver o problema por
@@ -607,7 +636,7 @@ automatizados, integração contínua e observabilidade tornaram o trabalho reve
 visível. Nenhuma dessas quatro coisas reduz a complexidade — todas reduzem o custo de errar
 dentro dela. É uma vitória real, e é uma vitória de natureza diferente da que Garmisch
 esperava.</p>
-</div></details></section>
+<div class="recup"><h5>Recuperação</h5><p class="perg">Quatro coisas melhoraram de fato desde 1968. Quais são, e qual é a natureza dessa vitória?</p><details class="resp"><summary>Ver resposta</summary><p>Controle de versão, testes automatizados, integração contínua e observabilidade. Nenhuma delas reduz a complexidade — todas reduzem o custo de errar dentro dela. É uma vitória real, e de natureza diferente da que Garmisch esperava.</p></details></div></div></details></section>
 <section class="chapter"><h3 id="c1-2"><span class="num">1.2</span><span class="ttl">Os invariantes nomeados</span></h3><dl class="ficha"><div><dt>meia-vida</dt><dd>sem erosão observada</dd></div><div><dt>estado</dt><dd>permanente</dd></div><div><dt>etiquetas</dt><dd>técnico · teórico</dd></div><div><dt>slug</dt><dd><code>/invariantes</code></dd></div></dl>
 <p>Um capítulo sobre invariantes que não lista invariantes é uma promessa vazia. Estes são os
 candidatos, cada um com o enunciado, o que ele realmente afirma, e onde ele reaparece no
@@ -625,7 +654,7 @@ de fluxo de informação.</p>
 estrutura do time, então mudar a arquitetura sem mudar a organização é caro e geralmente
 fracassa. Metade dos fracassos de migração para microsserviços que aparecem em 3.1.4 são
 casos de organização inalterada. O tema volta com nome próprio em 3.1.9, Team Topologies.</p>
-</div></details><details class="sec" open id="s1-2-2" data-num="1.2.2" data-tit="As leis de Lehman"><summary><h4><span class="snum">1.2.2</span> As leis de Lehman</h4></summary><div class="sec-corpo">
+<div class="recup"><h5>Recuperação</h5><p class="perg">Por que a lei de Conway é uma restrição e não uma metáfora? Qual a consequência prática?</p><details class="resp"><summary>Ver resposta</summary><p>Porque ela descreve uma restrição de fluxo de informação, válida em qualquer tecnologia: quatro times que não conversam produzem quatro componentes mal integrados, em COBOL ou em microsserviços. A consequência é que mudar a arquitetura sem mudar a organização é caro e costuma fracassar.</p></details></div></div></details><details class="sec" open id="s1-2-2" data-num="1.2.2" data-tit="As leis de Lehman"><summary><h4><span class="snum">1.2.2</span> As leis de Lehman</h4></summary><div class="sec-corpo">
 <p>Manny Lehman, ao longo dos anos 1970 e 1980, estudou a evolução de sistemas reais ao longo
 de várias versões e formulou um conjunto de leis. Duas delas bastam para o argumento deste
 livro.</p>
@@ -643,7 +672,7 @@ de funcionar de uma vez.</p>
 conjunto limitado de sistemas, e a base empírica é mais estreita do que a confiança com que
 elas costumam ser citadas. Elas são apresentadas aqui como generalizações bem sustentadas
 pela experiência, não como resultado com força de teorema.</p>
-</div></details><details class="sec" open id="s1-2-3" data-num="1.2.3" data-tit="Brooks"><summary><h4><span class="snum">1.2.3</span> Brooks</h4></summary><div class="sec-corpo">
+<div class="recup"><h5>Recuperação</h5><p class="perg">Enuncie as duas leis de Lehman que o livro usa — e a ressalva que ele faz sobre elas.</p><details class="resp"><summary>Ver resposta</summary><p>Mudança contínua: um sistema em uso precisa mudar ou fica progressivamente menos útil, porque o mundo se move. Complexidade crescente: ela aumenta a menos que se trabalhe deliberadamente para reduzi-la — a condicional é o ponto. A ressalva é que a base empírica é mais estreita do que a confiança com que as leis costumam ser citadas.</p></details></div></div></details><details class="sec" open id="s1-2-3" data-num="1.2.3" data-tit="Brooks"><summary><h4><span class="snum">1.2.3</span> Brooks</h4></summary><div class="sec-corpo">
 <p>Fred Brooks contribuiu com três ideias que sobreviveram intactas.</p>
 <p>O <strong>mítico homem-mês</strong>, de 1975: adicionar pessoas a um projeto atrasado atrasa mais o
 projeto. O mecanismo é aritmético — os canais de comunicação crescem com o quadrado do
@@ -661,7 +690,7 @@ bastante para que eliminá-la completamente não produzisse ganho de ordem de gr
 <p>Trinta e nove anos depois, o argumento continua sendo o teste mais afiado disponível para
 avaliar qualquer promessa de revolução na produtividade — inclusive, e principalmente, as
 do capítulo 4.3.</p>
-</div></details><details class="sec" open id="s1-2-4" data-num="1.2.4" data-tit="Parnas"><summary><h4><span class="snum">1.2.4</span> Parnas</h4></summary><div class="sec-corpo">
+<div class="recup"><h5>Recuperação</h5><p class="perg">Distinga complexidade essencial de acidental e mostre por que isso limita qualquer promessa de ganho de produtividade.</p><details class="resp"><summary>Ver resposta</summary><p>A essencial está no problema — entender o domínio, especificar comportamento correto, lidar com requisitos contraditórios. A acidental está nas ferramentas. Ferramentas só atacam a parte acidental, e essa parte já havia encolhido o bastante para que eliminá-la não produzisse ganho de ordem de grandeza. É o teste mais afiado disponível contra promessas de revolução.</p></details></div></div></details><details class="sec" open id="s1-2-4" data-num="1.2.4" data-tit="Parnas"><summary><h4><span class="snum">1.2.4</span> Parnas</h4></summary><div class="sec-corpo">
 <p>David Parnas, em 1972, respondeu a uma pergunta que parecia trivial: quando decomponho um
 sistema em módulos, qual critério uso?</p>
 <p>A resposta corrente na época era decompor por etapas de processamento — um módulo para
@@ -674,7 +703,7 @@ princípio de inversão de dependência e da arquitetura hexagonal. Praticamente
 é aplicação de Parnas com nomes diferentes. É provavelmente o texto de maior densidade por
 página da disciplina, e a maior parte dos profissionais aplica suas conclusões sem nunca
 tê-lo lido.</p>
-</div></details><details class="sec" open id="s1-2-5" data-num="1.2.5" data-tit="Entropia de software"><summary><h4><span class="snum">1.2.5</span> Entropia de software</h4></summary><div class="sec-corpo">
+<div class="recup"><h5>Recuperação</h5><p class="perg">Qual critério de decomposição Parnas propôs, e qual ele substituiu?</p><details class="resp"><summary>Ver resposta</summary><p>Cada módulo deve esconder uma decisão de projeto que pode mudar; a fronteira do módulo é o contorno do que pode ser trocado sem afetar o resto. Ele substituiu a decomposição por etapas de processamento, que produz módulos que mudam juntos — o oposto do objetivo.</p></details></div></div></details><details class="sec" open id="s1-2-5" data-num="1.2.5" data-tit="Entropia de software"><summary><h4><span class="snum">1.2.5</span> Entropia de software</h4></summary><div class="sec-corpo">
 <p>Software não se degrada fisicamente, mas se degrada organizacionalmente. Cada alteração
 feita sob pressão, cada exceção acrescentada sem revisão da estrutura, cada correção que
 trata sintoma, empurra o sistema na direção de menos ordem. O efeito é cumulativo e não
@@ -684,7 +713,7 @@ correta é sempre mais cara no curto prazo do que a alteração suficiente, e o 
 quem entrega prazo é sempre o curto prazo. Mude a linguagem, a arquitetura e o processo — o
 incentivo permanece. É por isso que a solução para entropia nunca foi ferramenta, e sim
 prática deliberada e contínua, tema de 3.3.9.</p>
-</div></details><details class="sec" open id="s1-2-6" data-num="1.2.6" data-tit="Acoplamento e coesão"><summary><h4><span class="snum">1.2.6</span> Acoplamento e coesão</h4></summary><div class="sec-corpo">
+<div class="recup"><h5>Recuperação</h5><p class="perg">O mecanismo da entropia de software é técnico ou econômico? Justifique.</p><details class="resp"><summary>Ver resposta</summary><p>Econômico. A alteração correta é sempre mais cara no curto prazo do que a alteração suficiente, e o incentivo de quem entrega prazo é o curto prazo. Por isso a solução nunca foi ferramenta, e sim prática deliberada e contínua.</p></details></div></div></details><details class="sec" open id="s1-2-6" data-num="1.2.6" data-tit="Acoplamento e coesão"><summary><h4><span class="snum">1.2.6</span> Acoplamento e coesão</h4></summary><div class="sec-corpo">
 <p>Coesão alta dentro do módulo, acoplamento baixo entre módulos. A formulação é dos anos
 1970, veio da programação estruturada, e sobreviveu a toda mudança de paradigma desde então
 sem alteração de conteúdo — apenas de escala.</p>
@@ -695,7 +724,7 @@ está reenunciando acoplamento. Quando alguém diz que um time deveria conseguir
 depender de outro, está reenunciando a mesma coisa em 2.6.</p>
 <p>Um princípio que atravessa cinco ordens de grandeza sem perder validade não é uma regra de
 estilo. É estrutura.</p>
-</div></details><details class="sec" open id="s1-2-7" data-num="1.2.7" data-tit="O custo da mudança tardia — e a controvérsia sobre ele"><summary><h4><span class="snum">1.2.7</span> O custo da mudança tardia — e a controvérsia sobre ele</h4></summary><div class="sec-corpo">
+<div class="recup"><h5>Recuperação</h5><p class="perg">O que faz de acoplamento e coesão uma questão de estrutura, e não de estilo?</p><details class="resp"><summary>Ver resposta</summary><p>O fato de atravessarem cinco ordens de grandeza sem perder validade: descrevem a relação entre funções, entre classes, entre módulos, entre serviços e entre times. Dizer que um microsserviço não deve compartilhar banco é reenunciar acoplamento.</p></details></div></div></details><details class="sec" open id="s1-2-7" data-num="1.2.7" data-tit="O custo da mudança tardia — e a controvérsia sobre ele"><summary><h4><span class="snum">1.2.7</span> O custo da mudança tardia — e a controvérsia sobre ele</h4></summary><div class="sec-corpo">
 <p>O gráfico é conhecido: o custo de corrigir um defeito cresce exponencialmente conforme ele
 avança pelas fases do projeto, sendo ordens de grandeza mais caro em produção do que em
 requisitos. Ele aparece em incontáveis apresentações, quase sempre atribuído a Barry Boehm,
@@ -716,7 +745,7 @@ minutos, e a curva que descrevia meses não se aplica sem tradução.</p>
 <p>Manter esse caso no livro é deliberado. Ele é o exemplo mais didático disponível de um
 conhecimento que envelheceu <strong>sem que ninguém percebesse</strong>, porque continuou sendo citado
 com a mesma confiança enquanto o contexto que o gerava desaparecia.</p>
-</div></details><details class="sec" open id="s1-2-8" data-num="1.2.8" data-tit="O que isso significa para o professor"><summary><h4><span class="snum">1.2.8</span> O que isso significa para o professor</h4></summary><div class="sec-corpo">
+<div class="recup"><h5>Recuperação</h5><p class="perg">Na curva de custo da mudança tardia, o que é sólido e o que não é?</p><details class="resp"><summary>Ver resposta</summary><p>A direção é sólida: defeito descoberto tarde custa mais. A magnitude — os multiplicadores de 10, 100, 1000 — não tem base para ser citada como fato: os dados vêm de projetos sequenciais dos anos 1970 e 1980. E o mecanismo mudou, porque onde há entrega contínua a distância entre escrever e implantar é de minutos.</p></details></div></div></details><details class="sec" open id="s1-2-8" data-num="1.2.8" data-tit="O que isso significa para o professor"><summary><h4><span class="snum">1.2.8</span> O que isso significa para o professor</h4></summary><div class="sec-corpo">
 <p>Os sete invariantes acima têm uma característica pedagógica em comum: nenhum deles é
 ensinável como conteúdo isolado. Não existe aula de Lei de Conway. Eles funcionam como
 lente — são apresentados uma vez, e depois aplicados repetidamente sobre o conteúdo das camadas seguintes.</p>
@@ -727,7 +756,7 @@ quando o aluno estuda microsserviços. Parnas aparece quando ele estuda API. Bro
 quando ele estuda assistentes de IA. O invariante é reforçado pelo conteúdo perecível, e o
 conteúdo perecível ganha um lugar na estrutura em vez de flutuar como novidade.</p>
 <p>É o inverso do que a maioria das grades faz, e é a recomendação central desta camada.</p>
-</div></details></section>
+<div class="recup"><h5>Recuperação</h5><p class="perg">Que estrutura de curso os invariantes sugerem, e por que ela é o inverso do usual?</p><details class="resp"><summary>Ver resposta</summary><p>Nenhum deles é ensinável como conteúdo isolado — não existe aula de lei de Conway. Em vez de uma disciplina introdutória que os &quot;passa&quot; no primeiro semestre, cada invariante deve ser retomado toda vez que um capítulo sazonal o exemplificar: Conway em microsserviços, Parnas em API, Brooks em assistentes de IA.</p></details></div></div></details></section>
 <section class="chapter"><h3 id="c1-3"><span class="num">1.3</span><span class="ttl">O teste de perenidade</span></h3><dl class="ficha"><div><dt>meia-vida</dt><dd>sem erosão observada</dd></div><div><dt>estado</dt><dd>permanente</dd></div><div><dt>etiquetas</dt><dd>teórico · meta</dd></div><div><dt>slug</dt><dd><code>/perenidade</code></dd></div></dl>
 <details class="sec" open id="s1-3-1" data-num="1.3.1" data-tit="O critério"><summary><h4><span class="snum">1.3.1</span> O critério</h4></summary><div class="sec-corpo">
 <p>Afirmar que algo é eterno é a afirmação mais forte que um livro sobre envelhecimento pode
@@ -741,7 +770,7 @@ apenas porque foram reescritos de forma cada vez mais vaga — a vagueza é a fo
 de falsa perenidade. <strong>Rupturas independentes</strong> exclui o caso de um princípio que atravessou
 três mudanças que eram, na verdade, a mesma mudança. E <strong>candidato</strong> é intencional: o teste
 elimina, mas não prova. Um invariante é uma hipótese que ainda não foi refutada.</p>
-</div></details><details class="sec" open id="s1-3-2" data-num="1.3.2" data-tit="Os três eixos de ruptura"><summary><h4><span class="snum">1.3.2</span> Os três eixos de ruptura</h4></summary><div class="sec-corpo">
+<div class="recup"><h5>Recuperação</h5><p class="perg">Enuncie o teste de perenidade com os três detalhes que importam.</p><details class="resp"><summary>Ver resposta</summary><p>Um conhecimento é candidato a invariante se permaneceu válido, sem reformulação de conteúdo, através de pelo menos três rupturas de paradigma independentes. &quot;Sem reformulação&quot; exclui princípios que sobrevivem só por ficarem vagos; &quot;independentes&quot; exclui contar três vezes a mesma mudança; e &quot;candidato&quot; é intencional — o teste elimina, mas não prova.</p></details></div></div></details><details class="sec" open id="s1-3-2" data-num="1.3.2" data-tit="Os três eixos de ruptura"><summary><h4><span class="snum">1.3.2</span> Os três eixos de ruptura</h4></summary><div class="sec-corpo">
 <p>As rupturas que valem como teste são as que mudaram as premissas econômicas ou físicas da
 computação, não as que mudaram sintaxe ou moda.</p>
 <p>O <strong>eixo de hardware</strong> contém a passagem do processamento em lote para o interativo, do
@@ -757,7 +786,7 @@ era o tempo de máquina, otimizar código era racional e a legibilidade era luxo
 recurso caro passou a ser o tempo de programador, a hierarquia se inverteu. Com a nuvem, o
 custo voltou a ser variável e mensurável por requisição, o que reabriu discussões que
 pareciam encerradas — e é a razão de existir o capítulo 3.7.</p>
-</div></details><details class="sec" open id="s1-3-3" data-num="1.3.3" data-tit="O cemitério dos falsos invariantes"><summary><h4><span class="snum">1.3.3</span> O cemitério dos falsos invariantes</h4></summary><div class="sec-corpo">
+<div class="recup"><h5>Recuperação</h5><p class="perg">Quais são os três eixos de ruptura, e qual deles é o menos discutido?</p><details class="resp"><summary>Ver resposta</summary><p>Hardware, escala e modelo de custo. O de custo é o menos discutido e o mais decisivo: quando o recurso caro era tempo de máquina, otimizar era racional e legibilidade era luxo; quando passou a ser tempo de programador, a hierarquia se inverteu.</p></details></div></div></details><details class="sec" open id="s1-3-3" data-num="1.3.3" data-tit="O cemitério dos falsos invariantes"><summary><h4><span class="snum">1.3.3</span> O cemitério dos falsos invariantes</h4></summary><div class="sec-corpo">
 <p>Aplicar o teste tem um custo, e ele deve ser pago publicamente. Estes são conhecimentos que
 foram ensinados como fundamentos e não sobreviveram.</p>
 <p><strong>Orientação a objetos como forma natural de organizar qualquer programa.</strong> Ensinada nos
@@ -783,7 +812,7 @@ carga horária desproporcional em grades brasileiras.</p>
 <p><strong>&ldquo;A nuvem é mais barata&rdquo;.</strong> Nunca foi um invariante, mas foi ensinada como se fosse. É uma
 afirmação sobre modelo de custo, e portanto é exatamente o tipo de coisa que muda quando o
 modelo de custo muda.</p>
-</div></details><details class="sec" open id="s1-3-4" data-num="1.3.4" data-tit="Como o leitor deve duvidar deste livro"><summary><h4><span class="snum">1.3.4</span> Como o leitor deve duvidar deste livro</h4></summary><div class="sec-corpo">
+<div class="recup"><h5>Recuperação</h5><p class="perg">Cite três falsos invariantes e o eixo que derrubou cada um.</p><details class="resp"><summary>Ver resposta</summary><p>Orientação a objetos como forma natural de organizar qualquer programa — caiu no eixo de escala e pela absorção de ideias funcionais. Requisitos congelados como pré-condição de qualidade — caiu no modelo de custo, quando implantar passou a levar minutos. &quot;A nuvem é mais barata&quot; — nunca foi invariante, é uma afirmação sobre modelo de custo.</p></details></div></div></details><details class="sec" open id="s1-3-4" data-num="1.3.4" data-tit="Como o leitor deve duvidar deste livro"><summary><h4><span class="snum">1.3.4</span> Como o leitor deve duvidar deste livro</h4></summary><div class="sec-corpo">
 <p>O Camada 1 afirma sete invariantes. É estatisticamente improvável que todos os sete resistam
 às próximas décadas, e seria desonesto encerrá-lo sem dizer isso.</p>
 <p>Meu candidato a primeiro a cair é 1.2.7, a curva de custo da mudança tardia — e ela já entrou
@@ -796,7 +825,7 @@ gatilho a vigiar, e ele está registrado na ficha deste capítulo.</p>
 afirmação de perenidade, procure a ruptura que a testaria. Se não conseguir imaginar
 nenhuma, desconfie — de mim, não do conceito. Uma afirmação que nada poderia falsificar não
 é um invariante. É uma opinião bem escrita.</p>
-</div></details></section>
+<div class="recup"><h5>Recuperação</h5><p class="perg">Qual invariante o próprio livro aponta como o próximo a cair, e qual é o gatilho?</p><details class="resp"><summary>Ver resposta</summary><p>Depois da curva de Boehm, a lei de Conway. Não por estar errada, mas porque o pressuposto que a sustenta é que a comunicação humana é o gargalo do projeto: se parte substancial da produção de código deixar de passar por comunicação entre pessoas, o mecanismo da lei muda de natureza.</p></details></div></div></details></section>
 <section class="chapter"><h3 id="cFontes"><span class="num">Fontes</span><span class="ttl">referências primárias</span></h3>
 <p>As referências primárias citadas são, na ordem em que aparecem: Naur, P. e Randell, B.
 (eds.), <em>Software Engineering: Report on a Conference Sponsored by the NATO Science
@@ -827,6 +856,8 @@ Engineering</em>, 2015.</p>
       <button class="acao" type="button" id="ap-exportar">Exportar notas</button>
       <button class="acao" type="button" id="ap-zerar">Zerar progresso</button>
     </div>
+    <h2>Para revisar</h2>
+    <div class="cx" id="ap-revisar"><span class="vazio">Nada vencido por enquanto.</span></div>
     <h2>Atalhos</h2>
     <div class="cx">
       <div class="lin"><span>Próxima seção</span><b>J</b></div>
@@ -889,17 +920,20 @@ Engineering</em>, 2015.</p>
   }
   function largura(v){ corpo.classList.toggle('largo', v==='largo'); marcar('larg',v); salvar('cv-larg',v); }
   function fichas(v){ corpo.classList.toggle('sem-ficha', v==='off'); marcar('ficha',v); salvar('cv-ficha',v); }
+  function recup(v){ corpo.classList.toggle('sem-recup', v==='off'); marcar('recup',v); salvar('cv-recup',v); }
 
   tema(ler('cv-tema','auto'));
   largura(ler('cv-larg','normal'));
   fichas(ler('cv-ficha','on'));
+  recup(ler('cv-recup','on'));
 
   document.addEventListener('click',function(e){
-    var b=e.target.closest && e.target.closest('button[data-tema],button[data-larg],button[data-ficha]');
+    var b=e.target.closest && e.target.closest('button[data-tema],button[data-larg],button[data-ficha],button[data-recup]');
     if(!b)return;
     if(b.hasAttribute('data-tema'))  tema(b.getAttribute('data-tema'));
     if(b.hasAttribute('data-larg'))  largura(b.getAttribute('data-larg'));
     if(b.hasAttribute('data-ficha')) fichas(b.getAttribute('data-ficha'));
+    if(b.hasAttribute('data-recup')) recup(b.getAttribute('data-recup'));
   });
 })();
 </script>
@@ -1031,9 +1065,10 @@ Engineering</em>, 2015.</p>
     var cx = document.createElement('div');
     cx.className = 'nota';
     var ta = document.createElement('textarea');
-    ta.placeholder = 'Sua anotação sobre ' + d.getAttribute('data-num') + '…';
+    ta.placeholder = 'Explique ' + d.getAttribute('data-num') + ' com suas palavras, sem olhar o texto.';
     var dica = document.createElement('div');
-    dica.className = 'dica'; dica.textContent = 'salvo neste navegador · entra junto no copiar';
+    dica.className = 'dica';
+    dica.textContent = 'explicar com as próprias palavras é o teste — salvo neste navegador, entra junto no copiar';
     cx.appendChild(ta); cx.appendChild(dica);
     if(corpoEl) corpoEl.appendChild(cx);
     try{ ta.value = localStorage.getItem(chave + '-nota-' + d.id) || ''; }catch(e){}
@@ -1062,7 +1097,8 @@ Engineering</em>, 2015.</p>
     b.setAttribute('aria-label','Marcar seção como lida');
     b.addEventListener('click', function(e){
       e.preventDefault(); e.stopPropagation();
-      if(lidas.has(d.id)) lidas.delete(d.id); else lidas.add(d.id);
+      if(lidas.has(d.id)){ lidas.delete(d.id); esquecerData(d.id); }
+      else { lidas.add(d.id); anotarData(d.id); }
       pintar();
     });
     sum.appendChild(b);
@@ -1083,6 +1119,48 @@ Engineering</em>, 2015.</p>
     if(b) secoes(b.getAttribute('data-secs'));
   });
 
+  // quando cada seção foi lida, para a fila de revisão espaçada
+  function anotarData(id){ try{ localStorage.setItem(chave+'-em-'+id, String(Date.now())); }catch(e){} }
+  function esquecerData(id){ try{ localStorage.removeItem(chave+'-em-'+id); }catch(e){} }
+  var PRAZOS = [
+    {dias: 90, rot: 'há mais de 3 meses'},
+    {dias: 30, rot: 'há mais de 1 mês'},
+    {dias: 7,  rot: 'há mais de 1 semana'}
+  ];
+  function revisar(){
+    var cx = document.getElementById('ap-revisar');
+    if(!cx) return;
+    var agora = Date.now(), venc = [];
+    secs.forEach(function(d){
+      if(!lidas.has(d.id)) return;
+      var t = 0;
+      try{ t = parseInt(localStorage.getItem(chave+'-em-'+d.id) || '0', 10); }catch(e){}
+      if(!t) return;
+      var dias = (agora - t) / 86400000;
+      for(var i = 0; i < PRAZOS.length; i++){
+        if(dias >= PRAZOS[i].dias){ venc.push({d: d, rot: PRAZOS[i].rot, dias: dias}); break; }
+      }
+    });
+    venc.sort(function(a, b){ return b.dias - a.dias; });
+    if(!venc.length){
+      cx.innerHTML = '<span class="vazio">Nada vencido por enquanto.</span>';
+      return;
+    }
+    cx.innerHTML = '';
+    venc.slice(0, 6).forEach(function(v){
+      var a = document.createElement('a');
+      a.className = 'rev'; a.href = '#' + v.d.id;
+      a.innerHTML = '<b>' + v.rot + '</b>' + v.d.getAttribute('data-num') + ' ' +
+                    v.d.getAttribute('data-tit');
+      cx.appendChild(a);
+    });
+    if(venc.length > 6){
+      var p = document.createElement('span');
+      p.className = 'vazio'; p.textContent = '+ ' + (venc.length - 6) + ' outras';
+      cx.appendChild(p);
+    }
+  }
+
   // painel de apoio
   function resumo(){
     var lidasN = 0, restante = 0, notas = 0;
@@ -1098,6 +1176,7 @@ Engineering</em>, 2015.</p>
         ? Math.floor(restante/60) + ' h ' + (restante%60) + ' min'
         : restante + ' min';
     if(el = document.getElementById('ap-notas')) el.textContent = String(notas);
+    revisar();
   }
   var pintarAntes = pintar;
   pintar = function(){ pintarAntes(); resumo(); };
@@ -1148,7 +1227,8 @@ Engineering</em>, 2015.</p>
       if(alvoSec) alvoSec.scrollIntoView({behavior: 'smooth', block: 'start'});
     } else if(k === 'm'){
       e.preventDefault();
-      if(lidas.has(atual.id)) lidas.delete(atual.id); else lidas.add(atual.id);
+      if(lidas.has(atual.id)){ lidas.delete(atual.id); esquecerData(atual.id); }
+      else { lidas.add(atual.id); anotarData(atual.id); }
       pintar();
     } else if(k === 'c'){
       e.preventDefault();

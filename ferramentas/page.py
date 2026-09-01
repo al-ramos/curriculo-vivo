@@ -154,6 +154,30 @@ body.so-nao-lidas details.sec.lida{display:none}
 .nota .dica{font-family:"IBM Plex Mono",monospace;font-size:.58rem;color:var(--faint);
   letter-spacing:.06em;margin-top:.25rem}
 
+/* recuperação */
+.recup{margin:1.8rem 0 0;padding:.9rem 1rem;border:1px solid var(--rule);
+  border-left:2px solid var(--accent);border-radius:2px;background:var(--surface)}
+.recup h5{margin:0 0 .5rem;font-family:"IBM Plex Mono",monospace;font-size:.6rem;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:400}
+.recup .perg{margin:0 0 .7rem;font-size:.98rem;color:var(--ink)}
+.recup details.resp>summary{list-style:none;cursor:pointer;font-family:"IBM Plex Mono",monospace;
+  font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+  border:1px solid var(--rule);border-radius:2px;padding:.22rem .5rem;display:inline-block}
+.recup details.resp>summary::-webkit-details-marker{display:none}
+.recup details.resp>summary:hover{color:var(--accent);border-color:var(--accent)}
+.recup details.resp[open]>summary{color:var(--faint);border-color:transparent;padding-left:0}
+.recup details.resp p{margin:.7rem 0 0;font-size:.94rem;color:var(--muted);line-height:1.6}
+body.sem-recup .recup{display:none}
+
+/* fila de revisão */
+aside.lado .rev{display:block;font-size:.78rem;color:var(--muted);text-decoration:none;
+  padding:.28rem 0;border-bottom:1px solid var(--rule-soft)}
+aside.lado .rev:last-child{border-bottom:0}
+aside.lado .rev b{display:block;font-family:"IBM Plex Mono",monospace;font-size:.6rem;
+  color:var(--faint);letter-spacing:.06em;font-weight:400}
+aside.lado .rev:hover{color:var(--ink)}
+aside.lado .vazio{font-size:.78rem;color:var(--faint);font-style:italic}
+
 /* progresso */
 .prog{margin-bottom:1.1rem;padding-bottom:.8rem;border-bottom:1px solid var(--rule-soft)}
 .prog .barra{height:3px;background:var(--rule-soft);border-radius:2px;overflow:hidden;margin-bottom:.4rem}
@@ -371,6 +395,11 @@ HTML = HEAD + f"""
             <button type="button" data-secs="abertas">Abertas</button>
             <button type="button" data-secs="fechadas">Recolhidas</button>
           </div></div>
+        <div class="ctrl"><span>Recuperação</span>
+          <div class="seg" role="group" aria-label="Perguntas de recuperação">
+            <button type="button" data-recup="on">Mostrar</button>
+            <button type="button" data-recup="off">Ocultar</button>
+          </div></div>
         <div class="ctrl"><span>Fichas</span>
           <div class="seg" role="group" aria-label="Fichas de envelhecimento">
             <button type="button" data-ficha="on">Mostrar</button>
@@ -425,6 +454,8 @@ HTML = HEAD + f"""
       <button class="acao" type="button" id="ap-exportar">Exportar notas</button>
       <button class="acao" type="button" id="ap-zerar">Zerar progresso</button>
     </div>
+    <h2>Para revisar</h2>
+    <div class="cx" id="ap-revisar"><span class="vazio">Nada vencido por enquanto.</span></div>
     <h2>Atalhos</h2>
     <div class="cx">
       <div class="lin"><span>Próxima seção</span><b>J</b></div>
@@ -462,17 +493,20 @@ CTRL = """
   }
   function largura(v){ corpo.classList.toggle('largo', v==='largo'); marcar('larg',v); salvar('cv-larg',v); }
   function fichas(v){ corpo.classList.toggle('sem-ficha', v==='off'); marcar('ficha',v); salvar('cv-ficha',v); }
+  function recup(v){ corpo.classList.toggle('sem-recup', v==='off'); marcar('recup',v); salvar('cv-recup',v); }
 
   tema(ler('cv-tema','auto'));
   largura(ler('cv-larg','normal'));
   fichas(ler('cv-ficha','on'));
+  recup(ler('cv-recup','on'));
 
   document.addEventListener('click',function(e){
-    var b=e.target.closest && e.target.closest('button[data-tema],button[data-larg],button[data-ficha]');
+    var b=e.target.closest && e.target.closest('button[data-tema],button[data-larg],button[data-ficha],button[data-recup]');
     if(!b)return;
     if(b.hasAttribute('data-tema'))  tema(b.getAttribute('data-tema'));
     if(b.hasAttribute('data-larg'))  largura(b.getAttribute('data-larg'));
     if(b.hasAttribute('data-ficha')) fichas(b.getAttribute('data-ficha'));
+    if(b.hasAttribute('data-recup')) recup(b.getAttribute('data-recup'));
   });
 })();
 </script>
@@ -633,9 +667,10 @@ PROG = r"""
     var cx = document.createElement('div');
     cx.className = 'nota';
     var ta = document.createElement('textarea');
-    ta.placeholder = 'Sua anotação sobre ' + d.getAttribute('data-num') + '…';
+    ta.placeholder = 'Explique ' + d.getAttribute('data-num') + ' com suas palavras, sem olhar o texto.';
     var dica = document.createElement('div');
-    dica.className = 'dica'; dica.textContent = 'salvo neste navegador · entra junto no copiar';
+    dica.className = 'dica';
+    dica.textContent = 'explicar com as próprias palavras é o teste — salvo neste navegador, entra junto no copiar';
     cx.appendChild(ta); cx.appendChild(dica);
     if(corpoEl) corpoEl.appendChild(cx);
     try{ ta.value = localStorage.getItem(chave + '-nota-' + d.id) || ''; }catch(e){}
@@ -664,7 +699,8 @@ PROG = r"""
     b.setAttribute('aria-label','Marcar seção como lida');
     b.addEventListener('click', function(e){
       e.preventDefault(); e.stopPropagation();
-      if(lidas.has(d.id)) lidas.delete(d.id); else lidas.add(d.id);
+      if(lidas.has(d.id)){ lidas.delete(d.id); esquecerData(d.id); }
+      else { lidas.add(d.id); anotarData(d.id); }
       pintar();
     });
     sum.appendChild(b);
@@ -685,6 +721,48 @@ PROG = r"""
     if(b) secoes(b.getAttribute('data-secs'));
   });
 
+  // quando cada seção foi lida, para a fila de revisão espaçada
+  function anotarData(id){ try{ localStorage.setItem(chave+'-em-'+id, String(Date.now())); }catch(e){} }
+  function esquecerData(id){ try{ localStorage.removeItem(chave+'-em-'+id); }catch(e){} }
+  var PRAZOS = [
+    {dias: 90, rot: 'há mais de 3 meses'},
+    {dias: 30, rot: 'há mais de 1 mês'},
+    {dias: 7,  rot: 'há mais de 1 semana'}
+  ];
+  function revisar(){
+    var cx = document.getElementById('ap-revisar');
+    if(!cx) return;
+    var agora = Date.now(), venc = [];
+    secs.forEach(function(d){
+      if(!lidas.has(d.id)) return;
+      var t = 0;
+      try{ t = parseInt(localStorage.getItem(chave+'-em-'+d.id) || '0', 10); }catch(e){}
+      if(!t) return;
+      var dias = (agora - t) / 86400000;
+      for(var i = 0; i < PRAZOS.length; i++){
+        if(dias >= PRAZOS[i].dias){ venc.push({d: d, rot: PRAZOS[i].rot, dias: dias}); break; }
+      }
+    });
+    venc.sort(function(a, b){ return b.dias - a.dias; });
+    if(!venc.length){
+      cx.innerHTML = '<span class="vazio">Nada vencido por enquanto.</span>';
+      return;
+    }
+    cx.innerHTML = '';
+    venc.slice(0, 6).forEach(function(v){
+      var a = document.createElement('a');
+      a.className = 'rev'; a.href = '#' + v.d.id;
+      a.innerHTML = '<b>' + v.rot + '</b>' + v.d.getAttribute('data-num') + ' ' +
+                    v.d.getAttribute('data-tit');
+      cx.appendChild(a);
+    });
+    if(venc.length > 6){
+      var p = document.createElement('span');
+      p.className = 'vazio'; p.textContent = '+ ' + (venc.length - 6) + ' outras';
+      cx.appendChild(p);
+    }
+  }
+
   // painel de apoio
   function resumo(){
     var lidasN = 0, restante = 0, notas = 0;
@@ -700,6 +778,7 @@ PROG = r"""
         ? Math.floor(restante/60) + ' h ' + (restante%60) + ' min'
         : restante + ' min';
     if(el = document.getElementById('ap-notas')) el.textContent = String(notas);
+    revisar();
   }
   var pintarAntes = pintar;
   pintar = function(){ pintarAntes(); resumo(); };
@@ -750,7 +829,8 @@ PROG = r"""
       if(alvoSec) alvoSec.scrollIntoView({behavior: 'smooth', block: 'start'});
     } else if(k === 'm'){
       e.preventDefault();
-      if(lidas.has(atual.id)) lidas.delete(atual.id); else lidas.add(atual.id);
+      if(lidas.has(atual.id)){ lidas.delete(atual.id); esquecerData(atual.id); }
+      else { lidas.add(atual.id); anotarData(atual.id); }
       pintar();
     } else if(k === 'c'){
       e.preventDefault();

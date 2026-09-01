@@ -1,4 +1,9 @@
-import markdown, re, json, html
+import markdown, re, json, html, os
+
+try:
+    RECUP = json.load(open('recuperacao.json'))
+except FileNotFoundError:
+    RECUP = {}
 
 md = open('livro/camadas-0-1.md').read()
 md = md.split('---',1)[1].strip()   # drop the two title lines
@@ -56,7 +61,16 @@ for p in partes[1:]:
     for marca in ('<section class="chapter">', '<h2 class="camada"', '</section>', '<hr />'):
         k = p.find(marca)
         if k != -1: corte = min(corte, k)
-    saida.append(p[:corte] + '</div></details>' + p[corte:])
+    trecho = p[:corte]
+    m = re.match(r'<details class="sec" open id="([^"]+)"', trecho)
+    extra = ''
+    if m and m.group(1) in RECUP:
+        perg, resp = RECUP[m.group(1)]
+        extra = ('<div class="recup"><h5>Recuperação</h5>'
+                 '<p class="perg">' + html.escape(perg) + '</p>'
+                 '<details class="resp"><summary>Ver resposta</summary>'
+                 '<p>' + html.escape(resp) + '</p></details></div>')
+    saida.append(trecho + extra + '</div></details>' + p[corte:])
 body = ''.join(saida)
 
 body = body.replace('<hr />','</section>')
