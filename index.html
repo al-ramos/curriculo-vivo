@@ -132,6 +132,11 @@ body.so-nao-lidas details.sec.lida{display:none}
 /* tempo de leitura e notas */
 .tempo{flex:none;align-self:center;font-family:"IBM Plex Mono",monospace;font-size:.6rem;
   color:var(--faint);letter-spacing:.04em;white-space:nowrap}
+.dobrar{flex:none;align-self:center;font-family:"IBM Plex Mono",monospace;font-size:.6rem;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:var(--surface);
+  border:1px solid var(--rule);border-radius:2px;padding:.18rem .45rem;cursor:pointer;
+  white-space:nowrap;min-width:5.2rem;text-align:center}
+.dobrar:hover{color:var(--accent);border-color:var(--accent)}
 .nota-btn{flex:none;align-self:center;font-family:"IBM Plex Mono",monospace;font-size:.6rem;
   letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:var(--surface);
   border:1px solid var(--rule);border-radius:2px;padding:.18rem .45rem;cursor:pointer}
@@ -891,6 +896,22 @@ desatualizado na publicação, e o livro perde exatamente o argumento que veio d
       if(nt.trim()) txt += '\n\n> **Nota:** ' + nt.trim().replace(/\n+/g, ' ');
       copiar(txt, c);
     });
+    // dobrar / desdobrar a seção
+    var db = document.createElement('button');
+    db.type = 'button'; db.className = 'dobrar';
+    function rotulo(){
+      db.textContent = d.open ? 'recolher' : 'expandir';
+      db.setAttribute('aria-expanded', d.open ? 'true' : 'false');
+      db.title = d.open ? 'Recolher esta seção' : 'Expandir esta seção';
+    }
+    rotulo();
+    db.addEventListener('click', function(e){
+      e.preventDefault(); e.stopPropagation();
+      d.open = !d.open;
+    });
+    d.addEventListener('toggle', rotulo);
+    sum.appendChild(db);
+
     // tempo estimado de leitura
     var corpoEl = d.querySelector('.sec-corpo');
     var palavras = corpoEl ? corpoEl.textContent.trim().split(/\s+/).length : 0;
