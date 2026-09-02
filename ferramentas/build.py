@@ -22,6 +22,7 @@ fichas = {
  '1.1': ('sem erosão observada','permanente','técnico · teórico','/fundacao'),
  '1.2': ('sem erosão observada','permanente','técnico · teórico','/invariantes'),
  '1.3': ('sem erosão observada','permanente','teórico · meta','/perenidade'),
+ '1.4': ('sem erosão observada','permanente','humano · cognitivo','/cognicao'),
 }
 def ficha(num):
     if num not in fichas: return ''

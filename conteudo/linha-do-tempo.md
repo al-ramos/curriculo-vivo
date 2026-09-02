@@ -180,8 +180,8 @@ aprendendo ao executar cada projeto — e é essa direção que sustenta a regra
 
 | Fase | Meses | Trilha | Capítulos escritos | Acumulado |
 |---|---|---|---|---|
-| 0 | 0–0,5 | 0 | — (fichas) | 4 de 22 |
-| 1 | 1–6 | 1 | 1.4, 2.1 | 6 |
+| 0 | 0–0,5 | 0 | — (fichas) | 5 de 22 |
+| 1 | 1–6 | 1 | 1.4 ✓, 2.1 | 6 |
 | 2 | 7–12 | 2 | 2.2, 2.3 | 8 |
 | 3 | 13–18 | 3 | 3.1, 1.5 | 10 |
 | 4 | 19–22 | 4 | 3.3 | 11 |

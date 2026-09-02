@@ -432,8 +432,8 @@ HTML = HEAD + f"""
           </div></div>
       </div>
       <div class="status">
-        <span class="chip on">Camadas 0 e 1 escritas</span>
-        <span class="chip">~5.800 palavras</span>
+        <span class="chip on">Camada 0 e 1.1 a 1.4 escritos</span>
+        <span class="chip">~8.000 palavras</span>
         <span class="chip">Índice v3</span>
         <span class="chip">01·09·2026</span>
       </div>

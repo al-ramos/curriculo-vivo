@@ -1,53 +1,126 @@
 {
-  "s0-1": ["Nomeie as quatro fases do arco e diga em qual delas está a maior parte do que as universidades brasileiras ensinam hoje.",
-           "Emergência, Consolidação, Erosão e Arqueologia. A maior parte do ensino brasileiro está na Erosão — o consenso já rachou, mas o vocabulário sobrevive à prática."],
-  "s0-2": ["Por que o livro classifica por velocidade e não por assunto? O que essa escolha custa?",
-           "Porque classificar por assunto obriga a decidir se ética é um tema humano ou contextual, e a resposta honesta é que é os dois. Classificar por velocidade obriga a uma única decisão por capítulo — decisão que o livro teria de defender de qualquer forma. O custo é abrir mão do conforto da ementa tradicional."],
-  "s0-3": ["Qual é o campo mais incomum da ficha de envelhecimento, e por que ele importa mais do que a data de revisão?",
-           "O campo de gatilhos. Data de revisão sozinha produz revisão burocrática — chega o prazo, alguém relê e não muda nada. Gatilho produz revisão quando há motivo: um capítulo bem escrito sabe dizer o que precisaria acontecer no mundo para que ele estivesse errado."],
-  "s0-4": ["A armadilha do currículo estático está no atraso? Se não, onde está?",
-           "Não está no atraso, e sim na ausência de sinalização do atraso. Quem aprende uma ferramenta descontinuada sabendo disso aprendeu história da computação; quem aprende a mesma coisa como prática corrente adquiriu um mapa errado do território."],
-  "s0-5": ["Quais são as duas competências do professor, e o que acontece com quem tem só uma delas?",
-           "Arqueológica e prospectiva. Só arqueólogo forma profissionais competentes e desatualizados; só futurista forma profissionais atualizados e sem fundação. As duas não se somam — se corrigem mutuamente."],
-  "s0-6": ["Para o profissional em transição, onde ficam as lacunas mais prováveis?",
-           "Nas camadas 1 e 2, não na 4. Quem vem de sustentação de legado costuma ter fundação melhor do que imagina; o que falta em geral não é a ferramenta da moda, e sim sistemas distribuídos (2.3) ou escrita técnica (1.5)."],
-
-  "s1-1-1": ["Defina abstração em uma frase que deixe explícito o que se perde nela. Como se mede uma boa abstração?",
-             "Abstração é a operação de decidir o que ignorar — sempre uma perda deliberada de informação. Mede-se pelo que ela permite esquecer sem consequência: uma boa abstração não obriga quem a usa a conhecer a implementação para prever o comportamento."],
-  "s1-1-2": ["Cite duas áreas da matemática que ganharam peso na prática recente e diga por quê.",
-             "Probabilidade e estatística, porque observabilidade e sistemas distribuídos exigem ler percentis em vez de médias — quem lê média otimiza o caso que não importa. E grafos, que sustentam dependências de build, roteamento e detecção de ciclos, sendo a estrutura mais reutilizada e menos reconhecida do ofício."],
-  "s1-1-3": ["Que limite teórico explica por que uma ferramenta de análise estática necessariamente erra?",
-             "A indecidibilidade, cujo caso canônico é o problema da parada, demonstrado por Turing em 1936. Nenhum analisador estático pode ser ao mesmo tempo completo e correto: toda ferramenta escolhe entre deixar passar problemas reais ou apontar problemas inexistentes."],
-  "s1-1-4": ["Qual é a pergunta correta sobre falha, e por que a outra formulação está errada?",
-             "A pergunta não é \"como impedir que falhe\", e sim \"como ele se comporta quando falhar\". Falha é um estado de projeto, não um acidente — princípio que reaparece inteiro em 2.3.3 e 2.3.6 e separa um sistema que degrada de um que desaba."],
-  "s1-1-5": ["O que a conferência de 1968 efetivamente fez, e quais são as duas leituras erradas mais comuns sobre ela?",
-             "Ela nomeou a disciplina, não a inventou — havia software complexo sendo feito havia mais de uma década. As duas leituras erradas são supor que ela fundou a prática, e supor que a crise do software foi resolvida: o padrão descrito em Garmisch continua reconhecível hoje."],
-  "s1-1-6": ["Quatro coisas melhoraram de fato desde 1968. Quais são, e qual é a natureza dessa vitória?",
-             "Controle de versão, testes automatizados, integração contínua e observabilidade. Nenhuma delas reduz a complexidade — todas reduzem o custo de errar dentro dela. É uma vitória real, e de natureza diferente da que Garmisch esperava."],
-
-  "s1-2-1": ["Por que a lei de Conway é uma restrição e não uma metáfora? Qual a consequência prática?",
-             "Porque ela descreve uma restrição de fluxo de informação, válida em qualquer tecnologia: quatro times que não conversam produzem quatro componentes mal integrados, em COBOL ou em microsserviços. A consequência é que mudar a arquitetura sem mudar a organização é caro e costuma fracassar."],
-  "s1-2-2": ["Enuncie as duas leis de Lehman que o livro usa — e a ressalva que ele faz sobre elas.",
-             "Mudança contínua: um sistema em uso precisa mudar ou fica progressivamente menos útil, porque o mundo se move. Complexidade crescente: ela aumenta a menos que se trabalhe deliberadamente para reduzi-la — a condicional é o ponto. A ressalva é que a base empírica é mais estreita do que a confiança com que as leis costumam ser citadas."],
-  "s1-2-3": ["Distinga complexidade essencial de acidental e mostre por que isso limita qualquer promessa de ganho de produtividade.",
-             "A essencial está no problema — entender o domínio, especificar comportamento correto, lidar com requisitos contraditórios. A acidental está nas ferramentas. Ferramentas só atacam a parte acidental, e essa parte já havia encolhido o bastante para que eliminá-la não produzisse ganho de ordem de grandeza. É o teste mais afiado disponível contra promessas de revolução."],
-  "s1-2-4": ["Qual critério de decomposição Parnas propôs, e qual ele substituiu?",
-             "Cada módulo deve esconder uma decisão de projeto que pode mudar; a fronteira do módulo é o contorno do que pode ser trocado sem afetar o resto. Ele substituiu a decomposição por etapas de processamento, que produz módulos que mudam juntos — o oposto do objetivo."],
-  "s1-2-5": ["O mecanismo da entropia de software é técnico ou econômico? Justifique.",
-             "Econômico. A alteração correta é sempre mais cara no curto prazo do que a alteração suficiente, e o incentivo de quem entrega prazo é o curto prazo. Por isso a solução nunca foi ferramenta, e sim prática deliberada e contínua."],
-  "s1-2-6": ["O que faz de acoplamento e coesão uma questão de estrutura, e não de estilo?",
-             "O fato de atravessarem cinco ordens de grandeza sem perder validade: descrevem a relação entre funções, entre classes, entre módulos, entre serviços e entre times. Dizer que um microsserviço não deve compartilhar banco é reenunciar acoplamento."],
-  "s1-2-7": ["Na curva de custo da mudança tardia, o que é sólido e o que não é?",
-             "A direção é sólida: defeito descoberto tarde custa mais. A magnitude — os multiplicadores de 10, 100, 1000 — não tem base para ser citada como fato: os dados vêm de projetos sequenciais dos anos 1970 e 1980. E o mecanismo mudou, porque onde há entrega contínua a distância entre escrever e implantar é de minutos."],
-  "s1-2-8": ["Que estrutura de curso os invariantes sugerem, e por que ela é o inverso do usual?",
-             "Nenhum deles é ensinável como conteúdo isolado — não existe aula de lei de Conway. Em vez de uma disciplina introdutória que os \"passa\" no primeiro semestre, cada invariante deve ser retomado toda vez que um capítulo sazonal o exemplificar: Conway em microsserviços, Parnas em API, Brooks em assistentes de IA."],
-
-  "s1-3-1": ["Enuncie o teste de perenidade com os três detalhes que importam.",
-             "Um conhecimento é candidato a invariante se permaneceu válido, sem reformulação de conteúdo, através de pelo menos três rupturas de paradigma independentes. \"Sem reformulação\" exclui princípios que sobrevivem só por ficarem vagos; \"independentes\" exclui contar três vezes a mesma mudança; e \"candidato\" é intencional — o teste elimina, mas não prova."],
-  "s1-3-2": ["Quais são os três eixos de ruptura, e qual deles é o menos discutido?",
-             "Hardware, escala e modelo de custo. O de custo é o menos discutido e o mais decisivo: quando o recurso caro era tempo de máquina, otimizar era racional e legibilidade era luxo; quando passou a ser tempo de programador, a hierarquia se inverteu."],
-  "s1-3-3": ["Cite três falsos invariantes e o eixo que derrubou cada um.",
-             "Orientação a objetos como forma natural de organizar qualquer programa — caiu no eixo de escala e pela absorção de ideias funcionais. Requisitos congelados como pré-condição de qualidade — caiu no modelo de custo, quando implantar passou a levar minutos. \"A nuvem é mais barata\" — nunca foi invariante, é uma afirmação sobre modelo de custo."],
-  "s1-3-4": ["Qual invariante o próprio livro aponta como o próximo a cair, e qual é o gatilho?",
-             "Depois da curva de Boehm, a lei de Conway. Não por estar errada, mas porque o pressuposto que a sustenta é que a comunicação humana é o gargalo do projeto: se parte substancial da produção de código deixar de passar por comunicação entre pessoas, o mecanismo da lei muda de natureza."]
+  "s0-1": [
+    "Nomeie as quatro fases do arco e diga em qual delas está a maior parte do que as universidades brasileiras ensinam hoje.",
+    "Emergência, Consolidação, Erosão e Arqueologia. A maior parte do ensino brasileiro está na Erosão — o consenso já rachou, mas o vocabulário sobrevive à prática."
+  ],
+  "s0-2": [
+    "Por que o livro classifica por velocidade e não por assunto? O que essa escolha custa?",
+    "Porque classificar por assunto obriga a decidir se ética é um tema humano ou contextual, e a resposta honesta é que é os dois. Classificar por velocidade obriga a uma única decisão por capítulo — decisão que o livro teria de defender de qualquer forma. O custo é abrir mão do conforto da ementa tradicional."
+  ],
+  "s0-3": [
+    "Qual é o campo mais incomum da ficha de envelhecimento, e por que ele importa mais do que a data de revisão?",
+    "O campo de gatilhos. Data de revisão sozinha produz revisão burocrática — chega o prazo, alguém relê e não muda nada. Gatilho produz revisão quando há motivo: um capítulo bem escrito sabe dizer o que precisaria acontecer no mundo para que ele estivesse errado."
+  ],
+  "s0-4": [
+    "A armadilha do currículo estático está no atraso? Se não, onde está?",
+    "Não está no atraso, e sim na ausência de sinalização do atraso. Quem aprende uma ferramenta descontinuada sabendo disso aprendeu história da computação; quem aprende a mesma coisa como prática corrente adquiriu um mapa errado do território."
+  ],
+  "s0-5": [
+    "Quais são as duas competências do professor, e o que acontece com quem tem só uma delas?",
+    "Arqueológica e prospectiva. Só arqueólogo forma profissionais competentes e desatualizados; só futurista forma profissionais atualizados e sem fundação. As duas não se somam — se corrigem mutuamente."
+  ],
+  "s0-6": [
+    "Para o profissional em transição, onde ficam as lacunas mais prováveis?",
+    "Nas camadas 1 e 2, não na 4. Quem vem de sustentação de legado costuma ter fundação melhor do que imagina; o que falta em geral não é a ferramenta da moda, e sim sistemas distribuídos (2.3) ou escrita técnica (1.5)."
+  ],
+  "s1-1-1": [
+    "Defina abstração em uma frase que deixe explícito o que se perde nela. Como se mede uma boa abstração?",
+    "Abstração é a operação de decidir o que ignorar — sempre uma perda deliberada de informação. Mede-se pelo que ela permite esquecer sem consequência: uma boa abstração não obriga quem a usa a conhecer a implementação para prever o comportamento."
+  ],
+  "s1-1-2": [
+    "Cite duas áreas da matemática que ganharam peso na prática recente e diga por quê.",
+    "Probabilidade e estatística, porque observabilidade e sistemas distribuídos exigem ler percentis em vez de médias — quem lê média otimiza o caso que não importa. E grafos, que sustentam dependências de build, roteamento e detecção de ciclos, sendo a estrutura mais reutilizada e menos reconhecida do ofício."
+  ],
+  "s1-1-3": [
+    "Que limite teórico explica por que uma ferramenta de análise estática necessariamente erra?",
+    "A indecidibilidade, cujo caso canônico é o problema da parada, demonstrado por Turing em 1936. Nenhum analisador estático pode ser ao mesmo tempo completo e correto: toda ferramenta escolhe entre deixar passar problemas reais ou apontar problemas inexistentes."
+  ],
+  "s1-1-4": [
+    "Qual é a pergunta correta sobre falha, e por que a outra formulação está errada?",
+    "A pergunta não é \"como impedir que falhe\", e sim \"como ele se comporta quando falhar\". Falha é um estado de projeto, não um acidente — princípio que reaparece inteiro em 2.3.3 e 2.3.6 e separa um sistema que degrada de um que desaba."
+  ],
+  "s1-1-5": [
+    "O que a conferência de 1968 efetivamente fez, e quais são as duas leituras erradas mais comuns sobre ela?",
+    "Ela nomeou a disciplina, não a inventou — havia software complexo sendo feito havia mais de uma década. As duas leituras erradas são supor que ela fundou a prática, e supor que a crise do software foi resolvida: o padrão descrito em Garmisch continua reconhecível hoje."
+  ],
+  "s1-1-6": [
+    "Quatro coisas melhoraram de fato desde 1968. Quais são, e qual é a natureza dessa vitória?",
+    "Controle de versão, testes automatizados, integração contínua e observabilidade. Nenhuma delas reduz a complexidade — todas reduzem o custo de errar dentro dela. É uma vitória real, e de natureza diferente da que Garmisch esperava."
+  ],
+  "s1-2-1": [
+    "Por que a lei de Conway é uma restrição e não uma metáfora? Qual a consequência prática?",
+    "Porque ela descreve uma restrição de fluxo de informação, válida em qualquer tecnologia: quatro times que não conversam produzem quatro componentes mal integrados, em COBOL ou em microsserviços. A consequência é que mudar a arquitetura sem mudar a organização é caro e costuma fracassar."
+  ],
+  "s1-2-2": [
+    "Enuncie as duas leis de Lehman que o livro usa — e a ressalva que ele faz sobre elas.",
+    "Mudança contínua: um sistema em uso precisa mudar ou fica progressivamente menos útil, porque o mundo se move. Complexidade crescente: ela aumenta a menos que se trabalhe deliberadamente para reduzi-la — a condicional é o ponto. A ressalva é que a base empírica é mais estreita do que a confiança com que as leis costumam ser citadas."
+  ],
+  "s1-2-3": [
+    "Distinga complexidade essencial de acidental e mostre por que isso limita qualquer promessa de ganho de produtividade.",
+    "A essencial está no problema — entender o domínio, especificar comportamento correto, lidar com requisitos contraditórios. A acidental está nas ferramentas. Ferramentas só atacam a parte acidental, e essa parte já havia encolhido o bastante para que eliminá-la não produzisse ganho de ordem de grandeza. É o teste mais afiado disponível contra promessas de revolução."
+  ],
+  "s1-2-4": [
+    "Qual critério de decomposição Parnas propôs, e qual ele substituiu?",
+    "Cada módulo deve esconder uma decisão de projeto que pode mudar; a fronteira do módulo é o contorno do que pode ser trocado sem afetar o resto. Ele substituiu a decomposição por etapas de processamento, que produz módulos que mudam juntos — o oposto do objetivo."
+  ],
+  "s1-2-5": [
+    "O mecanismo da entropia de software é técnico ou econômico? Justifique.",
+    "Econômico. A alteração correta é sempre mais cara no curto prazo do que a alteração suficiente, e o incentivo de quem entrega prazo é o curto prazo. Por isso a solução nunca foi ferramenta, e sim prática deliberada e contínua."
+  ],
+  "s1-2-6": [
+    "O que faz de acoplamento e coesão uma questão de estrutura, e não de estilo?",
+    "O fato de atravessarem cinco ordens de grandeza sem perder validade: descrevem a relação entre funções, entre classes, entre módulos, entre serviços e entre times. Dizer que um microsserviço não deve compartilhar banco é reenunciar acoplamento."
+  ],
+  "s1-2-7": [
+    "Na curva de custo da mudança tardia, o que é sólido e o que não é?",
+    "A direção é sólida: defeito descoberto tarde custa mais. A magnitude — os multiplicadores de 10, 100, 1000 — não tem base para ser citada como fato: os dados vêm de projetos sequenciais dos anos 1970 e 1980. E o mecanismo mudou, porque onde há entrega contínua a distância entre escrever e implantar é de minutos."
+  ],
+  "s1-2-8": [
+    "Que estrutura de curso os invariantes sugerem, e por que ela é o inverso do usual?",
+    "Nenhum deles é ensinável como conteúdo isolado — não existe aula de lei de Conway. Em vez de uma disciplina introdutória que os \"passa\" no primeiro semestre, cada invariante deve ser retomado toda vez que um capítulo sazonal o exemplificar: Conway em microsserviços, Parnas em API, Brooks em assistentes de IA."
+  ],
+  "s1-3-1": [
+    "Enuncie o teste de perenidade com os três detalhes que importam.",
+    "Um conhecimento é candidato a invariante se permaneceu válido, sem reformulação de conteúdo, através de pelo menos três rupturas de paradigma independentes. \"Sem reformulação\" exclui princípios que sobrevivem só por ficarem vagos; \"independentes\" exclui contar três vezes a mesma mudança; e \"candidato\" é intencional — o teste elimina, mas não prova."
+  ],
+  "s1-3-2": [
+    "Quais são os três eixos de ruptura, e qual deles é o menos discutido?",
+    "Hardware, escala e modelo de custo. O de custo é o menos discutido e o mais decisivo: quando o recurso caro era tempo de máquina, otimizar era racional e legibilidade era luxo; quando passou a ser tempo de programador, a hierarquia se inverteu."
+  ],
+  "s1-3-3": [
+    "Cite três falsos invariantes e o eixo que derrubou cada um.",
+    "Orientação a objetos como forma natural de organizar qualquer programa — caiu no eixo de escala e pela absorção de ideias funcionais. Requisitos congelados como pré-condição de qualidade — caiu no modelo de custo, quando implantar passou a levar minutos. \"A nuvem é mais barata\" — nunca foi invariante, é uma afirmação sobre modelo de custo."
+  ],
+  "s1-3-4": [
+    "Qual invariante o próprio livro aponta como o próximo a cair, e qual é o gatilho?",
+    "Depois da curva de Boehm, a lei de Conway. Não por estar errada, mas porque o pressuposto que a sustenta é que a comunicação humana é o gargalo do projeto: se parte substancial da produção de código deixar de passar por comunicação entre pessoas, o mecanismo da lei muda de natureza."
+  ],
+  "s1-4-1": [
+    "Qual é o tamanho real da memória de trabalho, e o que isso implica para legibilidade de código?",
+    "Cerca de quatro elementos simultâneos — a cifra de sete mais ou menos dois, de 1956, foi revisada para baixo. Legibilidade deixa de ser gosto e vira orçamento: cada nome ruim ou indireção desnecessária consome um dos quatro slots, e quando eles acabam a pessoa para de raciocinar sobre o problema e passa a raciocinar sobre o código."
+  ],
+  "s1-4-2": [
+    "Nomeie os quatro níveis de abstração e diga em qual começa a explicação de alguém sênior.",
+    "1: o que a máquina faz, linha a linha. 2: qual é a intenção do trecho. 3: qual é o papel no sistema. 4: qual problema do mundo isso resolve. A explicação madura começa no nível 3 — se ela for uma tradução do nível 1 para o português, a pessoa ainda não subiu."
+  ],
+  "s1-4-3": [
+    "Quais são os dois erros que dominam a prática de depuração?",
+    "Buscar confirmação em vez de refutação — o experimento valioso é o que poderia derrubar a hipótese. E mudar mais de uma coisa por vez: se o sistema volta a funcionar depois de duas alterações, você não consertou, apenas parou de ver, e é assim que defeitos reaparecem meses depois."
+  ],
+  "s1-4-4": [
+    "Por que desaprender custa mais do que aprender, e o que fazer a respeito?",
+    "Porque conhecimento antigo não fica inerte — interfere. Intuições construídas em uma década operam sem serem examinadas. O remédio é nomear o modelo antigo: escrevê-lo transforma um reflexo em proposição, e proposições podem ser testadas."
+  ],
+  "s1-4-5": [
+    "Qual pergunta separa quem transfere conhecimento entre tecnologias de quem não transfere?",
+    "\"O que este sistema é, por baixo do vocabulário?\" Quem entende Git como um grafo dirigido acíclico de instantâneos entende o próximo sistema de versionamento em uma tarde; quem decorou sete comandos não transfere nada. Modelos mentais corretos têm meia-vida de décadas, listas de comandos têm meia-vida de anos."
+  ],
+  "s1-4-6": [
+    "Por que essas habilidades não aparecem em anúncio de vaga e ainda assim determinam o desempenho?",
+    "Porque nenhuma delas é verificável numa lista de requisitos, mas todas governam o gargalo real do trabalho — memória de trabalho, agrupamento, método de diagnóstico, custo de desaprender e qualidade dos modelos mentais. São elas que determinam a velocidade com que alguém atravessa cada substituição de camada sazonal ao longo de trinta anos."
+  ],
+  "s1-4-7": [
+    "Cite as duas ressalvas honestas sobre prática deliberada.",
+    "A regra das dez mil horas não é de Ericsson — é uma popularização que ele próprio contestou. E a força explicativa da prática deliberada é menor do que a divulgação sugere, sobretudo em domínios pouco estruturados como programação. A conclusão defensável é a negativa: prática sem feedback quase certamente não leva a lugar nenhum."
+  ]
 }

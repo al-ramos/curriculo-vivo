@@ -611,6 +611,228 @@ nenhuma, desconfie — de mim, não do conceito. Uma afirmação que nada poderi
 
 ---
 
+## 1.4 · Cognição e metacognição
+
+O capítulo mais negligenciado de qualquer currículo de tecnologia, e o único cujo conteúdo
+não mudou em cinquenta anos porque não é sobre computadores: é sobre a máquina que os
+programa. Ele está na camada Permanente por um motivo simples — os limites da atenção
+humana não receberam atualização de versão.
+
+### 1.4.1 Carga cognitiva e os limites da memória de trabalho
+
+A memória de trabalho é o gargalo de toda atividade intelectual, e é ridiculamente pequena.
+A cifra que circula, os sete elementos mais ou menos dois de Miller, é de 1956 e foi
+revisada para baixo: as estimativas contemporâneas ficam em torno de quatro elementos
+simultâneos. Quatro. É esse o orçamento com que se lê uma função, se acompanha uma reunião
+de arquitetura e se depura um problema em produção às três da manhã.
+
+A teoria da carga cognitiva, formulada por John Sweller, separa esse orçamento em partes.
+A **carga intrínseca** vem da dificuldade inerente do material — uma árvore B é mais
+complexa que uma lista ligada, e nada muda isso. A **carga estranha** vem da forma como o
+material é apresentado: nomes ruins, indireção desnecessária, formatação inconsistente,
+documentação espalhada. É a única parte que se pode atacar, e é onde mora praticamente todo
+o valor prático do conceito. Havia ainda uma terceira categoria na formulação original, a
+carga "relevante", que a própria literatura passou a tratar com desconfiança — vale
+registrar, porque o livro pede rigor sobre o que envelheceu.
+
+A consequência para quem escreve código é direta e desconfortável: **legibilidade não é
+questão de gosto, é questão de orçamento**. Um nome ruim consome um slot dos quatro. Uma
+indireção desnecessária consome outro. Quando os quatro acabam, o leitor não fica um pouco
+mais lento — ele para de conseguir raciocinar sobre o problema e passa a raciocinar sobre o
+código, que é outra coisa.
+
+O mecanismo que quebra esse limite é o **agrupamento**. Um iniciante que lê
+`for (int i = 0; i < n; i++)` processa cinco elementos; alguém experiente processa um: "laço
+sobre a coleção". A perícia não amplia a memória de trabalho — ela aumenta o tamanho de cada
+peça que cabe nela. É por isso que a experiência não se transfere por explicação: o
+agrupamento se constrói por exposição repetida, e não há atalho conhecido.
+
+Felienne Hermans, em *The Programmer's Brain*, propõe uma distinção operacional que vale
+carregar: quando você trava diante de um código, o problema é **falta de conhecimento**
+(não sei o que essa palavra-chave faz), **falta de informação** (sei o que faz, mas não sei
+o que essa função devolve) ou **falta de capacidade de processamento** (sei tudo, mas são
+peças demais para segurar de uma vez). Os três parecem iguais por dentro e pedem remédios
+diferentes: estudar, consultar, ou anotar em papel. Confundi-los é a causa mais comum de
+tempo perdido em depuração.
+
+### 1.4.2 Os quatro níveis de abstração
+
+Todo código pode ser lido em quatro alturas, e a maior parte das confusões de projeto vem
+de duas pessoas conversando em alturas diferentes sem perceber.
+
+**Nível 1 — o que a máquina faz.** Linha a linha: esta variável recebe, este laço percorre,
+esta chamada bloqueia. É o nível do depurador e do rastreamento de pilha, e é o único onde
+o computador tem razão por definição.
+
+**Nível 2 — qual é a intenção do trecho.** "Isto valida o CPF", "isto tenta de novo com
+espera crescente". Um trecho legível é aquele em que o nível 2 é dedutível sem passar pelo
+nível 1. Quando alguém diz que um código está limpo, quase sempre está dizendo isso.
+
+**Nível 3 — qual é o papel no sistema.** Este módulo é a fronteira com o mundo externo,
+aquele guarda a regra de negócio, este outro existe só para isolar uma decisão que pode
+mudar. É o nível de Parnas, e o nível em que arquitetura acontece.
+
+**Nível 4 — qual problema do mundo isso resolve.** Por que existe essa regra, quem paga por
+ela, o que acontece com o negócio se ela estiver errada.
+
+O valor de nomear os quatro níveis é diagnóstico. Um desenvolvedor júnior tipicamente opera
+bem no nível 1 e adivinha o 2. Um pleno domina 1 e 2 e trata o 3 como decoração. A
+senioridade começa quando a pessoa transita nos quatro **de propósito** — e sabe dizer em
+qual está. Reuniões improdutivas quase sempre são pessoas presas em níveis distintos: uma
+argumenta implementação enquanto a outra argumenta negócio, e as duas acham que a outra não
+entendeu.
+
+Há um teste rápido: peça a alguém para explicar um trecho que escreveu. Se a explicação for
+uma tradução do nível 1 para o português — "aqui eu faço um laço e verifico se é nulo" —, a
+pessoa ainda não subiu. A explicação madura começa no nível 3.
+
+### 1.4.3 Debugging como método científico
+
+Depurar não é uma habilidade de ferramenta; é a aplicação do método científico sob pressão
+de tempo, e é a atividade em que a disciplina intelectual de um profissional fica mais
+visível.
+
+O ciclo é sempre o mesmo. **Observação**: o que exatamente acontece, em termos verificáveis,
+sem interpretação. **Hipótese**: uma explicação que, se verdadeira, produziria essa
+observação. **Predição**: se a hipótese for verdadeira, então tal experimento dará tal
+resultado — e este é o passo que quase todo mundo pula. **Experimento**: o menor possível,
+mudando uma coisa por vez. **Conclusão**: e o registro do que foi eliminado.
+
+Dois erros dominam a prática.
+
+O primeiro é **buscar confirmação em vez de refutação**. Formulada a hipótese, a tentação é
+procurar evidência a favor. O experimento valioso é o que teria potencial de derrubá-la — é
+o mesmo princípio que sustenta o capítulo 1.3 deste livro, aplicado em escala de minutos em
+vez de décadas.
+
+O segundo é **mudar mais de uma coisa por vez**. Duas alterações simultâneas e o sistema
+volta a funcionar: você não sabe o que consertou, e portanto não consertou — apenas parou de
+ver. Esse é o mecanismo pelo qual defeitos "resolvidos" reaparecem meses depois.
+
+A técnica mais subestimada é a **bisseção**: em vez de raciocinar sobre a causa, corte o
+espaço de busca ao meio e repita. Com mil revisões entre a última versão boa e a ruim, dez
+testes bastam. `git bisect` é a versão automatizada disso, mas o valor está no raciocínio,
+não no comando — a mesma bisseção funciona sobre dados de entrada, sobre configuração e
+sobre a lista de serviços de uma cadeia de chamadas.
+
+Uma observação sobre ferramentas, coerente com a tese do livro: depurador contra registro em
+log é uma discussão de camada sazonal. O método não muda. Quem sabe formular hipótese e
+cortar espaço de busca é eficaz com qualquer uma das duas; quem não sabe fica igualmente
+perdido com as duas, só que com telas mais bonitas.
+
+### 1.4.4 A meta-habilidade de aprender e desaprender
+
+Aprender uma tecnologia nova é a parte fácil, e é a única que os cursos endereçam. A parte
+cara é **desaprender**.
+
+O motivo é que conhecimento antigo não fica inerte: ele interfere. Quem passou quinze anos
+em orientação a objetos empresarial carrega intuições — sobre onde colocar estado, sobre
+como modelar comportamento, sobre o que é "óbvio" — que atrapalham ativamente ao aprender
+um paradigma funcional. O iniciante absoluto aprende mais devagar no começo e às vezes chega
+mais longe, não por talento, mas por não ter nada para desmontar antes.
+
+Isso tem duas consequências práticas.
+
+A primeira: **nomear o modelo antigo é metade do trabalho**. Enquanto a intuição permanece
+implícita, ela opera sem ser examinada. Escrever "eu presumo que estado mutável compartilhado
+é a forma natural de coordenar" transforma um reflexo em uma proposição — e proposições
+podem ser testadas.
+
+A segunda: a resistência a tecnologias novas raramente é preguiça, e quase nunca é o que
+parece. Ela costuma ser o custo real de desmontar um modelo mental que funciona há uma
+década — um custo que quem nunca o construiu não enxerga. Isso vale como diagnóstico, não
+como desculpa: reconhecer o custo é o que permite pagá-lo deliberadamente em vez de negá-lo.
+
+Vale registrar o que a evidência **não** sustenta: a ideia de estilos de aprendizagem —
+visual, auditivo, cinestésico — é popular, intuitiva e não se confirma em teste
+experimental. Ensinar cada pessoa no seu "estilo" não melhora o resultado. É um exemplo
+particularmente útil para este livro, porque é um falso invariante que se instalou na
+educação e continua sendo repetido em treinamento corporativo.
+
+### 1.4.5 Modelos mentais e transferência entre tecnologias
+
+Um modelo mental é a explicação interna que alguém carrega sobre como um sistema funciona.
+Ele quase sempre está errado em algum detalhe, e ainda assim é o que permite prever
+comportamento sem consultar documentação — o que é a definição operacional de competência.
+
+O ponto que importa para carreira é a **transferência**. Quem aprendeu Git decorando sete
+comandos não transfere nada quando muda de ferramenta. Quem entendeu que Git é um grafo
+dirigido acíclico de instantâneos, com referências móveis apontando para nós, entende
+qualquer sistema de versionamento subsequente em uma tarde — e, melhor, prevê corretamente o
+que acontece num caso que nunca viu.
+
+A pergunta que separa os dois é sempre a mesma, e vale carregar como hábito: **o que este
+sistema é, por baixo do vocabulário?** Um banco relacional é álgebra de conjuntos com
+restrições de integridade. Um contêiner é isolamento de processo com sistema de arquivos em
+camadas. Uma fila é um desacoplamento temporal entre produtor e consumidor. Nenhuma dessas
+frases é a documentação oficial de nada, e todas sobrevivem à troca do produto.
+
+Esse é o mecanismo concreto pelo qual a Camada 1 protege contra o envelhecimento das
+camadas 3 e 4. Não é uma metáfora inspiradora: é que modelos mentais corretos têm meia-vida
+de décadas, e listas de comandos têm meia-vida de anos.
+
+### 1.4.6 Por que isso supera qualquer linguagem ou framework
+
+Junte os cinco tópicos anteriores e o argumento se fecha sozinho.
+
+O gargalo do trabalho é a memória de trabalho, e ela não melhora com ferramenta. A
+competência que multiplica esse gargalo é o agrupamento, que se constrói por exposição
+deliberada. A capacidade de diagnosticar vem de método, não de instrumento. A velocidade de
+aprender algo novo depende do custo de desmontar o que já existe. E a transferência entre
+tecnologias depende da qualidade dos modelos mentais, não da quantidade de sintaxes
+conhecidas.
+
+Nenhum desses cinco itens aparece em anúncio de vaga. Todos os cinco determinam o
+desempenho de quem já foi contratado — e, o que interessa mais a este livro, determinam a
+velocidade com que a pessoa atravessa cada substituição de camada sazonal ao longo de trinta
+anos de carreira.
+
+Há uma consequência pedagógica desconfortável para quem ensina: essas habilidades não são
+ensináveis por exposição. Não existe aula de agrupamento. Elas se desenvolvem em ciclos de
+tentativa, erro e feedback específico — que é exatamente o formato que o ensino formal tem
+mais dificuldade de oferecer em escala, e o motivo pelo qual o capítulo 3.5 vai tratar a
+lacuna de ensino como estrutural, e não como desleixo.
+
+### 1.4.7 Prática deliberada e o platô do profissional intermediário
+
+Existe um padrão de carreira suficientemente comum para merecer nome: a pessoa melhora
+rápido nos primeiros três a cinco anos, atinge um patamar em que resolve com folga o que o
+trabalho exige, e permanece nesse patamar por uma década. Não é falta de esforço — é o
+resultado previsível de fazer bem o que já se sabe fazer.
+
+O mecanismo é a **automatização**. Uma habilidade praticada até virar automática deixa de
+consumir atenção, o que é ótimo para produtividade e péssimo para desenvolvimento: sem
+atenção consciente, não há ajuste. Digitar mais rápido não melhora a digitação de ninguém
+depois de certo ponto, e escrever mais do mesmo CRUD não melhora um engenheiro.
+
+O antídoto descrito na literatura é a **prática deliberada**, popularizada a partir dos
+estudos de Anders Ericsson: trabalhar deliberadamente logo acima do nível confortável, com
+objetivo específico e feedback rápido, aceitando o desconforto e o erro frequente como
+sinais de que se está no lugar certo.
+
+Duas ressalvas de honestidade, porque este livro cobra fontes.
+
+A primeira: **a regra das dez mil horas não é de Ericsson** — é uma popularização, e ele
+próprio a contestou. Não existe número mágico, e horas acumuladas sem feedback não produzem
+progresso; produzem antiguidade.
+
+A segunda: a força da prática deliberada como explicação do desempenho é **menor do que a
+divulgação sugere**. Meta-análises posteriores encontram uma fração modesta da variação
+explicada por ela, e menor ainda em domínios pouco estruturados — e programação é um domínio
+pouco estruturado, diferente de xadrez ou violino. A conclusão defensável não é "pratique
+deliberadamente e você chegará lá", e sim "prática sem feedback quase certamente não leva a
+lugar nenhum".
+
+Na prática profissional, isso se traduz em coisas pequenas e específicas: pedir revisão de
+código de alguém melhor que você em vez de de quem concorda; escolher a tarefa que você não
+sabe fazer em vez da que sabe; reimplementar do zero algo que você usa há anos; escrever
+sobre o que aprendeu, porque explicar é o teste que revela o que não se entendeu. É também
+a razão de este livro exigir um projeto e um texto ao fim de cada trilha do plano de
+estudos: leitura sem produção é o platô com aparência de progresso.
+
+
+---
+
 ## Fontes desta camada
 
 As referências primárias citadas são, na ordem em que aparecem: Naur, P. e Randell, B.
@@ -623,5 +845,12 @@ Decomposing Systems into Modules", *Communications of the ACM*, 1972 · Turing, 
 Computable Numbers, with an Application to the Entscheidungsproblem", 1936 · Boehm, B.,
 *Software Engineering Economics*, 1981 · Bossavit, L., *The Leprechauns of Software
 Engineering*, 2015.
+
+Para o capítulo 1.4: Miller, G., "The Magical Number Seven, Plus or Minus Two",
+*Psychological Review*, 1956, e a revisão posterior para cerca de quatro elementos
+(Cowan) · Sweller, J., trabalhos sobre teoria da carga cognitiva · Hermans, F.,
+*The Programmer's Brain*, 2021 · Ericsson, K. A., *Peak*, 2016, e a crítica meta-analítica
+de Macnamara, Hambrick e Oswald, 2014 · Pashler, H. et al., "Learning Styles: Concepts and
+Evidence", 2008.
 
 *Datas e atribuições devem ser conferidas contra as fontes primárias antes da publicação.*
