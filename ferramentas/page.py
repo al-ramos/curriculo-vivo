@@ -2,6 +2,10 @@ import re
 body = open('_body.html').read()
 
 HEAD = """<title>Currículo Vivo</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%225%22%20fill%3D%22%23F2F4F0%22%2F%3E%3Crect%20x%3D%226%22%20y%3D%224%22%20%20%20%20width%3D%2220%22%20height%3D%225.5%22%20rx%3D%221%22%20fill%3D%22%2322403A%22%2F%3E%3Crect%20x%3D%226%22%20y%3D%2210.5%22%20width%3D%2220%22%20height%3D%226.5%22%20rx%3D%221%22%20fill%3D%22%233E6B5B%22%2F%3E%3Crect%20x%3D%226%22%20y%3D%2218%22%20%20%20width%3D%2220%22%20height%3D%227.5%22%20rx%3D%221%22%20fill%3D%22%236F9481%22%2F%3E%3Crect%20x%3D%226%22%20y%3D%2226.5%22%20width%3D%2220%22%20height%3D%222.5%22%20rx%3D%221%22%20fill%3D%22%23A9C0B0%22%2F%3E%3C%2Fsvg%3E">
+<meta name="theme-color" content="#F2F4F0" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0F1312" media="(prefers-color-scheme: dark)">
+<meta name="description" content="Um currículo de Engenharia de Software organizado por velocidade de envelhecimento: 22 capítulos em quatro camadas, cada seção com meia-vida e data de revisão declaradas.">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -202,6 +206,22 @@ aside.lado .vazio{font-size:.78rem;color:var(--faint);font-style:italic}
   font-family:"IBM Plex Mono",monospace;font-size:.66rem;letter-spacing:.06em;
   padding:.5rem .8rem;border-radius:2px;margin-bottom:1.2rem;display:none}
 .aviso-sinc.aberto{display:block}
+
+/* publicações */
+.pubs{margin-top:1.6rem}
+.pub{display:grid;grid-template-columns:auto minmax(0,1fr);gap:.2rem .9rem;
+  padding:.55rem 0;border-bottom:1px solid var(--rule-soft);align-items:baseline}
+.pub:last-child{border-bottom:0}
+.pub .quando{font-family:"IBM Plex Mono",monospace;font-size:.66rem;color:var(--faint);
+  letter-spacing:.06em;white-space:nowrap;font-variant-numeric:tabular-nums}
+.pub .msg{font-size:.92rem;color:var(--ink);line-height:1.4}
+.pub .sha{grid-column:2;font-family:"IBM Plex Mono",monospace;font-size:.62rem;
+  color:var(--faint);text-decoration:none}
+.pub .sha:hover{color:var(--accent)}
+.pub.ultima .quando{color:var(--accent)}
+.pub.ultima .msg{font-weight:600}
+.pubs .aviso{font-size:.85rem;color:var(--faint);font-style:italic}
+.chip.data{border-color:var(--rule)}
 
 /* progresso */
 .prog{margin-bottom:1.1rem;padding-bottom:.8rem;border-bottom:1px solid var(--rule-soft)}
@@ -435,7 +455,7 @@ HTML = HEAD + f"""
         <span class="chip on">Camada 0 e 1.1 a 1.4 escritos</span>
         <span class="chip">~8.000 palavras</span>
         <span class="chip">Índice v3</span>
-        <span class="chip">01·09·2026</span>
+        <span class="chip data" id="chip-data">—</span>
       </div>
     </div>
     <div class="strata">
@@ -1060,7 +1080,67 @@ def validar_js(html):
             raise SystemExit('JavaScript inválido no bloco %d:\\n%s' % (i, r.stderr[:400]))
     return html
 
-HTML += SPY + CTRL + PROG
+PUBS = r"""
+<script>
+(function(){
+  var REPO = 'al-ramos/curriculo-vivo';
+  var chip = document.getElementById('chip-data');
+  var lista = document.getElementById('lista-pubs');
+  if(!chip && !lista) return;
+
+  function doisDig(n){ return (n < 10 ? '0' : '') + n; }
+  function dataCurta(d){
+    return doisDig(d.getDate()) + '·' + doisDig(d.getMonth() + 1) + '·' + d.getFullYear();
+  }
+  function rotuloDia(d){
+    var hoje = new Date(); hoje.setHours(0,0,0,0);
+    var alvo = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+    var dias = Math.round((hoje - alvo) / 86400000);
+    if(dias === 0) return 'hoje';
+    if(dias === 1) return 'ontem';
+    if(dias < 7) return 'há ' + dias + ' dias';
+    return doisDig(alvo.getDate()) + '/' + doisDig(alvo.getMonth() + 1) + '/' + alvo.getFullYear();
+  }
+  function hora(d){ return doisDig(d.getHours()) + ':' + doisDig(d.getMinutes()); }
+
+  function falhou(){
+    if(chip) chip.textContent = 'histórico indisponível';
+    if(lista) lista.innerHTML = '<span class="aviso">Não foi possível ler o histórico do ' +
+      'repositório agora. Ele continua em <a href="https://github.com/' + REPO +
+      '/commits/main">github.com/' + REPO + '</a>.</span>';
+  }
+
+  fetch('https://api.github.com/repos/' + REPO + '/commits?per_page=12')
+    .then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
+    .then(function(cs){
+      if(!cs || !cs.length) return falhou();
+      var ultima = new Date(cs[0].commit.author.date);
+      if(chip) chip.textContent = 'atualizado ' + rotuloDia(ultima);
+      if(!lista) return;
+      lista.innerHTML = '';
+      cs.forEach(function(c, i){
+        var d = new Date(c.commit.author.date);
+        var msg = (c.commit.message || '').split('\n')[0];
+        var el = document.createElement('div');
+        el.className = 'pub' + (i === 0 ? ' ultima' : '');
+        var q = document.createElement('span');
+        q.className = 'quando';
+        q.textContent = rotuloDia(d) + ' · ' + hora(d);
+        var m = document.createElement('span');
+        m.className = 'msg'; m.textContent = msg;
+        var a = document.createElement('a');
+        a.className = 'sha'; a.href = c.html_url; a.target = '_blank'; a.rel = 'noopener';
+        a.textContent = c.sha.slice(0, 7) + ' · ' + dataCurta(d);
+        el.appendChild(q); el.appendChild(m); el.appendChild(a);
+        lista.appendChild(el);
+      });
+    })
+    .catch(falhou);
+})();
+</script>
+"""
+HTML = HTML.replace('<title>Currículo Vivo</title>', '<title>Envelhecimento Macro</title>', 1)
+HTML += SPY + CTRL + PROG + PUBS
 HTML = validar_js(HTML)
 open('_head.html','w').write(HEAD)
 open('curriculo-vivo.html','w').write(HTML)

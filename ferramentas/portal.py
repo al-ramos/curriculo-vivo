@@ -121,6 +121,7 @@ HTML = HEAD + EXTRA + f"""
         <span class="chip">8 fases</span>
         <span class="chip">22 capítulos</span>
         <span class="chip">6 trilhas</span>
+        <span class="chip data" id="chip-data">—</span>
       </div>
     </div>
     <div class="strata">
@@ -164,6 +165,13 @@ HTML = HEAD + EXTRA + f"""
   </article>
  </div>
 </div>
+
+<section class="bloco" id="publicacoes">
+  <h3 id="publicacoes-t"><span>Publicações</span></h3>
+  <p>Cada mudança no portal é um commit datado. Esta lista vem do histórico do repositório,
+  ao vivo — se ela estiver desatualizada, o portal também está.</p>
+  <div class="pubs" id="lista-pubs"><span class="aviso">Carregando o histórico…</span></div>
+</section>
 
 <footer>
   <p><strong>Como ler este portal.</strong> O livro descreve o território; o plano de

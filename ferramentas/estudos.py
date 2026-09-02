@@ -118,6 +118,7 @@ HTML = HEAD + EXTRA + f"""
         <span class="chip">~2,5 a 3 anos</span>
         <span class="chip">6–8 h / semana</span>
         <span class="chip">40+ livros</span>
+        <span class="chip data" id="chip-data">—</span>
       </div>
     </div>
     <div class="strata">
