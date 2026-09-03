@@ -36,10 +36,10 @@ if ($temMarkdown) {
     if ($okBuild) { & python page.py; $okBuild = ($LASTEXITCODE -eq 0) }
     Pop-Location
     if ($okBuild) {
-        Copy-Item ferramentas\curriculo-vivo.html index.html -Force
+        Copy-Item ferramentas\curriculo-vivo.html livro.html -Force
         Write-Host "Página regerada." -ForegroundColor DarkGray
     } else {
-        Write-Host "Regeração falhou — publicando o index.html como está." -ForegroundColor Yellow
+        Write-Host "Regeração falhou — publicando o livro.html como está." -ForegroundColor Yellow
     }
 } else {
     Write-Host "Publicando o index.html como está." -ForegroundColor DarkGray

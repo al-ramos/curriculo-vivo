@@ -1,4 +1,7 @@
 import markdown, re, json, html, os
+from pathlib import Path
+
+BASE = Path(__file__).resolve().parent
 
 # as perguntas de recuperação são conteúdo: se sumirem, o livro sai mudo.
 # Falha alto em vez de gerar uma versão silenciosamente incompleta.
@@ -8,7 +11,7 @@ for _p in ('recuperacao.json', '../conteudo/recuperacao.json', 'conteudo/recuper
 else:
     raise SystemExit('recuperacao.json não encontrado — as perguntas de recuperação sumiriam do livro.')
 
-md = open('livro/camadas-0-1.md').read()
+md = (BASE.parent / 'conteudo' / 'texto' / 'camadas-0-1.md').read_text(encoding='utf-8')
 md = md.split('---',1)[1].strip()   # drop the two title lines
 md = md.replace('## 0.', '### 0.')
 md = md.replace('*Sem meia-vida: é o instrumento de leitura das camadas 1 a 4*',
@@ -23,6 +26,7 @@ fichas = {
  '1.2': ('sem erosão observada','permanente','técnico · teórico','/invariantes'),
  '1.3': ('sem erosão observada','permanente','teórico · meta','/perenidade'),
  '1.4': ('sem erosão observada','permanente','humano · cognitivo','/cognicao'),
+ '2.1': ('15–20 anos','consolidado','técnico','/paradigmas'),
 }
 def ficha(num):
     if num not in fichas: return ''

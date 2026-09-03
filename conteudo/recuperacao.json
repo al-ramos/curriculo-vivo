@@ -122,5 +122,33 @@
   "s1-4-7": [
     "Cite as duas ressalvas honestas sobre prática deliberada.",
     "A regra das dez mil horas não é de Ericsson — é uma popularização que ele próprio contestou. E a força explicativa da prática deliberada é menor do que a divulgação sugere, sobretudo em domínios pouco estruturados como programação. A conclusão defensável é a negativa: prática sem feedback quase certamente não leva a lugar nenhum."
+  ],
+  "s2-1-1": [
+    "Qual é a diferença entre programação imperativa e procedural, e qual regra limita o custo do estado mutável?",
+    "Imperativa descreve a computação como comandos que alteram estado; procedural organiza esse fluxo em unidades nomeadas, com parâmetros e escopo. A regra é reduzir o perímetro temporal: manter a mutação perto de quem a usa, nomear transições e expor operações em vez de estado compartilhado."
+  ],
+  "s2-1-2": [
+    "O que sobreviveu da orientação a objetos e que pretensão não sobreviveu?",
+    "Sobreviveram encapsulamento de decisões, polimorfismo sob contrato, identidade e a união de estado com seus invariantes. Não sobreviveu a pretensão de que classes e herança sejam a forma natural de modelar todo problema."
+  ],
+  "s2-1-3": [
+    "Como a programação funcional chegou ao mainstream sem substituir as linguagens imperativas?",
+    "Por absorção: linguagens multiparadigma incorporaram funções de primeira classe, lambdas, valores imutáveis, composição, map e filter. O paradigma venceu partes do programa sem vencer a placa na porta."
+  ],
+  "s2-1-4": [
+    "Distinga assíncrono de reativo e explique por que backpressure faz parte do contrato.",
+    "Assíncrono permite que quem inicia continue antes do término; reativo descreve reação a valores ou mensagens ao longo do tempo, ou uma arquitetura responsiva. Backpressure declara o que ocorre quando o produtor supera o consumidor; sem ele, a espera apenas vira fila crescente."
+  ],
+  "s2-1-5": [
+    "Diferencie evento, comando e mensagem. Que garantias um evento não oferece sozinho?",
+    "Evento registra um fato passado; comando pede uma ação; mensagem é o envelope que pode levar qualquer um. Um evento não garante entrega, ordem nem unicidade — essas propriedades pertencem ao canal e ao protocolo."
+  ],
+  "s2-1-6": [
+    "Qual pergunta é mais útil do que classificar uma linguagem como de tipagem forte ou fraca?",
+    "Que estados inválidos este tipo impede representar, e em qual fronteira a garantia termina? Forte e fraca são termos ambíguos; a pergunta concreta revela tanto o benefício quanto o limite do sistema de tipos."
+  ],
+  "s2-1-7": [
+    "Diferencie concorrência de paralelismo e cite as perguntas que todo modelo precisa responder.",
+    "Concorrência estrutura atividades que progridem em períodos sobrepostos; paralelismo executa atividades simultaneamente. Todo modelo precisa declarar propriedade do estado, cancelamento, propagação de erro, ordem e controle da pressão entre produtor e consumidor."
   ]
 }

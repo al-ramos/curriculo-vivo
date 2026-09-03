@@ -22,8 +22,8 @@ concentra em 14% do currículo.
 
 ## Estado
 
-- Camadas 0 e 1: texto integral (~5.800 palavras)
-- Camadas 2 a 4: índice completo, texto pendente
+- Camada 0 e capítulos 1.1 a 1.4: texto integral
+- Capítulo 2.1: texto integral; capítulos 2.2 a 4.3: índice completo, texto pendente
 - Datas e atribuições das fontes primárias ainda não conferidas contra as edições originais
 
 ## Estrutura

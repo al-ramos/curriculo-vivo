@@ -854,3 +854,271 @@ de Macnamara, Hambrick e Oswald, 2014 · Pashler, H. et al., "Learning Styles: C
 Evidence", 2008.
 
 *Datas e atribuições devem ser conferidas contra as fontes primárias antes da publicação.*
+
+
+---
+
+# CAMADA 2 — GERACIONAL
+*Meia-vida: quinze a vinte anos*
+
+## 2.1 · Paradigmas de programação
+
+Um paradigma não é uma linguagem nem uma coleção de palavras reservadas. É um conjunto de
+escolhas que a linguagem torna naturais: onde o estado vive, como o controle avança, em que
+unidade o programa é decomposto e que tipo de erro fica difícil de expressar. Linguagens
+modernas são quase todas multiparadigma, mas isso não elimina os paradigmas; apenas transfere
+para quem programa a responsabilidade de saber qual deles está usando em cada trecho.
+
+Este capítulo não organiza uma competição para eleger o paradigma vencedor. Faz a pergunta
+que atravessa o livro: o que cada modelo tornou fácil, que custo escondeu e o que permaneceu
+depois que sua fase de domínio passou.
+
+### 2.1.1 Imperativo e procedural
+
+Programação imperativa descreve uma computação como uma sequência de comandos que altera o
+estado do programa. Uma variável recebe um valor, depois outro; uma condição escolhe o próximo
+comando; um laço repete uma transformação. O significado de uma instrução depende não apenas
+do texto, mas do estado produzido pelas instruções anteriores. Ordem, portanto, não é detalhe
+de implementação: faz parte do programa.
+
+O modelo se ajustou cedo à máquina de programa armazenado. No vocabulário que John Backus
+criticaria em sua palestra do Prêmio Turing, variáveis se parecem com células de memória,
+atribuições com operações de carga e armazenamento, e o fluxo de controle com saltos e testes.
+Essa proximidade ajudou linguagens imperativas a entregar desempenho previsível e uma tradução
+compreensível entre algoritmo e execução. Também deixou como herança a tendência de descrever
+o problema nos termos da máquina, mesmo quando havia uma abstração melhor disponível.
+
+**Procedural** não é sinônimo de imperativo. É uma forma de organizar esse fluxo em
+procedimentos nomeados, com parâmetros e escopo, para que uma sequência possa ser entendida e
+reutilizada como unidade. FORTRAN já tratava, em 1957, a tradução de fórmulas e procedimentos
+para código eficiente como problema central. ALGOL 60 consolidou blocos, escopo e declarações
+de procedimento. A contribuição duradoura não foi uma sintaxe específica: foi permitir que o
+leitor raciocinasse sobre uma parte sem simular o programa inteiro.
+
+A programação estruturada apertou essa disciplina. Sequência, seleção e repetição substituíram
+a maior parte dos saltos arbitrários, não porque `goto` tornasse um programa automaticamente
+incorreto, mas porque destruía a correspondência visível entre a estrutura do texto e a ordem
+da execução. Dijkstra foi mais cuidadoso do que o slogan que herdamos: remover saltos de modo
+mecânico também pode produzir um programa opaco. O objetivo era tornar o fluxo acompanhável,
+não obedecer a uma proibição lexical.
+
+O custo do paradigma aparece quando o estado mutável escapa da unidade que o controla. Uma
+atribuição local é fácil de acompanhar; dez módulos capazes de alterar o mesmo objeto tornam o
+resultado dependente de história, ordem e conhecimento espalhado. Concorrência amplia esse
+custo, mas não o inventa. A regra prática que sobreviveu é reduzir o perímetro temporal:
+manter a mutação perto de quem a usa, dar nome às transições importantes e não expor estado
+compartilhado quando se pode expor uma operação.
+
+É por isso que o imperativo permanece sem ser permanente. Enquanto programas precisarem
+coordenar efeitos no tempo — gravar, enviar, cobrar, mover — a sequência continuará útil. O
+que envelhece a cada geração é quanto desse mecanismo deixamos visível e quanto confinamos
+atrás de abstrações mais declarativas.
+
+### 2.1.2 Orientação a objetos — o que sobrou depois da crítica dos anos 2010
+
+Orientação a objetos reuniu tradições diferentes sob o mesmo nome. Em Simula, objetos
+modelavam entidades de uma simulação com estado e comportamento. Em Smalltalk, a ênfase de
+Alan Kay estava em objetos autônomos trocando mensagens, com ligação tardia e fronteiras que
+escondiam representação. Na indústria dos anos 1990 e 2000, o centro de gravidade mudou para
+classes, herança, diagramas e grandes grafos de objetos. As três coisas são aparentadas, mas
+não são equivalentes.
+
+A crítica dos anos 2010 atingiu principalmente a versão que havia virado ortodoxia: modelar
+cada substantivo como classe, usar herança como mecanismo padrão de reúso e distribuir estado
+mutável por uma rede de objetos que só funciona quando se conhece sua ordem de chamadas. A
+popularização de funções de primeira classe, dados imutáveis e serviços independentes tornou
+visível que muito código chamado de orientado a objetos era procedural com cerimônia — e que a
+cerimônia não comprava encapsulamento real.
+
+O que sobrou é menos vistoso e mais resistente. **Encapsulamento** continua sendo a capacidade
+de proteger uma decisão de representação. **Polimorfismo** continua permitindo que clientes
+dependam de um contrato de comportamento, não de uma implementação. **Identidade** continua
+necessária quando duas entidades com os mesmos dados não são a mesma entidade. E objetos
+continuam sendo uma boa fronteira quando estado e invariantes precisam mudar juntos.
+
+O que não sobreviveu como lei foi a pretensão universal. Herança é uma ferramenta de
+substituição sob contrato, não uma árvore genealógica para organizar o domínio. Classe não é a
+unidade natural de todo problema. E ocultar campos atrás de métodos que apenas leem e escrevem
+os mesmos campos não é encapsular; é acrescentar pontuação.
+
+O teste prático é perguntar se a unidade tem identidade, ciclo de vida e invariantes próprios.
+Uma conta, um pedido ou uma conexão frequentemente têm. Uma transformação de texto, uma
+consulta e uma regra algébrica frequentemente não têm. Usar objetos no primeiro caso e funções
+no segundo não é ecletismo: é recusar que uma técnica local vire cosmologia.
+
+### 2.1.3 Funcional — da academia ao mainstream por absorção, não por substituição
+
+Programação funcional descreve computações pela composição de funções e expressões, reduzindo
+a dependência de mudanças de estado observáveis. Sua propriedade mais útil não é concisão nem
+elegância: é **substituição**. Se uma expressão produz sempre o mesmo resultado para as mesmas
+entradas e não altera o mundo ao redor, pode ser compreendida, testada e reorganizada sem
+reconstruir toda a história da execução.
+
+Isso não significa que programas funcionais não tenham efeitos. Um sistema útil ainda lê,
+grava, falha e conversa pela rede. A diferença é arquitetural: efeitos são empurrados para
+fronteiras explícitas, enquanto o núcleo transforma valores. Imutabilidade reduz o número de
+estados possíveis; funções de ordem superior permitem transformar o padrão de iteração em
+vocabulário; tipos algébricos e casamento de padrões tornam casos possíveis visíveis no texto.
+
+Durante décadas, essas ideias ficaram associadas a Lisp, ML, Haskell e à pesquisa em
+linguagens. O movimento decisivo não foi essas linguagens substituírem as imperativas. Foi
+Java, C#, JavaScript, Python, Kotlin e outras absorverem lambdas, coleções imutáveis,
+composição, `map`, `filter` e tratamento de funções como valores. O paradigma venceu partes do
+programa sem vencer a placa na porta.
+
+Essa absorção corrige também a caricatura inversa. Função pequena não torna um sistema
+funcional, e encadear dez operações não elimina custo de memória ou de entrada e saída.
+Pureza pode deslocar complexidade para a fronteira em vez de removê-la. Em fluxos com estado
+duradouro, interação incremental ou requisitos fortes de desempenho, uma solução híbrida é
+frequentemente mais legível do que uma solução que protege a pureza a qualquer preço.
+
+O ganho geracional está no repertório de restrições: preferir valores a lugares mutáveis,
+isolar efeitos e compor transformações. Depois de absorvidas, essas escolhas deixam de parecer
+funcionais e passam a parecer apenas bom código. É assim que um paradigma acadêmico muda o
+mainstream sem substituí-lo.
+
+### 2.1.4 Reativo e assíncrono
+
+Assíncrono descreve uma relação no tempo: quem inicia uma operação pode continuar antes que
+ela termine. Não diz que o trabalho rodará em paralelo, em outra máquina ou mesmo em outra
+thread. Em entrada e saída, seu valor principal é não ocupar um recurso enquanto o programa
+espera pela rede, pelo disco ou pelo usuário.
+
+`async` e `await` foram uma reconciliação importante. O compilador transforma o método numa
+máquina de estados, mas o texto preserva a aparência de uma sequência. Isso remove a pirâmide
+de callbacks sem restaurar a simplicidade síncrona: o método ainda pode ser suspenso em cada
+`await`, o contexto pode ter mudado quando ele voltar, e cancelamento e erro precisam atravessar
+a cadeia inteira. Bloquear no meio de uma cadeia assíncrona não é neutralidade; é misturar dois
+modelos de espera com contratos diferentes.
+
+**Reativo** é uma palavra mais sobrecarregada. Pode nomear uma interface que reage a eventos,
+um fluxo que empurra valores ao consumidor ou uma arquitetura que busca permanecer responsiva
+sob falha e variação de carga. O Manifesto Reativo de 2014 ligou responsividade, resiliência,
+elasticidade e comunicação por mensagens. É uma proposta arquitetural, não uma definição
+universal do termo.
+
+No nível de fluxo, a mudança essencial é de *puxar quando quiser* para *receber quando houver*.
+Isso exige um contrato para o caso em que o produtor é mais rápido que o consumidor.
+**Backpressure** é esse contrato: desacelerar, acumular dentro de limite, amostrar ou descartar
+de forma declarada. Sem ele, o sistema apenas troca espera visível por fila crescente.
+
+O critério não é escolher a API mais moderna. Assincronia serve quando há espera que pode ser
+aproveitada; fluxo reativo serve quando valores chegam ao longo do tempo e a pressão precisa
+ser propagada. Para uma transformação curta e local, ambos podem acrescentar mais estados de
+controle do que removem.
+
+### 2.1.5 Orientado a eventos
+
+Um evento registra algo que já aconteceu. Um comando pede que algo aconteça. Uma mensagem é o
+envelope que pode carregar qualquer dos dois. Confundir os três produz contratos frágeis: um
+evento chamado `CriarPedido`, por exemplo, ainda é um comando disfarçado porque pode ser
+recusado e espera um destinatário responsável.
+
+No paradigma orientado a eventos, produtores publicam fatos sem controlar todos os usos que
+serão feitos deles, e consumidores reagem de forma independente. O ganho é desacoplamento de
+evolução e de tempo: um novo consumidor pode aparecer sem mudar o produtor, e ambos não
+precisam estar ativos no mesmo instante quando existe persistência intermediária. O custo é
+que o fluxo deixa de caber numa pilha de chamadas. Para entender uma ação, pode ser necessário
+reconstruir uma cadeia espalhada por processos, filas e instantes diferentes.
+
+O evento, sozinho, não promete entrega, ordem ou unicidade. Essas são propriedades do canal e
+do protocolo. Um consumidor que pode receber o mesmo fato novamente precisa ser idempotente ou
+registrar o que já processou. Um consumidor que depende de ordem precisa declarar a chave e o
+escopo dessa ordem. Um sistema que trata essas garantias como propriedades naturais da palavra
+"evento" descobre o contrato apenas durante a falha.
+
+Também convém separar três técnicas frequentemente misturadas. **Notificação de evento** pode
+carregar apenas um identificador e obrigar o consumidor a consultar o estado atual. **Evento
+com estado transferido** leva os dados necessários e aceita duplicação. **Event sourcing** usa
+eventos como registro autoritativo do qual o estado é derivado. A terceira opção não é a versão
+madura das duas primeiras; é uma decisão de persistência com custo de esquema, replay e
+correção histórica.
+
+O paradigma é geracional porque a forma concreta da infraestrutura muda mais rápido do que o
+problema. Filas, brokers e bibliotecas são substituídos; os compromissos entre acoplamento,
+ordem, entrega e observabilidade permanecem.
+
+### 2.1.6 Tipagem como paradigma transversal — estática, dinâmica, gradual
+
+Tipagem é uma disciplina para classificar valores e operações; não é uma divisão moral entre
+linguagens seguras e inseguras. Toda linguagem estabelece o que pode ser somado, chamado ou
+acessado. A diferença está em quando essa compatibilidade é verificada, quanto dela pode ser
+inferida e o que acontece na fronteira entre partes que conhecem precisões diferentes.
+
+Na tipagem **estática**, parte dessas relações é verificada antes da execução. Isso transforma
+certas famílias de defeito em erro de compilação e dá às ferramentas informação para navegar e
+refatorar. O teorema de solidez de Milner, de 1978, tornou famosa a formulação de que programas
+bem tipados não "dão errado" — dentro de um sistema formal e de uma definição específica de
+erro. Fora dessas aspas, um programa bem tipado ainda calcula o preço errado, perde dados e
+viola a lei com perfeita correção de tipos.
+
+Na tipagem **dinâmica**, valores carregam informação de tipo e as operações são verificadas
+durante a execução. Dinâmica não significa ausência de tipos; significa que o programa pode
+chegar a uma combinação inválida que uma análise anterior não excluiu. Em troca, prototipação,
+metaprogramação e dados cuja forma só se conhece na borda podem exigir menos tradução
+cerimonial.
+
+A tipagem **gradual**, formalizada por Siek e Taha em 2006, reconhece que sistemas reais não
+migram de um mundo ao outro de uma vez. Ela permite que regiões com garantias estáticas
+convivam com regiões imprecisas, inserindo verificações nas fronteiras. Seu valor principal
+não é produzir uma terceira escola, mas tornar a precisão uma decisão incremental.
+
+Termos como "forte" e "fraca" ajudam pouco sem definição: autores diferentes os usam para
+coerção, segurança de memória ou possibilidade de burlar o sistema. A pergunta útil é mais
+concreta: **que estados inválidos este tipo impede representar, e em qual fronteira a garantia
+termina?** Tipos são uma forma executável de documentação quando respondem isso; quando apenas
+repetem a estrutura dos dados, viram inventário.
+
+### 2.1.7 Concorrência e paralelismo — threads, atores, CSP, async/await
+
+Concorrência é a composição de atividades que progridem em períodos sobrepostos; paralelismo
+é a execução simultânea de atividades. Um programa pode ser concorrente num único núcleo por
+intercalação e paralelo sem expor concorrência ao autor quando uma biblioteca divide o
+trabalho. A distinção importa porque o primeiro problema é estruturar dependências; o segundo é
+usar recursos para obter vazão ou reduzir tempo.
+
+**Threads** oferecem múltiplos fluxos de execução sobre memória compartilhada. São gerais e
+próximas do sistema operacional, mas transferem para o programa a disciplina de proteger
+estado. Corridas, deadlocks e visibilidade de memória não são acidentes da API: são
+consequências do modelo de propriedade compartilhada.
+
+**Atores**, propostos por Hewitt, Bishop e Steiger em 1973, encapsulam estado e se comunicam
+por mensagens. **CSP**, apresentado por Hoare em 1978, estrutura processos sequenciais que se
+coordenam por comunicação. As duas famílias reduzem a superfície de memória compartilhada,
+mas não eliminam ordem, espera ou falha; deslocam esses problemas para caixas postais, canais e
+protocolos. O nome da abstração muda, a necessidade de explicitar propriedade permanece.
+
+**`async`/`await`** organiza tarefas que suspendem e retomam, sendo especialmente útil quando
+o gargalo é espera por entrada e saída. Não transforma trabalho intensivo de CPU em trabalho
+paralelo. Iniciar cem operações assíncronas também não cria capacidade para concluí-las: sem
+limite de concorrência, a fila apenas se move para outra camada.
+
+Qualquer modelo sério precisa responder às mesmas perguntas: quem possui cada estado, como o
+trabalho é cancelado, onde o erro reaparece, que ordem é garantida e o que impede o produtor de
+superar o consumidor. A API que não obriga essas respostas pode ser confortável no exemplo e
+hostil em produção.
+
+Este capítulo está na camada Geracional porque seus modelos atravessaram várias gerações de
+linguagem e hardware, mas seus pesos mudam. Memória compartilhada parecia natural quando havia
+um processador; imutabilidade e troca de mensagens ganharam valor com múltiplos núcleos e
+sistemas distribuídos. Paradigmas não se sucedem como versões. Eles se acumulam, são
+combinados e voltam a ser avaliados quando o custo dominante muda.
+
+**Fontes primárias do capítulo.** Backus, J. W. et al., [*The FORTRAN Automatic Coding
+System*](https://archive.computerhistory.org/resources/text/Fortran/102663113.05.01.acc.pdf),
+1957 · Naur, P. (ed.), [*Revised Report on the Algorithmic Language ALGOL
+60*](https://archive.computerhistory.org/resources/text/algol/algol_bulletin/EX/RR60/INDEX.HTM),
+1963 · Dijkstra, E. W., ["Go To Statement Considered
+Harmful"](https://homepages.cwi.nl/~storm/teaching/reader/Dijkstra68.pdf), 1968, e
+[*Notes on Structured Programming*](https://www.cs.utexas.edu/~EWD/transcriptions/EWD02xx/EWD249/EWD249.html),
+1970 · Kay, A. C., *The Early History of Smalltalk*, 1993, DOI
+10.1145/155360.155364 · Backus, J., *Can Programming Be Liberated from the von Neumann
+Style?*, 1978, DOI 10.1145/359576.359579 · Hewitt, C., Bishop, P. e Steiger, R., *A
+Universal Modular ACTOR Formalism for Artificial Intelligence*, 1973 · Hoare, C. A. R.,
+[*Communicating Sequential Processes*](https://ora.ox.ac.uk/objects/uuid%3A833f1ea8-feba-4d81-b419-83e6f5f24e81),
+1978 · Milner, R., *A Theory of Type Polymorphism in Programming*, 1978 · Siek, J. e Taha,
+W., [*Gradual Typing for Functional
+Languages*](https://web.stanford.edu/class/cs242/materials/old/siek06__gradual.pdf), 2006 ·
+Luckham, D., *The Power of Events*, 2002 · [*The Reactive Manifesto*,
+v2](https://www.reactivemanifesto.org/), 2014 · Pike, R., [*Concurrency Is Not
+Parallelism*](https://go.dev/talks/2012/waza.slide), 2012.

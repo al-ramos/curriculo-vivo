@@ -1,4 +1,6 @@
 _body.html
+ferramentas/_head.html
+ferramentas/curriculo-vivo.html
 __pycache__/
 *.pyc
 .DS_Store
