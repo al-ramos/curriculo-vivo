@@ -356,7 +356,6 @@ for cam,nome,cor,n,hv in BANDS:
 
 ROADMAP = [
  ("2","Geracional","15–20 anos",[
-   ("2.3","Sistemas distribuídos: fundamentos","7 seções",0),
    ("2.4","Linguagens de programação","6 seções",0),
    ("2.5","Requisitos, produto e IHC","7 seções",0),
    ("2.6","Comportamento e carreira","7 seções",0)]),
@@ -409,7 +408,7 @@ for _, tipo, idd, a, b in marcas:
 if em_sub: partes.append('</div>')
 if em_grupo: partes.append('</div>')
 partes.append('<div class="grp"><span>A escrever</span>'
-              '<a class="cap" href="#roteiro">Capítulos 2.3 a 4.3</a></div></nav>')
+              '<a class="cap" href="#roteiro">Capítulos 2.4 a 4.3</a></div></nav>')
 RAIL = ''.join(partes)
 
 HTML = HEAD + f"""
@@ -478,12 +477,12 @@ HTML = HEAD + f"""
      <a href="#c1-4">1.4 · Cognição e metacognição</a>
      <a href="#cFontes">Fontes</a>
      <a href="#c2-1">2.1 · Paradigmas de programação</a>
-     <a href="#roteiro">Capítulos 2.3 a 4.3 · a escrever</a>
+     <a href="#roteiro">Capítulos 2.4 a 4.3 · a escrever</a>
    </details>
    {body}
    <div class="roadmap" id="roteiro">
      <h2 class="camada" style="border:0;padding:0;margin:0 0 .5rem">
-       <span class="cnum">A escrever</span><span class="cname">Capítulos 2.3 a 4.3</span></h2>
+       <span class="cnum">A escrever</span><span class="cname">Capítulos 2.4 a 4.3</span></h2>
      <p style="color:var(--muted);font-size:.95rem">Quinze capítulos com a ficha definida
      e o texto pendente. A ordem de escrita segue a regra do plano: fichas antes de prosa.</p>
      {rm}

@@ -182,5 +182,33 @@
   "s2-2-8": [
     "Uma base em Sybase com a regra de negócio em procedimento armazenado: por que a decisão original era correta e o que ela cobra depois?",
     "Era correta porque dava garantia transacional, evitava tráfego de rede por linha e concentrava a regra num ponto único para clientes escritos em linguagens diferentes. Cobra depois: o banco vira dependência que não se testa isoladamente, o código escapa do versionamento e da revisão do resto da equipe, e trocar de motor deixa de ser mudança de dialeto para virar reescrita. É a Lei de Conway pelo lado dos dados — quem tinha permissão de escrever ficou registrado no lugar onde a regra foi parar."
+  ],
+  "s2-3-1": [
+    "Por que os oito itens da lista parecem óbvios isoladamente e ainda assim continuam sendo violados?",
+    "Porque todos os oito são verdadeiros dentro de um processo. Uma chamada de função não perde pacote, não custa milissegundos, não é interceptada e não muda de destino no meio. Programar distribuído é desaprender oito hábitos que a programação local ensinou como naturais — e o sinal de alerta é a abstração que não deixa onde declarar timeout, política de repetição e comportamento em falha: ela não removeu essas decisões, tomou-as por você."
+  ],
+  "s2-3-2": [
+    "Acrescentar paralelismo reduz latência? E o que a média esconde na cauda?",
+    "Não: paralelismo aumenta vazão e não move o piso de latência — dez conexões não fazem a luz andar mais rápido; sobre recurso saturado, ainda aumenta a latência porque a fila cresce. A média esconde que a experiência mora na cauda: com leque de cem chamadas paralelas e uma chance em cem de cada uma estar lenta, a maioria das requisições encontra pelo menos uma lenta. O p99 do componente vira o caso típico da requisição composta."
+  ],
+  "s2-3-3": [
+    "Um cliente não recebe resposta. Quais são as três situações possíveis, e por que repetir sem idempotência é perigoso?",
+    "A requisição pode ter se perdido na ida, ter sido processada com a resposta perdida na volta, ou estar sendo processada agora — indistinguíveis do lado do cliente. Repetir sem idempotência aplica o efeito duas vezes: é corrupção de dados com passos adicionais. A repetição também amplifica carga sobre quem já está degradado, produzindo falha metaestável — o incidente continua depois que o gatilho acabou. Correções: recuo exponencial, aleatorização e orçamento de tentativa por caminho, não por camada."
+  ],
+  "s2-3-4": [
+    "Por que a resolução de conflito por última escrita vence é perigosa, e o que Lamport propôs no lugar do tempo físico?",
+    "Porque desempata com relógios que ninguém audita: um nó adiantado faz escritas legítimas mais novas serem descartadas em favor de antigas, em silêncio e sem erro — um dos poucos mecanismos que perde dado confirmado sem emitir sinal. Lamport propôs abandonar o tempo físico e definir ordem por causalidade: um evento acontece-antes de outro se o precede no mesmo processo ou se há mensagem entre eles; eventos sem essa relação são concorrentes e não têm ordem, porque a pergunta não faz sentido."
+  ],
+  "s2-3-5": [
+    "Por que exatamente uma vez não existe como propriedade da rede, e o que existe no lugar?",
+    "Pelo problema dos dois generais: saber que a mensagem chegou exige confirmação, saber que a confirmação chegou exige outra, e a recursão não termina — em nenhum ponto finito os dois lados compartilham certeza. Existe o efeito de uma vez só: entrega pelo menos uma vez com processamento idempotente no destino. Quando um sistema de mensageria anuncia exactly-once, o que oferece é transação dentro do próprio domínio; ao tocar um efeito externo, a garantia termina na fronteira."
+  ],
+  "s2-3-6": [
+    "Qual é o objetivo comum dos padrões de resiliência? Por que rejeitar trabalho é recurso de projeto?",
+    "Impedir que uma falha local vire global. Rejeitar é recurso de projeto porque, sem contrapressão, a fila cresce sem limite — e fila sem limite não amortece, amplifica latência até faltar memória. Um sistema que aceita tudo promete o que não pode cumprir e degrada uniformemente, respondendo devagar para todos em vez de bem para quem consegue atender. Descartar cedo e por prioridade, com prazo propagado como orçamento a cada salto, é preferível."
+  ],
+  "s2-3-7": [
+    "Qual o critério que separa este capítulo do 3.1, e por que a ordem de estudo é assimétrica?",
+    "O fundamento não muda de substância — falácias de 1994, acontece-antes de 1978, FLP de 1985 descrevem 2026 sem ajuste — enquanto estilos de arquitetura oscilam em ciclos de cinco a quinze anos, com retornos. A assimetria: quem aprende o fundamento e depois o estilo consegue avaliar o estilo — onde está a falha parcial, quanto consenso o desenho exige, quem exerce contrapressão. Quem aprende só o estilo redescobre cada falha pela via cara e fica sem nada transferível quando a moda passa."
   ]
 }

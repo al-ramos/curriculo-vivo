@@ -1467,3 +1467,291 @@ Database*](https://research.google/pubs/pub39966/), OSDI, 2012 · Inmon, W. H., 
 Warehouse*, 1992 · Kimball, R., *The Data Warehouse Toolkit*, 1996 · Ambler, S. e Sadalage, P.,
 *Refactoring Databases: Evolutionary Database Design*, 2006 · Kleppmann, M., *Designing
 Data-Intensive Applications*, 2017.
+
+---
+
+## 2.3 · Sistemas distribuídos: fundamentos
+
+A definição mais útil de sistema distribuído é a de Leslie Lamport, e ela é uma piada com
+conteúdo técnico: é aquele em que a falha de um computador cuja existência você desconhecia
+torna o seu inutilizável. O que a frase captura é a única novidade real da disciplina. Um
+programa local falha inteiro ou funciona inteiro; um sistema distribuído falha em partes, e as
+partes que continuam funcionando precisam decidir o que fazer sem saber o que aconteceu com as
+outras.
+
+Tudo o mais neste capítulo decorre disso. Timeouts existem porque não há como distinguir lento de
+morto. Relógios lógicos existem porque não há um agora compartilhado. Consenso é caro porque
+concordar exige rodadas de mensagens que podem se perder. Entrega exatamente uma vez é
+impossível pelo mesmo motivo. São consequências de uma restrição física, não escolhas de
+tecnologia — e é por isso que este capítulo está na camada geracional enquanto o 3.1, que trata
+de estilos de arquitetura, está na cíclica.
+
+Uma advertência de leitura: nada aqui é exclusivo de sistemas grandes. Duas máquinas já bastam.
+Uma aplicação e um banco em servidores diferentes já é um sistema distribuído, e a maior parte
+dos defeitos descritos adiante aparece nessa escala.
+
+### 2.3.1 As oito falácias da computação distribuída
+
+A lista nasceu na Sun Microsystems entre 1994 e 1997, atribuída principalmente a Peter Deutsch,
+com a oitava acrescentada por James Gosling. Ela enumera premissas que quem programa carrega da
+chamada local para a remota sem perceber: a rede é confiável; a latência é zero; a banda é
+infinita; a rede é segura; a topologia não muda; existe um administrador; o custo de transporte é
+zero; a rede é homogênea.
+
+O valor da lista não está em cada item, que enunciado sozinho parece óbvio. Está no fato de que
+todos os oito são verdadeiros dentro de um processo. Uma chamada de função não falha por perda de
+pacote, não custa milissegundos, não tem limite de banda, não é interceptada, não muda de destino
+no meio, não tem dono operacional distinto e não atravessa versões incompatíveis. Programar
+distribuído é, em boa medida, desaprender oito hábitos que a programação local ensinou como
+naturais — o que conecta diretamente à seção 1.4.4, sobre a habilidade de desaprender.
+
+A crítica mais precisa dessa herança está no artigo de Waldo, Wyant, Wollrath e Kendall, de 1994,
+*A Note on Distributed Computing*. O argumento é que a chamada remota de procedimento erra na
+premissa: tentar fazer o remoto parecer local não simplifica o problema, apenas esconde o momento
+em que ele aparece. Latência, memória compartilhada, falha parcial e concorrência não são
+detalhes de implementação que uma boa abstração possa encapsular — são diferenças de tipo. A
+abstração que promete transparência entrega surpresa, e a surpresa chega em produção.
+
+Trinta anos depois, o padrão se repete a cada geração de ferramenta. O ORB dos anos 1990, o
+serviço web dos anos 2000, o cliente HTTP gerado por especificação e a malha de serviços dos anos
+2010 são todos, em alguma medida, tentativas de tornar a chamada remota confortável. Todas úteis;
+nenhuma capaz de revogar a física. O sinal de alerta é sempre o mesmo: quando o código de chamada
+não tem onde declarar timeout, política de nova tentativa e comportamento em falha, a abstração
+não removeu essas decisões — apenas as tomou por você, e provavelmente mal.
+
+### 2.3.2 Latência e throughput — as ordens de grandeza
+
+Existe um conjunto de números que decide arquitetura antes de qualquer discussão de estilo, e
+quase nenhum currículo pede que sejam memorizados. Não é preciso precisão: o que importa é a
+ordem de grandeza, porque as decisões que eles governam mudam quando o expoente muda.
+
+Uma referência de leitura em cache L1 fica na casa do nanossegundo. Um acesso à memória
+principal, na casa da centena de nanossegundos — cerca de cem vezes mais. Uma leitura de SSD fica
+entre dezenas e centenas de microssegundos; uma busca em disco rotacional, na casa de dez
+milissegundos. Uma ida e volta de rede dentro do mesmo centro de dados custa em torno de meio
+milissegundo. Entre continentes, a viagem é limitada pela velocidade da luz na fibra e fica na
+casa da centena de milissegundos — São Paulo a Frankfurt não sai por menos de uma centena, e
+nenhuma otimização de software altera isso.
+
+A conclusão prática que esses números impõem é que a diferença entre memória e rede é de cerca de
+mil vezes, e entre rede local e intercontinental, de mais de cem. Uma decisão de projeto que
+transforma um acesso em memória numa chamada de rede não é um refinamento: é uma mudança de três
+ordens de grandeza. É por isso que a chamada remota dentro de um laço é o defeito de desempenho
+mais comum e mais caro em sistemas distribuídos, e por que ele quase nunca aparece em ambiente de
+desenvolvimento, onde tudo roda na mesma máquina.
+
+Latência e vazão são independentes e frequentemente confundidas. Vazão é quanto trabalho passa
+por unidade de tempo; latência é quanto demora um item. Acrescentar paralelismo aumenta vazão e
+não reduz o piso de latência — dez conexões não fazem a luz andar mais rápido. Pior: acrescentar
+paralelismo sobre um recurso saturado aumenta a latência, porque a fila cresce. A Lei de Little
+formaliza a relação e é a ferramenta mais barata para prever isso: em regime estável, o número
+médio de itens no sistema é a taxa de chegada multiplicada pelo tempo médio de permanência.
+
+Por fim, a média mente, e mente de forma sistemática. A distribuição de latência tem cauda longa,
+e a experiência do usuário mora na cauda. O artigo de Dean e Barroso, de 2013, mostra por que isso
+piora com a escala: se uma requisição consulta cem serviços em paralelo e cada um tem uma chance
+em cem de estar lento, a maioria das requisições encontra pelo menos um lento. O percentil 99 de
+um componente vira o caso típico da requisição composta. Quem monitora média não vê nada disso, e
+otimiza o caso que não importa — é a mesma observação que a seção 1.1.2 faz sobre por que
+probabilidade ganhou peso na prática.
+
+### 2.3.3 Falha parcial: timeout, retry, backoff, idempotência
+
+Quando uma chamada local falha, você recebe uma exceção. Quando uma chamada remota não responde,
+você não recebe nada — e "nada" é ambíguo de forma irredutível. A requisição pode ter se perdido
+na ida, pode ter sido processada com a resposta perdida na volta, ou pode estar sendo processada
+neste instante. As três situações são indistinguíveis do lado do cliente, e exigem condutas
+diferentes. Este é o problema central do capítulo.
+
+O timeout é o mecanismo que converte "nada" em decisão, e é necessariamente imperfeito: ele adota
+um limite arbitrário para declarar morto o que talvez esteja apenas lento. Timeout curto demais
+descarta trabalho bom e multiplica carga; longo demais consome a conexão, a thread e a paciência
+de quem chamou. A ausência de timeout é a pior das três, e é o padrão de muitos clientes HTTP —
+uma chamada sem prazo transfere ao servidor remoto o controle sobre a disponibilidade do seu
+sistema.
+
+A nova tentativa é o reflexo natural, e é também a forma mais eficiente de derrubar um sistema que
+está apenas degradado. Um serviço lento provoca timeouts; os timeouts provocam novas tentativas;
+as novas tentativas triplicam a carga exatamente sobre o componente que já não dava conta. O
+sistema entra num estado em que a carga gerada pelo próprio mecanismo de recuperação impede a
+recuperação, e remover a causa original não basta para sair dele. Sistemas com essa propriedade
+são chamados de metaestáveis, e o padrão é reconhecível: o incidente continua depois que o gatilho
+acabou.
+
+Três correções fazem a diferença entre nova tentativa útil e amplificação. Recuo exponencial, para
+que a pressão caia enquanto o serviço se recupera. Aleatorização do intervalo, sem a qual todos os
+clientes voltam ao mesmo tempo e reproduzem o pico — o efeito de rebanho. E orçamento de tentativa
+por caminho, não por camada: quando cada uma de quatro camadas repete três vezes, uma requisição
+vira oitenta e uma, e a multiplicação é invisível em qualquer código isolado. Vale acrescentar
+uma quarta: só repetir o que ainda importa. Repetir uma requisição cujo cliente já desistiu é
+trabalho garantidamente inútil sob a carga máxima.
+
+Nada disso é seguro sem idempotência. Uma operação é idempotente quando executá-la mais de uma vez
+produz o mesmo efeito de executá-la uma vez. Leitura costuma ser idempotente de graça; escrita não
+é, e é onde o dinheiro está. A técnica padrão é a chave de idempotência: o cliente gera um
+identificador único para a intenção, o servidor registra o resultado associado a essa chave dentro
+da mesma transação que aplica o efeito, e uma repetição devolve o resultado guardado em vez de
+executar de novo. O detalhe que costuma ser errado é o "dentro da mesma transação": registrar a
+chave fora da transação do efeito recria exatamente a janela que se queria fechar.
+
+A regra que resume a seção: repetir sem idempotência não é resiliência, é corrupção de dados com
+passos adicionais. E a pergunta que todo projeto de integração deveria responder por escrito é
+qual operação, no caminho crítico, seria executada duas vezes se a resposta se perdesse — e o que
+aconteceria.
+
+### 2.3.4 Relógios, ordenação, quórum e consenso
+
+Não existe um agora compartilhado. Cada máquina tem seu relógio, e relógios divergem: derivam por
+temperatura e imprecisão do oscilador, são corrigidos por NTP em saltos que podem andar para trás,
+e sofrem com segundos bissextos. A consequência é que comparar dois carimbos de tempo produzidos
+em máquinas diferentes não estabelece ordem — estabelece uma suposição.
+
+A distinção mínima que todo programador deveria carregar é entre o relógio de parede, que informa
+data e hora e pode saltar, e o relógio monótono, que só avança e serve para medir intervalos.
+Medir duração com relógio de parede é a origem de durações negativas em log de produção, e de
+timeouts que expiram cedo ou nunca depois de um ajuste de horário. A regra é curta: parede para
+registrar quando; monótono para medir quanto tempo.
+
+O caso perigoso é a resolução de conflito por "última escrita vence". Ela parece uma regra de
+desempate neutra e é, na prática, uma decisão de descartar dados com base em relógios que ninguém
+está auditando. Se o relógio de um nó está adiantado em dois segundos, escritas legítimas feitas
+depois são descartadas em favor de escritas mais antigas, silenciosamente e sem erro. É um dos
+poucos mecanismos capazes de perder dados confirmados sem produzir nenhum sinal.
+
+Lamport resolveu a parte conceitual em 1978, e a solução é uma das ideias mais elegantes da área:
+abandonar o tempo físico e definir ordem por causalidade. Um evento acontece-antes de outro se o
+precede no mesmo processo ou se há uma mensagem entre eles; eventos sem essa relação são
+concorrentes, e concorrentes não têm ordem — não porque falte informação, mas porque a pergunta
+não tem sentido. Relógios lógicos numeram eventos preservando essa relação; relógios vetoriais
+permitem detectar concorrência em vez de fingir uma ordem. Quase todo sistema replicado sério usa
+alguma variante disso.
+
+Quando a aplicação de fato precisa de uma decisão única e irrevogável — quem é o líder, se a
+transação foi confirmada, qual valor ficou registrado —, entra o consenso. É um problema com
+resultado de impossibilidade conhecido: Fischer, Lynch e Paterson mostraram, em 1985, que em um
+sistema assíncrono não existe algoritmo determinístico que garanta consenso mesmo com um único
+processo defeituoso. A prática convive com isso porque relaxa as hipóteses: assume sincronia
+parcial, usa timeouts como detectores imperfeitos de falha e aceita perder progresso durante
+períodos ruins, sem nunca perder correção. Paxos, descrito por Lamport, e Raft, de Ongaro e
+Ousterhout, são as duas famílias dominantes — a segunda projetada explicitamente para ser
+compreensível, o que é um objetivo de engenharia legítimo e raramente declarado.
+
+A lição de projeto é econômica, não algorítmica. Consenso custa rodadas de rede e disponibilidade:
+sem quórum, não há decisão. Sistemas bem projetados não evitam o consenso, eles o confinam —
+usam-no para escolher líder, registrar configuração ou confirmar transação, e mantêm o caminho
+quente fora dele. Perguntar "o que aqui realmente exige acordo entre nós?" costuma revelar que a
+resposta é bem menos do que o desenho inicial assumia.
+
+### 2.3.5 Garantias de entrega — e o mito do exactly-once
+
+Há três garantias possíveis para a entrega de uma mensagem, e apenas duas delas existem. **No
+máximo uma vez** é enviar sem confirmação: nunca há duplicata, e pode haver perda. **Pelo menos
+uma vez** é repetir até obter confirmação: nunca há perda, e pode haver duplicata. **Exatamente
+uma vez**, como propriedade da rede, não existe.
+
+A impossibilidade é o problema dos dois generais, e o argumento cabe em um parágrafo. Para que o
+remetente saiba que a mensagem chegou, precisa de uma confirmação. Para que o destinatário saiba
+que a confirmação chegou, precisa de uma confirmação da confirmação. A recursão não termina, e em
+nenhum ponto finito os dois lados compartilham certeza. Como não há como saber se a mensagem
+chegou, não há como decidir entre reenviar — arriscando duplicata — e não reenviar, arriscando
+perda. A escolha entre as duas garantias reais é obrigatória.
+
+O que existe, e é frequentemente vendido sob o nome errado, é o efeito de uma vez só: entrega pelo
+menos uma vez combinada com processamento idempotente. A duplicata acontece na rede e é absorvida
+no destino, pela chave de idempotência da seção anterior ou por uma operação naturalmente
+idempotente. O resultado observável é o de execução única, e o mecanismo que o produz está no
+destino — não no transporte.
+
+Vale desfazer a confusão de marketing com precisão, porque ela custa caro em projeto. Quando um
+sistema de mensageria anuncia semântica exatamente uma vez, o que ele normalmente oferece é uma
+transação que abrange consumir, processar e produzir dentro do seu próprio domínio. É real e é
+útil. Mas assim que o processamento toca algo fora desse domínio — cobrar um cartão, enviar um
+e-mail, chamar uma API de terceiro —, a garantia termina na fronteira, e o efeito colateral
+externo pode acontecer duas vezes. A regra: a garantia vale até onde vai a transação, e nunca
+mais longe.
+
+Há um corolário que ordena o projeto de integrações. Como duplicata é inevitável e perda é
+inaceitável na maior parte dos casos de negócio, o desenho correto é quase sempre pelo menos uma
+vez com consumidor idempotente. Isso transfere o trabalho para o destino, onde ele é resolvível,
+em vez de deixá-lo no transporte, onde não é.
+
+### 2.3.6 Padrões de resiliência
+
+Os padrões desta seção têm um objetivo comum, e enunciá-lo primeiro evita tratá-los como
+receituário: todos existem para impedir que uma falha local vire uma falha global. A pergunta que
+cada um responde é como conter o dano quando uma dependência para de funcionar — e a resposta
+nunca é continuar tentando como se nada tivesse acontecido.
+
+O **disjuntor**, popularizado por Michael Nygard em *Release It!*, em 2007, observa a taxa de erro
+de uma dependência e, ultrapassado um limiar, passa a falhar imediatamente sem tentar a chamada.
+Depois de um intervalo, deixa passar algumas requisições de teste e volta a fechar se elas
+funcionarem. O ganho é duplo: o chamador para de gastar threads e prazo esperando o que vai falhar,
+e o chamado deixa de receber carga enquanto tenta se recuperar. O erro comum é tratá-lo como
+recurso de infraestrutura e esquecer a parte de aplicação — o que a chamada devolve enquanto o
+disjuntor está aberto é uma decisão de negócio, não um detalhe técnico.
+
+A **antepara** isola recursos para que o esgotamento em um caminho não consuma o que os outros
+precisam. O nome vem da compartimentação de cascos de navio, e a imagem é exata: sem divisórias,
+um furo afunda tudo. Na prática significa pools de conexão, filas e limites de concorrência
+separados por dependência. É o padrão que evita que um serviço secundário e lento consuma todas as
+threads e derrube o fluxo principal, que estava perfeitamente saudável.
+
+A **contrapressão** é a mais importante e a menos implementada. Quando a produção supera o
+consumo, alguém precisa desacelerar. Se ninguém desacelera, a fila cresce, e uma fila que cresce
+sem limite não é um amortecedor: é um amplificador de latência que termina em falta de memória. A
+consequência incômoda, mas correta, é que rejeitar trabalho é um recurso de projeto. Um sistema que
+aceita tudo o que lhe oferecem está prometendo o que não pode cumprir, e vai descobrir isso da
+pior forma — respondendo devagar para todo mundo em vez de bem para a parte que consegue atender.
+Descartar carga cedo e de forma seletiva, preservando o que tem prazo válido e o que é prioritário,
+é preferível a degradar uniformemente.
+
+Duas ideias transversais fecham a seção. A primeira é o prazo como orçamento: um prazo definido na
+borda deve ser propagado e decrementado a cada salto, de modo que nenhuma camada trabalhe por algo
+que já expirou para quem pediu. Timeouts fixos e independentes por camada garantem trabalho
+desperdiçado e prazos que somam mais do que o cliente espera. A segunda é a degradação planejada:
+decidir de antemão o que o sistema faz sem cada dependência — cache velho, resposta parcial,
+recurso desligado com aviso — em vez de descobrir no incidente. É a mesma exigência que a seção
+0.3 faz às fichas: um sistema bem projetado sabe dizer o que aconteceria se cada peça sua estivesse
+errada.
+
+### 2.3.7 Por que este capítulo é geracional e o 3.1 é cíclico
+
+A separação entre este capítulo e o de arquitetura é a decisão editorial mais defendível do livro,
+e vale expor o critério.
+
+Nada do que está aqui mudou de substância nas últimas quatro décadas. As falácias são de 1994 e
+descrevem 2026 sem ajuste. O acontece-antes de Lamport é de 1978. A impossibilidade de FLP é de
+1985. O problema dos dois generais é anterior à internet comercial. O que mudou foi o vocabulário,
+a qualidade das bibliotecas e a frequência com que um programador comum encontra esses problemas —
+não os problemas.
+
+Já o capítulo 3.1 trata de estilos: monolito, SOA, microsserviços, sem servidor, monolito modular.
+Esses oscilam em ciclos de cinco a quinze anos, e oscilam de verdade, com retornos. A ida e a volta
+entre centralizar e distribuir é o pêndulo que a seção 0.1 mencionou, e ele continua se movendo.
+
+Misturar as duas coisas é o mecanismo específico que faz um currículo envelhecer mal, e o efeito é
+assimétrico. Quem aprende o fundamento e depois o estilo consegue avaliar o estilo: sabe perguntar
+onde está a falha parcial, quanto consenso o desenho exige, o que acontece com a duplicata, quem
+exerce contrapressão. Quem aprende só o estilo reproduz o desenho e redescobre cada falha desta
+lista pela via cara — e, quando o estilo sai de moda, fica sem nada transferível.
+
+O teste da seção 1.3.1 se aplica bem aqui. Estes conteúdos sobreviveram a mudanças de linguagem,
+de hardware, de modelo de implantação e de estilo arquitetural, e não há eixo de ruptura visível
+que os ameace: enquanto houver mais de uma máquina e uma rede imperfeita entre elas, valem. É o
+que os coloca na camada geracional — e o que justifica estudá-los antes, e não depois, de escolher
+uma arquitetura.
+
+**Fontes primárias do capítulo.** Waldo, J., Wyant, G., Wollrath, A. e Kendall, S., [*A Note on
+Distributed Computing*](https://scholar.harvard.edu/files/waldo/files/waldo-94.pdf), Sun
+Microsystems, 1994 · Deutsch, P. e Gosling, J., *The Eight Fallacies of Distributed Computing*,
+Sun Microsystems, 1994–1997 · Lamport, L., [*Time, Clocks, and the Ordering of Events in a
+Distributed System*](https://lamport.azurewebsites.net/pubs/time-clocks.pdf), Communications of
+the ACM, 1978 · Fischer, M., Lynch, N. e Paterson, M., [*Impossibility of Distributed Consensus
+with One Faulty Process*](https://groups.csail.mit.edu/tds/papers/Lynch/jacm85.pdf), JACM, 1985 ·
+Lamport, L., [*Paxos Made Simple*](https://lamport.azurewebsites.net/pubs/paxos-simple.pdf),
+2001 · Ongaro, D. e Ousterhout, J., [*In Search of an Understandable Consensus Algorithm
+(Raft)*](https://raft.github.io/raft.pdf), USENIX ATC, 2014 · Dean, J. e Barroso, L. A., [*The
+Tail at Scale*](https://research.google/pubs/pub40801/), Communications of the ACM, 2013 ·
+Nygard, M., *Release It! Design and Deploy Production-Ready Software*, 2007 · Little, J. D. C.,
+*A Proof for the Queuing Formula L = λW*, Operations Research, 1961 · Kleppmann, M., *Designing
+Data-Intensive Applications*, 2017, capítulos 8 e 9.

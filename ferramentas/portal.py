@@ -95,7 +95,7 @@ PORTAS = """
     <h3>Engenharia de Software: Envelhecimento Macro</h3>
     <p>O livro. Vinte e dois capítulos organizados por velocidade de envelhecimento, cada
     seção com meia-vida, estado e data de revisão declarados.</p>
-    <span class="st">Camada 0, 1.1 a 1.4, 2.1 e 2.2 · 7 de 22 capítulos</span>
+    <span class="st">Camada 0, 1.1 a 1.4 e 2.1 a 2.3 · 8 de 22 capítulos</span>
   </a>
   <a class="porta" href="estudos.html">
     <span class="k">O percurso</span>
@@ -127,7 +127,7 @@ HTML = HEAD + EXTRA + f"""
     <div class="strata">
       <h2>Onde o plano está</h2>
       <div class="band"><div class="lab">Escrito<em>capítulos</em></div>
-        <div class="bar" style="background:var(--s1);height:2.2rem"></div><div class="hv">7 de 22</div></div>
+        <div class="bar" style="background:var(--s1);height:2.5rem"></div><div class="hv">8 de 22</div></div>
       <div class="band"><div class="lab">Com ficha<em>capítulos</em></div>
         <div class="bar" style="background:var(--s2);height:1.6rem"></div><div class="hv">22 de 22</div></div>
       <div class="band"><div class="lab">Trilhas<em>concluídas</em></div>

@@ -28,6 +28,7 @@ fichas = {
  '1.4': ('sem erosão observada','permanente','humano · cognitivo','/cognicao'),
  '2.1': ('15–20 anos','consolidado','técnico','/paradigmas'),
  '2.2': ('15–20 anos','consolidado','técnico','/dados'),
+ '2.3': ('15–20 anos','consolidado','técnico','/distribuidos'),
 }
 def ficha(num):
     if num not in fichas: return ''
