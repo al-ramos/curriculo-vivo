@@ -1122,3 +1122,348 @@ Languages*](https://web.stanford.edu/class/cs242/materials/old/siek06__gradual.p
 Luckham, D., *The Power of Events*, 2002 · [*The Reactive Manifesto*,
 v2](https://www.reactivemanifesto.org/), 2014 · Pike, R., [*Concurrency Is Not
 Parallelism*](https://go.dev/talks/2012/waza.slide), 2012.
+
+---
+
+## 2.2 · Dados e persistência
+
+Programas são substituídos; dados sobrevivem a eles. É comum que um sistema tenha sido reescrito
+três vezes sobre o mesmo esquema, e raro que o oposto tenha acontecido. Essa assimetria é o motivo
+de este capítulo estar na camada geracional enquanto boa parte da infraestrutura que o cerca está
+na sazonal: o modelo de dados é a decisão mais cara de reverter que uma equipe toma, e a que menos
+recebe tempo de projeto.
+
+A persistência é também onde o software encontra o tempo. Enquanto tudo está em memória, o
+programa pode fingir que a execução é instantânea e isolada. No momento em que algo precisa
+sobreviver a um desligamento, aparecem falha parcial, concorrência, ordenação e a necessidade de
+dizer o que significa "gravado". Quase todo conceito difícil do capítulo 2.3 já está aqui, em
+escala menor.
+
+Este capítulo trata do que permaneceu. Ele não recomenda um banco.
+
+### 2.2.1 Modelagem relacional e normalização
+
+O artigo de Codd, em 1970, não propôs uma sintaxe nem um produto. Propôs uma separação: o modo
+como os dados são descritos deve ser independente do modo como estão armazenados e acessados.
+Antes disso, consultar um dado exigia saber por qual caminho navegar até ele — ponteiros,
+conjuntos encadeados, a ordem física dos registros. Uma mudança de armazenamento quebrava
+programas. O modelo relacional trocou a navegação por uma descrição: o cliente diz que relação
+quer, não como chegar nela.
+
+Essa independência é a contribuição que sobreviveu, e vale separá-la do resto. SQL não é o modelo
+relacional — é uma linguagem que o implementa de forma parcial e às vezes infiel, com duplicatas,
+`NULL` de três valores e ordem de colunas. O que atravessou cinquenta anos foi a ideia de que
+existe um esquema lógico ao qual as aplicações se acoplam, e um plano físico que o banco pode
+mudar sozinho. Todo otimizador de consulta existe dentro dessa fresta.
+
+A normalização é o procedimento que torna o esquema lógico defensável. Ela parte das dependências
+funcionais — que atributo determina que atributo — e elimina redundância que permitiria ao banco
+guardar duas versões do mesmo fato. Da primeira à terceira forma normal, e à forma de Boyce-Codd,
+o que se persegue é sempre o mesmo: que cada fato esteja registrado em exatamente um lugar. A
+motivação não é elegância, é a anomalia de atualização. Um dado repetido em dois lugares vai
+divergir; a única questão é quando.
+
+O ditado de campo — normalizar até doer, desnormalizar até funcionar — é bom conselho e péssima
+teoria, porque esconde qual das duas operações é reversível. Desnormalizar um esquema normalizado
+é uma decisão local, tomada com medição, e possível de desfazer. Normalizar um esquema que nasceu
+achatado exige descobrir dependências funcionais em dados que já divergiram, e essa arqueologia
+costuma ser mais cara do que a reescrita da aplicação. A ordem importa: normalize primeiro porque
+é o estado do qual se pode sair barato.
+
+O custo real do modelo aparece na fronteira com a linguagem de programação. O descasamento de
+impedância — objetos com identidade, herança e grafos de referência de um lado; relações,
+conjuntos e chaves do outro — produziu trinta anos de camadas de mapeamento, e nenhuma delas
+eliminou o problema, porque ele não é de ferramenta. São duas formas legítimas de descrever o
+mundo, otimizadas para perguntas diferentes. O mapeador esconde a diferença até o dia em que ela
+reaparece como consulta acidentalmente cara.
+
+### 2.2.2 Transações, ACID e níveis de isolamento
+
+Uma transação é uma mentira útil: ela permite que quem programa escreva como se fosse o único
+usuário do banco e como se falhas não existissem. Jim Gray formalizou o conceito em 1981;
+Härder e Reuter cunharam a sigla ACID em 1983. As quatro letras não têm o mesmo peso, e tratá-las
+como bloco único é a origem de boa parte da confusão que se segue.
+
+Atomicidade e durabilidade são propriedades sobre falha: ou tudo acontece ou nada acontece, e o
+que foi confirmado sobrevive à queda. São as mais bem implementadas e as menos discutidas.
+Consistência, no sentido de ACID, é a mais fraca das quatro — significa apenas que a transação
+leva o banco de um estado que satisfaz as restrições declaradas a outro que também as satisfaz.
+É uma propriedade da aplicação, não do banco, e não tem relação com o "C" de CAP, uma coincidência
+de vocabulário que a seção 2.2.5 vai precisar desfazer.
+
+O isolamento é onde mora o assunto. Serializabilidade — o resultado equivale a alguma execução
+sequencial das transações — é a garantia que corresponde à mentira útil. Ela custa caro, e por
+isso praticamente nenhum banco a entrega por padrão. O SQL-92 definiu quatro níveis por meio das
+anomalias que cada um permite: leitura suja, leitura não repetível e fantasmas. A definição por
+anomalia foi um erro de projeto que sobrevive até hoje na norma.
+
+O erro foi demonstrado por Berenson e coautores em 1995. A taxonomia por anomalias é ambígua e não
+acomoda o isolamento por instantâneo, que era o que os bancos de fato estavam construindo: o
+snapshot isolation evita as três anomalias da norma e mesmo assim não é serializável, porque
+admite a escrita enviesada — duas transações leem o mesmo estado, cada uma decide algo válido
+isoladamente, e a combinação viola uma invariante que nenhuma das duas quebrou sozinha. O exemplo
+clássico é a escala de plantão em que dois médicos, simultaneamente, verificam que há outro de
+sobreaviso e se ausentam.
+
+A consequência prática é desconfortável e verificável em qualquer instalação: o nível padrão do
+PostgreSQL e do Oracle é read committed; o do MySQL com InnoDB é repeatable read; o do SQL Server
+é read committed. Nenhum é serializável. A maioria do código de negócio escrito no mundo assume
+uma garantia que o banco não está dando, e funciona porque a concorrência real é baixa o
+suficiente para que a janela não seja atingida — até que o volume cresça, e o defeito apareça como
+um dado impossível que ninguém consegue reproduzir.
+
+A regra que sobrevive não é "use serializable". É saber declarar, para cada transação que sustenta
+uma invariante de negócio, qual anomalia a quebraria e o que impede essa anomalia: o nível de
+isolamento, um bloqueio explícito, uma restrição única no banco, ou uma reformulação que torne a
+invariante local a uma linha. A restrição declarada no esquema é a mais barata das quatro e a mais
+frequentemente esquecida, porque exige admitir que a aplicação não é a única a escrever.
+
+### 2.2.3 O movimento NoSQL — o que era hype e o que ficou
+
+O nome nasceu de um encontro em São Francisco em 2009, e era uma provocação antes de ser uma
+categoria. O contexto técnico vinha de dois artigos: o do Bigtable, do Google, em 2006, e o do
+Dynamo, da Amazon, em 2007. Ambos descreviam sistemas construídos para uma restrição que a maioria
+das empresas não tinha — escala horizontal em hardware comum, com disponibilidade acima de
+consistência — e ambos foram lidos como receita geral.
+
+O que era hype pode ser nomeado com precisão, porque envelheceu rápido. Primeiro, a ideia de que
+bancos relacionais não escalam: escalavam, e o que não escalava era a junção distribuída e a
+transação de duas fases, que são problemas específicos e não o modelo. Segundo, e mais custoso, o
+adjetivo *schemaless*. Não existe dado sem esquema; existe esquema não declarado. Quem tira o
+esquema do banco não o elimina, move para o código da aplicação — e para todas as versões da
+aplicação que já escreveram naquela coleção. O esquema deixa de ser verificado na escrita e passa
+a ser descoberto na leitura, geralmente por um `if` defensivo escrito depois do incidente.
+
+O que ficou é substancial e menos vistoso. O particionamento horizontal deixou de ser um recurso
+avançado e passou a ser decisão de primeira classe: escolher a chave de partição virou parte da
+modelagem, não da operação. A ideia de armazenamento com propósito — usar um motor diferente para
+uma carga com padrão de acesso diferente — deixou de ser heresia. E a discussão sobre consistência
+saiu do departamento de banco de dados e chegou a quem escreve aplicação, o que era necessário e
+está longe de terminar.
+
+O desfecho repete o padrão que o capítulo 2.1 descreveu para a programação funcional: a absorção
+venceu a substituição. Bancos relacionais incorporaram tipos JSON com indexação; sistemas
+distribuídos com SQL e transações — a linhagem do Spanner, de 2012 — desfizeram a premissa de que
+era preciso escolher entre escala e transação; e os bancos ditos NoSQL passaram a oferecer esquema
+opcional, índices secundários e alguma forma de transação. Vinte anos depois, a fronteira é menos
+uma parede e mais um conjunto de escolhas de projeto que se podem descrever uma a uma.
+
+### 2.2.4 Modelos além do relacional
+
+Cada modelo de dados é uma aposta em um padrão de consulta. Ele torna barata uma forma de
+perguntar e cara todas as outras. Descrever os modelos como uma lista de opções equivalentes é o
+erro que este capítulo tenta evitar; a pergunta útil não é qual é melhor, é qual consulta é quente
+e qual o sistema pode se dar ao luxo de responder devagar.
+
+**Chave-valor** oferece a busca por identificador e nada mais. Em troca, particiona
+trivialmente — a chave já é o critério de distribuição — e sustenta latência previsível. Tudo o
+que não for acesso por chave conhecida vira varredura ou índice mantido à mão. É o modelo com o
+melhor perfil de custo e a menor tolerância a requisitos que mudam.
+
+**Documento** guarda agregados: a unidade de leitura é a mesma unidade de escrita, o que elimina
+junções quando o desenho acerta o agregado. O custo é que o agregado é uma decisão irreversível
+disfarçada de conveniência. Um dado que precisa aparecer em dois agregados será duplicado, e
+mantê-los coerentes volta a ser problema da aplicação — exatamente a anomalia de atualização que a
+normalização existia para evitar, agora sem o banco para ajudar.
+
+**Grafo** privilegia a travessia: perguntas cuja resposta depende do caminho, com profundidade
+variável e desconhecida na escrita da consulta. Em SQL, isso é junção recursiva, e o custo cresce
+de forma que o otimizador estima mal. Fraude, permissões transitivas, cadeias de dependência e
+relações societárias são os casos em que o modelo se paga. Quando a profundidade é fixa e pequena,
+não se paga.
+
+**Colunar** organiza o armazenamento por coluna e não por linha, o que muda a economia da leitura:
+uma agregação sobre uma coluna toca apenas os blocos daquela coluna, e a homogeneidade de tipo
+dentro do bloco permite compressão muito melhor. É a base técnica de quase todo sistema analítico
+moderno, e é péssimo para ler ou atualizar uma linha inteira — que é a operação dominante da carga
+transacional. A seção 2.2.6 depende deste parágrafo.
+
+**Série temporal** assume que a escrita é quase sempre um acréscimo no fim, que a consulta é quase
+sempre uma janela de tempo com agregação, e que o dado antigo perde resolução sem perder
+utilidade. Sob essas três hipóteses, permite compressão e descarte automático que nenhum modelo
+geral alcança. Fora delas, é um banco ruim.
+
+Duas observações fecham a seção. A primeira: o modelo mais frequentemente escolhido pelo motivo
+errado é o de documento, porque a fase inicial de um projeto premia a ausência de migração — e a
+conta chega no ano dois, quando o agregado errado já tem volume. A segunda: manter vários motores
+tem custo operacional real, e a persistência poliglota só se justifica quando a diferença de
+padrão de acesso é grande o bastante para pagar backup, monitoramento, plantão e a coerência entre
+duas fontes que agora podem discordar.
+
+### 2.2.5 Consistência, replicação e CAP
+
+O teorema CAP é o resultado mais citado e menos lido desta área. A conjectura é de Eric Brewer, em
+2000; a prova formal, de Gilbert e Lynch, em 2002. O que ele afirma é estreito: quando há uma
+partição de rede, um sistema replicado precisa escolher entre responder com risco de devolver dado
+desatualizado e recusar-se a responder. Só isso.
+
+A leitura popular — "escolha dois entre três" — é falsa e faz estrago. Não há um modo de operação
+em que se abre mão da tolerância a partição em troca de consistência e disponibilidade: a partição
+não é uma opção de projeto, é um evento que a rede impõe. Fora do período de partição, um sistema
+pode oferecer consistência forte e alta disponibilidade ao mesmo tempo, e a maioria oferece. O
+próprio Brewer publicou, em 2012, uma retratação sobre o quanto a formulação em três letras havia
+induzido ao erro.
+
+O modelo mais honesto é o PACELC, de Daniel Abadi, também de 2012: *se* houver partição (P), o
+sistema escolhe entre disponibilidade e consistência (A/C); *senão* (E), no regime normal, ele
+ainda escolhe entre latência e consistência (L/C). A segunda metade é a que descreve o dia a dia,
+porque partições são raras e a espera pela confirmação de réplicas é permanente. É o trade-off que
+aparece toda vez que alguém pergunta por que a leitura logo após a escrita não trouxe o valor novo.
+
+A replicação organiza esse espaço em três topologias. **Líder único** dá uma ordem total de
+escrita de graça e concentra a disponibilidade de escrita em um nó, transformando a eleição de
+novo líder no ponto crítico. **Múltiplos líderes** aceita escrita em mais de um lugar e paga com
+conflito, que precisa ser resolvido por alguma regra — última escrita vence, que perde dados de
+forma silenciosa; um tipo de dado que converge por construção; ou uma decisão de negócio. **Sem
+líder**, com quórum, troca a coordenação por aritmética: leituras e escritas em subconjuntos que
+se sobrepõem. A promessa de que R + W > N garante leitura atualizada vale sob hipóteses mais
+frágeis do que a fórmula sugere.
+
+Do lado das garantias, o vocabulário precisa ser exato porque quase todo produto usa "consistente"
+sem qualificar. **Linearizabilidade** é a mais forte: o sistema se comporta como se houvesse uma
+única cópia e cada operação tomasse efeito num instante entre seu início e seu fim. **Consistência
+causal** preserva a ordem entre eventos que se causaram, deixando os concorrentes livres, e é
+frequentemente o melhor equilíbrio disponível. **Consistência eventual** afirma apenas que, na
+ausência de novas escritas, as réplicas convergem — uma promessa sem prazo. Dizer que um sistema é
+eventualmente consistente não é dizer quase nada; a pergunta operacional é qual é a janela típica,
+qual é a de cauda, e o que a aplicação mostra ao usuário durante ela.
+
+Vale registrar por que essa discussão pertence à camada geracional. Os nomes dos produtos que
+implementam cada escolha mudam a cada poucos anos. A escolha em si — coordenar mais e esperar, ou
+coordenar menos e conviver com divergência — não mudou desde que existem duas cópias do mesmo dado
+em máquinas diferentes, e não há sinal de que mude.
+
+### 2.2.6 OLTP vs. OLAP; warehouse, lake, lakehouse
+
+A separação entre a carga que atende a transação e a carga que responde à pergunta é uma das
+distinções mais estáveis da área, e é anterior à sigla. Codd popularizou o termo OLAP em 1993, mas
+a prática de manter uma cópia separada para análise já existia porque o conflito é físico: a carga
+transacional lê e escreve poucas linhas por vez, muitas vezes por segundo, e precisa de latência
+baixa e previsível; a analítica varre milhões de linhas em poucas colunas e tolera segundos. As
+duas competem pelo mesmo cache, pelos mesmos bloqueios e pelo mesmo disco. Rodá-las juntas degrada
+a que importa mais.
+
+O armazém de dados foi a primeira resposta institucional, e trouxe consigo uma divergência de
+projeto que vale conhecer porque ela reaparece em toda plataforma nova. Inmon defendia um modelo
+corporativo normalizado como fonte única, do qual saem recortes departamentais; Kimball defendia
+esquemas dimensionais orientados ao processo de negócio, construídos de forma incremental. A
+disputa nunca foi resolvida por evidência e continua viva com outros nomes. O que ambos acertaram
+é o que ficou: transformação declarada, granularidade definida e linhagem rastreável.
+
+O lago de dados foi a reação — e é um caso de manual do arco de quatro fases. Guardar tudo no
+formato bruto e adiar o esquema para a leitura resolvia um gargalo verdadeiro, o de que modelar
+antes de saber a pergunta descartava dado que depois faria falta. O custo apareceu na fase
+seguinte: sem catálogo, sem contrato e sem responsável, um lago vira um pântano, e o adiamento do
+esquema se converte em trabalho arqueológico feito por analista sem acesso a quem produziu o dado.
+É o mesmo mecanismo do *schemaless* da seção 2.2.3, em escala corporativa.
+
+O lakehouse é a síntese, e sua parte técnica é mais interessante que seu nome de marketing: os
+formatos de tabela sobre arquivos — a linhagem do Iceberg, do Delta e do Hudi — devolvem ao lago
+transação, evolução de esquema e viagem no tempo, mantendo o armazenamento barato e aberto. É uma
+reconquista, não uma invenção: as propriedades sendo readicionadas são as que o armazém já tinha e
+o lago abriu mão.
+
+O que o leitor deve extrair não é a taxonomia. É a distinção entre o permanente e o sazonal dentro
+dela. Permanente: separar as duas cargas, declarar a transformação, saber a granularidade e a
+linhagem. Sazonal: os nomes das plataformas, e a arquitetura da moda que promete unificar as duas
+cargas sem custo. Essa promessa reaparece a cada oito ou dez anos.
+
+### 2.2.7 Migração e versionamento de esquema
+
+O esquema é código, com uma diferença que muda tudo: implantar código novo descarta o antigo, e
+migrar dados não. Reverter uma versão de aplicação é uma operação de segundos e sem perda.
+Reverter uma migração que já removeu uma coluna exige um dado que não existe mais. É por isso que
+a migração é, quase sempre, a parte mais arriscada de uma implantação — e a que recebe menos
+revisão.
+
+A técnica que resolve isso é antiga, tem vários nomes — expandir e contrair, mudança paralela — e
+uma única ideia: nenhuma implantação deve conter simultaneamente uma mudança destrutiva de esquema
+e a mudança de código que deixa de usar o que foi destruído. Separam-se em três passos, cada um
+implantável e reversível sozinho. Primeiro, expandir: adicionar a estrutura nova sem remover a
+antiga, e passar a escrever nas duas. Depois, migrar e ler da nova, com a antiga ainda intacta e o
+código anterior ainda funcionando. Por fim, quando nenhuma versão em produção depende mais dela,
+contrair: remover a antiga.
+
+O passo do meio é o que costuma ser pulado, e é o que dá a propriedade que importa: durante toda a
+janela, duas versões da aplicação coexistem em produção sobre o mesmo banco. Isso não é um detalhe
+de sistemas grandes — é a condição de qualquer implantação gradual, de qualquer réplica que recebe
+a atualização depois, e de qualquer reversão. Um esquema que só funciona com uma versão da
+aplicação de cada vez impõe janela de indisponibilidade, e a impõe justamente no momento em que
+seria preciso reverter.
+
+Três exigências práticas decorrem disso, e valem como critério de revisão. Migrações versionadas,
+ordenadas e aplicadas pela mesma ferramenta em todos os ambientes, incluindo a máquina de quem
+desenvolve — migração aplicada à mão em produção é a origem de divergências que só aparecem meses
+depois. Migrações idempotentes ou protegidas contra reaplicação, porque a que falha no meio será
+executada de novo. E, para tabela grande, atenção ao bloqueio: alterações que reescrevem a tabela
+ou seguram o cadeado por muito tempo derrubam o sistema mesmo quando o comando termina com
+sucesso. Adicionar uma coluna anulável costuma ser barato; adicionar uma com valor padrão, ou uma
+restrição validada sobre todo o histórico, frequentemente não é — e o comportamento varia entre
+motores e versões, o que faz do teste em cópia de produção a única forma honesta de saber.
+
+Ambler e Sadalage documentaram isso como refatoração de banco de dados em 2006, com o mesmo
+argumento que Fowler usara para código: mudanças pequenas, com verificação a cada passo, são mais
+seguras que a mudança grande e correta feita de uma vez. Vinte anos depois, o argumento continua
+válido e a prática continua minoritária, porque o custo de pular o passo do meio só é cobrado no
+dia da reversão.
+
+### 2.2.8 Do campo: bases críticas em Sybase e SQL Server em produção contínua
+
+*Esta seção é relato de campo. As afirmações abaixo são o argumento; os episódios concretos que as
+sustentam entram na revisão — a regra da seção 1.3.4 vale aqui com força particular, porque
+experiência pessoal é a evidência mais fácil de generalizar indevidamente.*
+
+Sybase e SQL Server compartilham ancestral: o Microsoft SQL Server nasceu, no fim dos anos 1980,
+de um acordo de licenciamento sobre o código do Sybase, e as bases seguiram caminhos separados
+depois de 1994. Herdaram o mesmo T-SQL, o mesmo procedimento armazenado como unidade de
+distribuição e a mesma cultura operacional. Para quem trabalhou em instituição financeira
+brasileira, essa linhagem não é curiosidade histórica — é a razão de haver, em produção hoje,
+sistemas cuja lógica de negócio mora no banco e não na aplicação.
+
+Três observações que a experiência com esse tipo de base sustenta.
+
+A primeira é sobre onde a lógica mora. Colocar regra de negócio em procedimento armazenado foi,
+por muito tempo, a decisão correta: garantia transacional, ausência de tráfego de rede por linha e
+um ponto único de aplicação da regra para clientes escritos em linguagens diferentes. As
+consequências aparecem depois, e não invalidam a decisão original: o banco vira uma dependência
+que não se pode testar isoladamente, o código escapa das ferramentas de versionamento e revisão do
+resto da equipe, e a migração para qualquer outro motor deixa de ser uma troca de dialeto para se
+tornar uma reescrita. É a Lei de Conway da seção 1.2.1 vista do lado dos dados: a estrutura de quem
+tinha permissão de escrever ficou registrada no lugar onde a regra foi parar.
+
+A segunda é sobre o custo do bloqueio. O modelo de concorrência tradicional dessa família era
+baseado em bloqueio, não em versionamento de linha, e isso significa que leitor e escritor
+disputam. Em base transacional com relatório rodando junto, uma consulta analítica mal escrita não
+fica lenta apenas para si: ela segura o cadeado e a fila cresce atrás dela. Foi essa dinâmica, mais
+do que qualquer argumento de arquitetura, que empurrou a separação entre carga transacional e
+analítica da seção 2.2.6 — e é por isso que o isolamento por instantâneo, quando chegou, foi
+tratado como recurso de sobrevivência e não como refinamento.
+
+A terceira é sobre longevidade, e é a que interessa ao argumento do livro. Uma base assim é o
+exemplo mais limpo do que a seção 0.1 chama de arqueologia: o conhecimento saiu da grade e do
+mercado de contratação, continuou rodando operação crítica, e ficou concentrado em profissionais
+que envelheceram junto com o sistema. A ferramenta está na camada sazonal; o que se aprende
+mantendo-a, não. Modelagem, transação, plano de execução, bloqueio, migração sem janela — a lista
+inteira deste capítulo é o que sobra quando o produto sai de cena, e é transferível para qualquer
+motor que venha depois. É o argumento que o capítulo 2.6 vai retomar como carreira.
+
+**Fontes primárias do capítulo.** Codd, E. F., ["A Relational Model of Data for Large Shared Data
+Banks"](https://www.seas.upenn.edu/~zives/03f/cis550/codd.pdf), *Communications of the ACM*, 1970 ·
+Gray, J., [*The Transaction Concept: Virtues and
+Limitations*](https://jimgray.azurewebsites.net/papers/thetransactionconcept.pdf), 1981 · Härder,
+T. e Reuter, A., *Principles of Transaction-Oriented Database Recovery*, ACM Computing Surveys,
+1983, DOI 10.1145/289.291 · Berenson, H. et al., [*A Critique of ANSI SQL Isolation
+Levels*](https://arxiv.org/pdf/cs/0701157), SIGMOD, 1995 · Chang, F. et al., [*Bigtable: A
+Distributed Storage System for Structured Data*](https://research.google/pubs/pub27898/), OSDI,
+2006 · DeCandia, G. et al., [*Dynamo: Amazon Highly Available Key-value
+Store*](https://www.allthingsdistributed.com/files/amazon-dynamo-sosp2007.pdf), SOSP, 2007 ·
+Gilbert, S. e Lynch, N., [*Brewer Conjecture and the Feasibility of Consistent, Available,
+Partition-Tolerant Web Services*](https://users.ece.cmu.edu/~adrian/731-sp04/readings/GL-cap.pdf),
+SIGACT News, 2002 · Brewer, E., [*CAP Twelve Years Later: How the Rules Have
+Changed*](https://www.infoq.com/articles/cap-twelve-years-later-how-the-rules-have-changed/),
+IEEE Computer, 2012 · Abadi, D., *Consistency Tradeoffs in Modern Distributed Database System
+Design*, IEEE Computer, 2012 · Corbett, J. C. et al., [*Spanner: Globally-Distributed
+Database*](https://research.google/pubs/pub39966/), OSDI, 2012 · Inmon, W. H., *Building the Data
+Warehouse*, 1992 · Kimball, R., *The Data Warehouse Toolkit*, 1996 · Ambler, S. e Sadalage, P.,
+*Refactoring Databases: Evolutionary Database Design*, 2006 · Kleppmann, M., *Designing
+Data-Intensive Applications*, 2017.

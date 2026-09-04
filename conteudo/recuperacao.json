@@ -150,5 +150,37 @@
   "s2-1-7": [
     "Diferencie concorrência de paralelismo e cite as perguntas que todo modelo precisa responder.",
     "Concorrência estrutura atividades que progridem em períodos sobrepostos; paralelismo executa atividades simultaneamente. Todo modelo precisa declarar propriedade do estado, cancelamento, propagação de erro, ordem e controle da pressão entre produtor e consumidor."
+  ],
+  "s2-2-1": [
+    "Por que a ordem importa: normalizar primeiro e desnormalizar depois, e não o contrário?",
+    "Porque só uma das duas operações é barata de desfazer. Desnormalizar um esquema normalizado é decisão local, tomada com medição e reversível. Normalizar um esquema que nasceu achatado exige descobrir dependências funcionais em dados que já divergiram — arqueologia que costuma custar mais que reescrever a aplicação."
+  ],
+  "s2-2-2": [
+    "Seu banco está em read committed e você acredita ter serializabilidade. Que classe de defeito isso produz, e por que ele é difícil de reproduzir?",
+    "Produz violação de invariante por concorrência — o caso clássico é a escrita enviesada, em que duas transações leem o mesmo estado, cada uma decide algo válido isoladamente, e a combinação quebra uma regra que nenhuma delas quebrou sozinha. É difícil de reproduzir porque depende de uma janela temporal estreita: em baixa concorrência o defeito não aparece, e surge quando o volume cresce, como um dado impossível sem passo a passo."
+  ],
+  "s2-2-3": [
+    "O que exatamente está errado no adjetivo schemaless?",
+    "Não existe dado sem esquema — existe esquema não declarado. Tirar o esquema do banco não o elimina: move para o código da aplicação, e para todas as versões da aplicação que já escreveram naquela coleção. Ele deixa de ser verificado na escrita e passa a ser descoberto na leitura, em geral por um if defensivo escrito depois do incidente."
+  ],
+  "s2-2-4": [
+    "Qual é a pergunta certa ao escolher um modelo de dados, e por que o modelo de documento é o mais escolhido pelo motivo errado?",
+    "A pergunta não é qual modelo é melhor, e sim qual consulta é quente e qual pode ser respondida devagar — cada modelo é uma aposta em um padrão de acesso. O documento é escolhido pelo motivo errado porque a fase inicial premia a ausência de migração; o agregado, porém, é uma decisão irreversível disfarçada de conveniência, e a conta chega quando o agregado errado já tem volume."
+  ],
+  "s2-2-5": [
+    "Por que a leitura de CAP como escolha dois entre três é falsa? O que o PACELC acrescenta?",
+    "Porque tolerância a partição não é opção de projeto: a partição é um evento que a rede impõe. CAP só diz que, durante uma partição, escolhe-se entre responder com dado possivelmente velho e não responder — fora dela, dá para ter consistência forte e disponibilidade. O PACELC acrescenta a metade que descreve o dia a dia: fora da partição ainda se escolhe entre latência e consistência, porque esperar a confirmação das réplicas é permanente e partições são raras."
+  ],
+  "s2-2-6": [
+    "Separe o permanente do sazonal na história warehouse → lake → lakehouse.",
+    "Permanente: separar a carga transacional da analítica (o conflito é físico — poucas linhas com latência baixa contra varredura de milhões em poucas colunas), declarar a transformação, definir granularidade e manter linhagem. Sazonal: os nomes das plataformas e a promessa recorrente, a cada oito ou dez anos, de unificar as duas cargas sem custo. O lakehouse é reconquista, não invenção: devolve ao lago as garantias de que o armazém já dispunha."
+  ],
+  "s2-2-7": [
+    "Descreva expandir e contrair. Qual passo costuma ser pulado e qual propriedade se perde com isso?",
+    "Expandir: criar a estrutura nova sem remover a antiga e escrever nas duas. Migrar: passar a ler da nova, com a antiga intacta e o código anterior ainda funcionando. Contrair: remover a antiga quando nenhuma versão em produção depende dela. O passo do meio é o pulado, e com ele se perde a coexistência de duas versões da aplicação sobre o mesmo banco — condição de qualquer implantação gradual e de qualquer reversão. Sem ela, a janela de indisponibilidade cai exatamente no momento em que seria preciso reverter."
+  ],
+  "s2-2-8": [
+    "Uma base em Sybase com a regra de negócio em procedimento armazenado: por que a decisão original era correta e o que ela cobra depois?",
+    "Era correta porque dava garantia transacional, evitava tráfego de rede por linha e concentrava a regra num ponto único para clientes escritos em linguagens diferentes. Cobra depois: o banco vira dependência que não se testa isoladamente, o código escapa do versionamento e da revisão do resto da equipe, e trocar de motor deixa de ser mudança de dialeto para virar reescrita. É a Lei de Conway pelo lado dos dados — quem tinha permissão de escrever ficou registrado no lugar onde a regra foi parar."
   ]
 }
