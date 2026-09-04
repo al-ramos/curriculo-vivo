@@ -1755,3 +1755,1291 @@ Tail at Scale*](https://research.google/pubs/pub40801/), Communications of the A
 Nygard, M., *Release It! Design and Deploy Production-Ready Software*, 2007 · Little, J. D. C.,
 *A Proof for the Queuing Formula L = λW*, Operations Research, 1961 · Kleppmann, M., *Designing
 Data-Intensive Applications*, 2017, capítulos 8 e 9.
+
+---
+
+## 2.4 · Linguagens de programação
+
+Uma linguagem de programação parece o exemplo perfeito de conhecimento perecível, e é por isso
+que este capítulo está na camada geracional e não na sazonal. Linguagens individuais envelhecem;
+o padrão pelo qual envelhecem não mudou em cinquenta anos. Quem entende o padrão consegue prever
+o comportamento de uma linguagem que ainda não existe, e essa é a única forma de conhecimento
+sobre linguagens que vale a pena ensinar como currículo.
+
+O capítulo também precisa desfazer uma expectativa. A pergunta que os alunos fazem — qual
+linguagem devo aprender — é a menos útil que se pode fazer sobre o assunto, e a resposta honesta
+é decepcionante: a que o trabalho à sua frente exige, e depois mais uma de paradigma diferente,
+pelo motivo que a seção 1.4.5 já estabeleceu. O que decide carreira não é a linguagem; é o que se
+sabe fazer com qualquer uma delas.
+
+### 2.4.1 Linha do tempo por geração
+
+A taxonomia por gerações é o modo tradicional de contar essa história, e vale contá-la sabendo
+que ela própria envelheceu — o que a torna um bom primeiro exemplo do argumento do livro.
+
+A **primeira geração** é a linguagem de máquina: o código que o processador executa, escrito
+diretamente em números. A **segunda** é o assembly, que substitui números por mnemônicos e
+introduz a primeira abstração real, o montador. Nenhuma das duas desapareceu; ambas migraram para
+nichos — compiladores, sistemas embarcados de recurso escasso, otimização pontual, engenharia
+reversa.
+
+A **terceira geração** é onde vive quase tudo que se usa hoje: linguagens de alto nível com
+comandos, procedimentos e independência relativa da máquina. FORTRAN, em 1957, provou que um
+compilador podia gerar código competitivo com o escrito à mão, o que era a objeção central da
+época. COBOL, em 1959, apostou numa sintaxe próxima do inglês para que o programa fosse legível
+por quem não programava — aposta que não se cumpriu como se esperava, e que mesmo assim produziu
+o corpo de código mais longevo da história. ALGOL 60 consolidou blocos e escopo e virou o
+ancestral gramatical de quase todo o resto. C, em 1972, ofereceu abstração portável com acesso à
+máquina, e por isso continua sendo a língua franca entre sistemas.
+
+A **quarta geração** é onde a taxonomia começa a falhar. A ideia era subir mais um degrau de
+abstração com linguagens declarativas e específicas de domínio: geradores de relatório,
+ferramentas de banco de dados, ambientes de desenvolvimento rápido. O membro que sobreviveu com
+folga é o SQL, e ele sobreviveu por ser genuinamente declarativo — descreve o resultado, não o
+caminho, que é a mesma independência da seção 2.2.1. A maioria dos outros 4GLs morreu junto com
+o produto que os hospedava, e essa correlação é o assunto da seção 2.4.2.
+
+A **quinta geração** foi definida por objetivo, não por forma: linguagens de programação lógica e
+por restrições, associadas à ambição de inteligência artificial dos anos 1980, com Prolog como
+representante e o projeto japonês de Quinta Geração como marco. O objetivo não se cumpriu no prazo
+prometido, e a categoria ficou órfã — sobreviveram as técnicas, absorvidas por resolvedores de
+restrições e por linguagens de propósito geral, no mesmo movimento de absorção que a seção 2.1.3
+descreveu para o paradigma funcional.
+
+A **sexta geração** não tem definição estável, e é exatamente aí que a taxonomia deixa de
+descrever. Já foi usada para redes neurais, para linguagens visuais e, mais recentemente, para
+programação assistida por modelo de linguagem. Um esquema classificatório que precisa ser
+reinterpretado a cada década para acomodar o presente parou de ser descritivo e virou vocabulário
+cerimonial. Vale ensiná-lo pelo que ele registra até a quarta geração, e vale dizer ao aluno,
+explicitamente, que dali em diante ele é um artefato de ementa — o tipo de conteúdo que a seção
+0.4 chama de arqueologia ensinada sem aviso.
+
+### 2.4.2 O padrão de envelhecimento — adoção, platô, nicho, manutenção
+
+Linguagens seguem o arco de quatro fases da seção 0.1, com duas particularidades: a escala de
+tempo é mais longa que a de frameworks, e a fase final é mais habitada.
+
+Na **adoção**, a linguagem cresce ligada a uma plataforma, a um problema ou a uma empresa que a
+patrocina. Quase nenhuma linguagem se populariza por mérito linguístico isolado: ela pega carona.
+Java cresceu com a web corporativa e a promessa de portabilidade; JavaScript, por ser a única
+opção dentro do navegador; Objective-C e depois Swift, por decisão de uma fabricante; Python, por
+uma sucessão de nichos — scripting, ciência, ensino, dados. O mérito técnico importa para que a
+linguagem sobreviva à carona, não para conseguir a carona.
+
+No **platô**, ela vira infraestrutura. Aparece em vagas pelo nome, tem livros de referência,
+ferramentas maduras e, o marcador mais confiável, é usada por muita gente que não a escolheu.
+Nessa fase, a evolução da linguagem passa a ser limitada por compatibilidade retroativa, e o
+debate interno da comunidade muda de "o que podemos acrescentar" para "o que podemos acrescentar
+sem quebrar o que existe".
+
+No **nicho**, ela deixa de ser escolha padrão para software novo, mas continua dominante em um
+recorte. Perl saiu do desenvolvimento web e continuou vivo em processamento de texto e
+administração de sistemas; Fortran nunca saiu de computação numérica de alto desempenho; Lisp
+permanece onde a manipulação de código como dado é o requisito.
+
+Na **manutenção**, o software novo praticamente cessa e o corpo existente continua rodando,
+sustentado por profissionais cada vez mais escassos. É o estado de COBOL, de Visual Basic 6, de
+Delphi em muitos contextos — e é o assunto da próxima seção.
+
+A observação mais útil do capítulo é sobre a causa da morte. Linguagens raramente são substituídas
+por linguagens melhores; elas morrem quando a plataforma ou o nicho que as sustentava desaparece.
+ActionScript não perdeu para uma linguagem: perdeu com o fim do Flash. Visual Basic 6 não perdeu
+em uma comparação técnica: perdeu quando a Microsoft mudou de plataforma. A implicação prática é
+que, ao avaliar o risco de longo prazo de uma linguagem, a pergunta certa não é sobre a linguagem —
+é sobre a saúde e a independência da plataforma à qual ela está amarrada.
+
+### 2.4.3 Por que COBOL não morreu, e o que isso ensina sobre o resto
+
+COBOL é o contraexemplo mais útil da área, porque contraria a intuição de que o melhor vence e a
+de que o antigo desaparece. Sessenta e poucos anos depois de criado, ele continua executando
+processamento de lote em folha de pagamento, seguro e serviços financeiros — inclusive no Brasil,
+inclusive em instituições que se apresentam como modernas.
+
+Três forças explicam a longevidade, e nenhuma é técnica no sentido usual.
+
+A primeira é a assimetria de risco. Reescrever um sistema que funciona e movimenta dinheiro tem
+prejuízo ilimitado e ganho limitado: o melhor resultado possível é que tudo continue exatamente
+como estava, e qualquer desvio é perda. Nenhum executivo é promovido por uma migração que deu
+certo, e vários são demitidos por uma que deu errado. É a mesma economia da decisão que o capítulo
+3.7 vai tratar de frente.
+
+A segunda é que a regra de negócio não está documentada em outro lugar. Décadas de exceções
+legais, acordos comerciais e correções pontuais foram registradas apenas como código. Reescrever
+exige primeiro descobrir o que o sistema faz — e essa descoberta é uma pesquisa arqueológica, não
+um projeto de engenharia com escopo previsível. É o mesmo mecanismo da seção 2.2.8, quando a regra
+mora no procedimento armazenado.
+
+A terceira é que COBOL é bom no que faz. Processamento sequencial de grandes volumes com aritmética
+decimal exata é precisamente o problema para o qual ele foi projetado, e a aritmética decimal não é
+detalhe: representar dinheiro em ponto flutuante binário produz erro de arredondamento que
+auditoria não aceita. Muitas linguagens modernas só oferecem esse tipo por biblioteca, e muita
+migração descobre isso tarde.
+
+A lição generaliza, e é uma das mais importantes do livro. O que mantém um sistema vivo não é a
+qualidade da tecnologia, é o custo de substituí-lo comparado ao benefício. Todo software que hoje
+se escreve em linguagem moderna e da moda será, se der certo, o legado de alguém em vinte anos —
+sustentado por profissionais que não escolheram aquela linguagem e que a aprenderão porque o
+sistema importa. Ensinar isso muda a relação do aluno com o legado: ele deixa de ser um castigo e
+vira uma categoria previsível de trabalho, frequentemente bem paga e mal ensinada.
+
+### 2.4.4 Ecossistema e gerenciador de pacotes decidem mais que sintaxe
+
+Comparações de linguagem quase sempre discutem sintaxe e sistema de tipos, que são a parte
+visível e a menos determinante. Na prática, o que decide produtividade e risco é o que vem em
+volta: a biblioteca padrão, o gerenciador de pacotes, a ferramenta de build, o depurador, o
+formatador, o servidor de linguagem, a qualidade das mensagens de erro do compilador e o tamanho
+do conjunto de pessoas que se pode contratar.
+
+O gerenciador de pacotes merece destaque porque mudou a natureza do trabalho. Ele resolveu um
+problema real — reúso — e criou outro, que é a dependência transitiva. Um projeto declara vinte
+dependências e instala mil e duzentas, das quais conhece vinte. Cada uma dessas mil e duzentas é
+código de terceiro executando com os mesmos privilégios do seu, mantido por pessoas que você não
+conhece, sob governança que você não verificou. O incidente do pacote de onze linhas removido do
+npm em 2016, que quebrou a construção de milhares de projetos, é o exemplo didático: não porque o
+pacote fosse importante, mas porque expôs que ninguém sabia que dependia dele.
+
+Isso transforma escolha de linguagem em decisão de cadeia de suprimentos, e é a ponte para o
+capítulo 4.1. As perguntas que separam ecossistemas maduros dos imaturos são operacionais: existe
+arquivo de trava com verificação de integridade? Há como auditar o que foi instalado? A publicação
+de pacote exige segundo fator? Existe caminho para fixar uma versão sem congelar a segurança? A
+biblioteca padrão cobre o suficiente para que a árvore de dependências seja rasa?
+
+A última pergunta é a mais subestimada. Uma biblioteca padrão abrangente não é conforto: é redução
+de superfície de ataque e de trabalho de manutenção. Ecossistemas que cultivam bibliotecas padrão
+pequenas transferem para cada projeto a responsabilidade de montar e manter a sua — e a maioria
+dos projetos monta mal.
+
+### 2.4.5 Runtimes e interoperabilidade — JVM, CLR, WASM
+
+Há uma camada abaixo da linguagem que envelhece ainda mais devagar do que ela, e que raramente
+recebe atenção no ensino: o ambiente de execução. A observação central é que o runtime costuma
+sobreviver à linguagem que o originou, e que apostar no runtime é frequentemente mais seguro do
+que apostar na linguagem.
+
+A **JVM** foi construída para Java e hoje hospeda Kotlin, Scala e Clojure — linguagens com
+filosofias incompatíveis entre si, compartilhando coletor de lixo, modelo de memória, formato de
+biblioteca e ferramental de observação. Uma equipe que migrou de Java para Kotlin não trocou de
+plataforma: trocou de sintaxe sobre a mesma plataforma, o que explica por que a migração é
+incremental e barata. A **CLR** repetiu o padrão com C#, F# e VB.NET, com a interoperabilidade
+como objetivo declarado desde o início.
+
+O **WebAssembly** é a aposta mais recente e a mais interessante do ponto de vista deste livro. Não
+é uma linguagem: é um alvo de compilação portável, com execução em caixa de areia e modelo de
+segurança explícito por capacidades. Nasceu no navegador para permitir que código escrito em C,
+Rust e outras linguagens rodasse ali com desempenho previsível, e saiu do navegador para servidor,
+borda e plugins. Se cumprir a promessa, será a segunda vez que a indústria constrói uma camada de
+portabilidade abaixo da linguagem — e a primeira em que ela nasce com o isolamento como requisito,
+e não como remendo.
+
+Uma ressalva de honestidade, porque este é o parágrafo mais perecível do capítulo: WASM está entre
+emergência e consolidação. Há adoção real fora de quem o criou e casos documentados em produção, o
+que são bons sinais pelo critério da seção 0.5. Não há ainda a evidência de longo prazo que só o
+tempo produz, e um capítulo escrito em 2026 não pode fingir que há. A ficha registra isto como
+gatilho de revisão.
+
+A lição transferível: quando avaliar longevidade, olhe uma camada abaixo do que está sendo
+vendido. A linguagem é a parte visível; o runtime, o formato de bytecode e o modelo de memória são
+o que determina se haverá caminho de saída daqui a dez anos.
+
+### 2.4.6 Como escolher uma linguagem sem escolher uma moda
+
+A escolha de linguagem é uma decisão de arquitetura com prazo de vida longo e custo de reversão
+alto, e merece o mesmo rigor que a seção 3.1.8 vai exigir para ADRs. O que segue são critérios,
+não uma resposta.
+
+**Existe evidência de uso em produção, na sua escala e no seu domínio?** Não em conferência, não em
+postagem de blog de quem criou a linguagem — em produção, contada por quem operou e teve problemas.
+É o mesmo critério da seção 0.5 para distinguir emergência de barulho.
+
+**Quem mantém, sob qual governança, e o que acontece se essa parte perder o interesse?** Linguagem
+mantida por uma única empresa sem fundação independente tem um risco que linguagem com governança
+distribuída não tem. Não é impedimento; é um fator a declarar.
+
+**Qual é o histórico de compatibilidade?** Este é o critério mais previsível e o menos usado. A
+transição de Python 2 para 3 levou mais de uma década e dividiu o ecossistema, e foi feita por um
+projeto sério com boas intenções; a promessa explícita de compatibilidade de Go e o compromisso
+histórico da plataforma Java são o contraexemplo. O histórico passado de quebra é o melhor
+previsor do custo de manutenção futuro.
+
+**Você consegue contratar, e consegue formar?** Um ecossistema pequeno pode ser tecnicamente
+superior e ainda assim ser a escolha errada para uma equipe que precisa crescer. Vale o inverso: a
+linguagem popular pode trazer um conjunto de candidatos grande e raso.
+
+**Qual é o custo de saída?** Se em cinco anos a decisão se mostrar errada, o que é preciso reescrever?
+Sistemas que confinam a linguagem atrás de fronteiras claras — processos separados, contratos de
+API, formatos de dados neutros — pagam menos por um erro de escolha. É a mesma lógica da seção
+1.2.4: esconder a decisão que pode mudar.
+
+Duas conclusões desconfortáveis fecham o capítulo. A primeira é que, para a maioria das equipes, a
+resposta certa é a linguagem que a equipe já domina, e a justificativa técnica para trocar precisa
+ser maior do que costuma ser. A segunda é que índices de popularidade — os que contam menções,
+buscas ou repositórios — medem atenção, não adequação, e não respondem a nenhuma das cinco
+perguntas acima. Usá-los como critério de decisão é terceirizar arquitetura para uma métrica que
+ninguém auditou.
+
+**Fontes primárias do capítulo.** Backus, J. W. et al., [*The FORTRAN Automatic Coding
+System*](https://archive.computerhistory.org/resources/text/Fortran/102663113.05.01.acc.pdf),
+1957 · CODASYL, *COBOL Report*, 1960 · Naur, P. (ed.), [*Revised Report on ALGOL
+60*](https://archive.computerhistory.org/resources/text/algol/algol_bulletin/EX/RR60/INDEX.HTM),
+1963 · Ritchie, D., *The Development of the C Language*, HOPL-II, 1993 · Sammet, J.,
+*Programming Languages: History and Fundamentals*, 1969 · Codd, E. F., *A Relational Model of
+Data for Large Shared Data Banks*, 1970, para a linhagem declarativa do SQL · Lindholm, T. e
+Yellin, F., *The Java Virtual Machine Specification*, 1996 · Haas, A. et al., [*Bringing the Web
+up to Speed with WebAssembly*](https://dl.acm.org/doi/10.1145/3062341.3062363), PLDI, 2017 ·
+[*The Go 1 Compatibility Promise*](https://go.dev/doc/go1compat), 2012 · Python Software
+Foundation, [*PEP 373 — Python 2.7 Release Schedule*](https://peps.python.org/pep-0373/), sobre o
+encerramento do suporte em 2020.
+
+---
+
+## 2.5 · Requisitos, produto e IHC
+
+Este é o capítulo que a maioria dos currículos de computação trata como acessório e que a prática
+trata como decisivo. A estatística que sustenta a afirmação é antiga e incômoda: desde os relatórios
+de fracasso de projeto dos anos 1990, a causa dominante nunca foi incompetência técnica — foi
+construir a coisa errada, ou construir a coisa certa para um entendimento errado do problema.
+Software que funciona perfeitamente e resolve o problema errado é uma falha de engenharia, não um
+mal-entendido de negócio.
+
+O capítulo está na camada geracional porque seu conteúdo é sobre pessoas e sobre a estrutura do
+problema, não sobre ferramentas. O vocabulário mudou várias vezes — especificação, caso de uso,
+história, tarefa a ser feita, descoberta contínua — e as questões por baixo do vocabulário são as
+mesmas desde que existe encomenda de software.
+
+### 2.5.1 Levantamento e descoberta — o problema atrás do pedido
+
+A distinção que organiza a seção é entre o pedido e o problema. Um pedido é uma solução já
+escolhida por quem tem o problema, e vem embrulhada como requisito: "quero um botão de exportar
+para Excel". O problema atrás dele pode ser outro completamente — a pessoa precisa conferir números
+com um colega que não tem acesso ao sistema, e a exportação é a única via que ela conhece. Atender
+ao pedido resolve o sintoma e cria manutenção permanente; entender o problema pode revelar que a
+resposta é acesso de leitura para o colega.
+
+Isso não autoriza ignorar o que o usuário pede. O erro simétrico, e mais comum entre pessoas
+técnicas, é presumir que se entende o problema melhor do que quem convive com ele. A postura
+correta é investigativa e não substitutiva: perguntar o que a pessoa faz hoje, quando fez pela
+última vez, quanto tempo levou, o que deu errado da última vez, e o que ela faria se o sistema não
+existisse. Perguntas sobre o passado observável produzem informação; perguntas sobre preferência
+futura produzem especulação educada.
+
+Duas armadilhas recorrentes merecem nome. A primeira é entrevistar apenas quem contratou — a
+pessoa que assina raramente é a que usa, e as duas descrevem o mesmo processo de formas
+irreconciliáveis. A segunda é aceitar a descrição oficial do processo sem observar o processo real:
+toda organização tem um fluxo documentado e um fluxo praticado, e a distância entre os dois é onde
+mora o requisito de verdade — planilhas paralelas, combinados informais, campos usados para
+finalidade diferente da declarada.
+
+O produto do levantamento não é uma lista de funcionalidades. É um enunciado do problema que
+sobrevive à mudança de solução: quem tem a dor, com que frequência, qual é o custo atual de conviver
+com ela, e como saberemos que ela diminuiu. Se essas quatro respostas não existem, o que se tem é
+um pedido, e a equipe vai descobrir isso depois de construir.
+
+### 2.5.2 Requisito funcional, não funcional e atributo de qualidade
+
+Requisito funcional é o que o sistema faz; não funcional é como ele precisa se comportar enquanto
+faz. A nomenclatura é ruim e vale dizer por quê: "não funcional" sugere secundário, e são
+justamente esses os requisitos que determinam a arquitetura. Nenhuma decisão da seção 3.1 é tomada
+por causa de um requisito funcional — cadastrar cliente se faz em qualquer arquitetura. Elas são
+tomadas por causa de latência, volume, disponibilidade, tolerância a perda, janela de manutenção e
+requisito regulatório. Por isso a literatura de arquitetura prefere chamá-los de atributos de
+qualidade, e é a nomenclatura que este livro adota.
+
+O problema prático não é classificá-los, é torná-los verificáveis. "O sistema deve ser rápido" não
+é requisito; é uma intenção. Um atributo de qualidade só existe quando tem um cenário: sob qual
+carga, medido em qual percentil, em qual caminho de código, com qual valor-limite, e o que
+acontece quando o limite é ultrapassado. "O percentil 95 da consulta de saldo deve ficar abaixo de
+300 ms com 2.000 requisições por segundo, e acima disso a resposta é degradar para saldo em cache
+com aviso" é um requisito — porque é falsificável, e porque diz o que fazer quando falha. É a mesma
+exigência que a seção 0.3 faz aos objetivos de aprendizagem: verbo verificável em vez de intenção.
+
+Vale registrar a hierarquia de custo, porque ela orienta a ordem da conversa. Atributos de
+qualidade que precisam ser projetados desde o início — segurança, auditabilidade, capacidade de
+particionar dados por cliente ou por região, rastreabilidade — custam pouco quando assumidos cedo e
+muito quando adicionados depois, porque atravessam todas as camadas. Requisitos funcionais, em
+geral, se acrescentam de forma incremental. A conversa sobre atributos de qualidade, portanto, é a
+que não pode ser adiada, e é quase sempre a que é.
+
+### 2.5.3 Histórias, critérios de aceite e a fronteira com teste
+
+A história de usuário nasceu como um dispositivo de conversa, não como formato de documento. A
+formulação original de Kent Beck, no contexto do XP, era deliberadamente insuficiente: um cartão
+com poucas palavras, cuja função era garantir que a conversa acontecesse antes da implementação. A
+degradação previsível transformou o cartão em especificação em miniatura, escrita por uma pessoa,
+lida por outra, sem conversa nenhuma — e o formato "como X, quero Y, para Z" virou cerimônia. Ron
+Jeffries reagiu a isso com a formulação das três dimensões: cartão, conversa e confirmação, sendo
+o cartão a menos importante das três.
+
+O critério de aceite é a confirmação, e é onde o requisito encosta no teste. Ele responde a uma
+pergunta binária: como saberemos, sem discussão, que isto está pronto? Um bom critério é observável
+do lado de fora, não menciona implementação, e inclui os casos de erro — que é onde a maioria falha.
+Critérios que descrevem só o caminho feliz produzem software que funciona na demonstração.
+
+A fronteira com o teste é sutil e vale nomeá-la, porque o capítulo 3.3 vai depender dela. O
+critério de aceite é uma afirmação sobre comportamento externo acordada antes de construir; o teste
+é o mecanismo que verifica essa afirmação de forma repetível. Quando se escreve o critério em
+formato executável — a família de práticas de BDD e especificação por exemplo —, os dois coincidem,
+e o ganho real não é a automação: é ter forçado a conversa sobre exemplos concretos antes do
+código. O ganho se perde por completo quando a especificação executável é escrita depois, por quem
+já implementou, sem quem tem o problema na sala. Nesse caso o que se produz é um teste com sintaxe
+mais verbosa.
+
+Uma consequência para o ensino: a habilidade escassa aqui não é escrever histórias, é fazer boas
+perguntas sobre exemplos. "Me dê um caso em que isso não vale" e "o que acontece se chegarem dois
+ao mesmo tempo" descobrem mais requisito do que qualquer gabarito de formatação.
+
+### 2.5.4 Fundamentos de IHC e usabilidade
+
+Interação humano-computador é uma disciplina com literatura própria e resultados replicados, e a
+formação em computação costuma reduzi-la a uma aula sobre cores. O núcleo que todo desenvolvedor
+deveria carregar é pequeno e estável há décadas.
+
+As dez heurísticas de Jakob Nielsen, de 1994, continuam sendo o melhor instrumento de custo-benefício
+da área: visibilidade do estado do sistema; correspondência com o mundo real; controle e liberdade
+do usuário; consistência e padrões; prevenção de erro; reconhecer em vez de lembrar; flexibilidade
+e eficiência; estética e design minimalista; ajuda para reconhecer, diagnosticar e recuperar-se de
+erros; e documentação. São heurísticas e não regras: servem para inspecionar uma interface e
+encontrar problemas baratos, não para provar que ela é boa.
+
+Três delas merecem destaque por serem as mais violadas por software corporativo. **Visibilidade do
+estado**: uma operação que demora sem informar o que está acontecendo transfere ao usuário a
+incerteza da seção 2.3.3 — ele não distingue lento de quebrado, e clica de novo, gerando a
+duplicata que a aplicação não trata. **Prevenção de erro** é sempre mais barata que boa mensagem
+de erro, e desenhar o campo para que o valor inválido não seja expressável vence qualquer
+validação. **Recuperação de erro**: a mensagem precisa dizer o que aconteceu, por que, e qual é o
+próximo passo — três coisas que "erro inesperado" não faz nenhuma.
+
+O conceito que amarra tudo é o de modelo mental: o usuário constrói uma teoria de como o sistema
+funciona a partir do que ele mostra, e age com base nessa teoria. Norman chamou de golfos de
+execução e avaliação a distância entre o que a pessoa quer fazer e o que a interface oferece, e
+entre o que o sistema faz e o que ela consegue perceber. Quase todo problema de usabilidade é um
+desses dois golfos. Como a seção 1.4.5 argumenta para quem programa, o custo real está no modelo
+mental errado — e a interface é o que o forma.
+
+### 2.5.5 Acessibilidade e internacionalização como requisito, não retrofit
+
+As duas andam juntas neste capítulo porque compartilham a mesma economia: custam pouco quando
+assumidas no início e muito quando adicionadas depois, exatamente como os atributos de qualidade da
+seção 2.5.2.
+
+Acessibilidade tem norma pública e verificável — as WCAG, do W3C, organizadas em quatro princípios:
+perceptível, operável, compreensível e robusto. O erro conceitual mais comum é tratá-la como
+atendimento a uma minoria. Ela é, na prática, qualidade de interface para todo mundo: contraste
+suficiente serve a quem tem baixa visão e a quem está no sol; navegação por teclado serve a quem
+não usa mouse e a quem opera rápido; legenda serve a quem não ouve e a quem está em ambiente
+barulhento. E há um argumento que independe de convicção: no Brasil, acessibilidade digital é
+exigência legal para serviços públicos e tem base na Lei Brasileira de Inclusão — o que a coloca
+como requisito, e o capítulo 3.4 retoma o assunto pelo lado jurídico.
+
+O motivo de não ser possível adicioná-la depois é estrutural. Acessibilidade depende de semântica:
+um botão precisa ser um botão para que a tecnologia assistiva saiba anunciá-lo, o foco precisa
+seguir uma ordem que faça sentido, o estado precisa ser exposto de forma programática. Uma interface
+construída com elementos genéricos e comportamento montado à mão precisa ser reconstruída, não
+ajustada.
+
+Internacionalização segue o mesmo padrão com outras causas. Traduzir texto é a parte fácil e a
+menos importante. O que quebra é o resto: formato de data e número, ordenação alfabética
+dependente de idioma, plurais que não seguem a regra do inglês, nomes que não se separam em nome e
+sobrenome, endereços com estrutura diferente, moedas com número de casas decimais diferente, fusos
+horários e horário de verão, e texto que muda de direção. Cada um desses vira uma suposição
+espalhada pelo código quando não é assumido no início — e o exemplo mais didático é o de guardar
+data e hora sem fuso, decisão que parece inofensiva e que reaparece como bug irreproduzível na
+seção 2.3.4.
+
+### 2.5.6 Pesquisa com usuário para quem não é designer
+
+Não é preciso ser pesquisador para obter informação melhor do que palpite, e vale delimitar o que
+uma equipe de desenvolvimento consegue fazer bem com pouco treino.
+
+O **teste de usabilidade** é o instrumento com melhor retorno. Consiste em dar uma tarefa real a
+alguém que não construiu o sistema e observar em silêncio. A regra que quase todo iniciante quebra
+é intervir: no instante em que se explica, o dado é perdido, porque a pergunta é justamente se a
+pessoa consegue sozinha. Nielsen argumentou que cinco participantes revelam a maior parte dos
+problemas de usabilidade — número que é uma heurística de custo, não uma lei, e que vale como
+autorização para começar pequeno em vez de não começar.
+
+A **entrevista** serve para entender contexto e comportamento passado, e não para validar ideia.
+Perguntar "você usaria isso?" produz gentileza; perguntar "me conte a última vez que você precisou
+fazer isso" produz dado. O viés de agradar o entrevistador é forte e não se elimina com boa
+intenção — apenas com perguntas sobre o que já aconteceu.
+
+A **análise de uso do sistema** é a fonte mais barata e a mais desperdiçada. Onde as pessoas
+abandonam o fluxo, quais campos são preenchidos com valor inválido, qual funcionalidade tem uso
+próximo de zero, quais telas concentram tempo. Isso costuma estar disponível antes de qualquer
+pesquisa formal, e responde a perguntas que a entrevista não responde.
+
+Duas ressalvas de honestidade. Métrica de uso diz o que acontece e não diz por quê — inferir
+motivo a partir de comportamento agregado é o erro mais comum de equipe técnica com acesso a dados.
+E qualquer coleta desse tipo é tratamento de dado pessoal quando permite identificar alguém, o que
+traz a LGPD para dentro da decisão de instrumentação, assunto do capítulo 3.4.
+
+### 2.5.7 Por que quem entende o negócio envelhece mais devagar
+
+Esta seção existe para explicar por que um capítulo sobre requisitos aparece num livro sobre
+envelhecimento de conhecimento técnico.
+
+O conhecimento de domínio é o ativo profissional que envelhece mais devagar de todos. As regras de
+liquidação de um sistema financeiro, a lógica de apuração de um tributo, o fluxo de uma
+concessão de crédito e as restrições de uma operação logística mudam em ritmo de legislação e de
+prática de mercado, não em ritmo de tecnologia. Alguém que entende esse domínio permanece útil
+depois de duas trocas completas de stack — e a recíproca não é verdadeira.
+
+Há uma consequência de carreira que o capítulo 2.6 vai desenvolver. Profissionais que se definem
+apenas pela tecnologia recomeçam do zero a cada ciclo, e competem sempre com quem acabou de
+aprender a mesma ferramenta. Profissionais que acumulam domínio somam: cada ciclo tecnológico é
+uma ferramenta nova aplicada ao mesmo entendimento, que continua valendo. O par mais valioso e mais
+raro no mercado brasileiro é exatamente esse — quem sabe programar e entende o negócio o bastante
+para discutir a regra com quem a define.
+
+E há uma consequência de projeto, que fecha o argumento. A capacidade de traduzir entre o
+vocabulário do negócio e o do sistema é o que impede a deriva entre o que foi pedido e o que foi
+construído. Quando essa tradução não existe em ninguém da equipe, ela é feita por documento, e
+documento não faz pergunta.
+
+**Fontes primárias do capítulo.** Nielsen, J., [*10 Usability Heuristics for User Interface
+Design*](https://www.nngroup.com/articles/ten-usability-heuristics/), 1994 · Nielsen, J. e
+Landauer, T., *A Mathematical Model of the Finding of Usability Problems*, INTERCHI, 1993, para o
+argumento dos cinco participantes · Norman, D., *The Design of Everyday Things*, 1988, edição
+revista de 2013 · Beck, K., *Extreme Programming Explained*, 1999, para a origem das histórias ·
+Jeffries, R., [*Essential XP: Card, Conversation,
+Confirmation*](https://ronjeffries.com/xprog/articles/expcardconversationconfirmation/), 2001 ·
+Cockburn, A., *Writing Effective Use Cases*, 2000 · Wiegers, K. e Beatty, J., *Software
+Requirements*, 3ª ed., 2013 · Bass, L., Clements, P. e Kazman, R., *Software Architecture in
+Practice*, para cenários de atributo de qualidade · W3C, [*Web Content Accessibility
+Guidelines (WCAG) 2.2*](https://www.w3.org/TR/WCAG22/), 2023 · Brasil, [*Lei nº 13.146/2015 — Lei
+Brasileira de Inclusão*](https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2015/lei/l13146.htm) ·
+Adzic, G., *Specification by Example*, 2011.
+
+---
+
+## 2.6 · Comportamento e carreira
+
+Este é o capítulo mais fácil de escrever mal, e vale declarar as duas formas de errar antes de
+começar. A primeira é o conselho motivacional, que soa verdadeiro e não é verificável. A segunda é
+o oposto: fingir que existe evidência forte onde há apenas prática acumulada. O que segue tenta
+ficar entre as duas — descrever mecanismos observáveis, dizer quando a base é experiência e não
+estudo, e evitar prescrição onde a resposta depende de contexto.
+
+O capítulo está na camada geracional porque o objeto é a relação entre pessoas em torno de trabalho
+técnico, e essa relação muda em escala de geração, não de ciclo de ferramenta. O que muda mais
+rápido — remoto, assíncrono, o efeito da automação sobre a porta de entrada — está concentrado na
+seção 2.6.7, que é a mais perecível e traz gatilho de revisão próprio.
+
+### 2.6.1 Por que comportamento é infraestrutura
+
+A palavra "comportamental" carrega a sugestão de que se trata de um complemento agradável à
+competência real. A tese desta seção é o contrário: em trabalho de software, comportamento é
+infraestrutura, no sentido literal de que o sistema construído depende dele.
+
+O argumento não é moral, é estrutural, e já foi estabelecido na seção 1.2.1. A Lei de Conway diz
+que a arquitetura de um sistema reproduz a estrutura de comunicação de quem o constrói. Se duas
+equipes não conversam, o acoplamento entre seus módulos será feito por contorno — um campo
+sobrecarregado, uma tabela compartilhada em segredo, um processo manual entre as duas. A
+consequência incômoda é que problemas de comunicação viram dívida técnica com endereço no código, e
+não podem ser resolvidos apenas refatorando.
+
+Um segundo mecanismo é a segurança psicológica, e é onde a base empírica é mais sólida. O trabalho
+de Amy Edmondson mostra que equipes em que as pessoas se sentem seguras para apontar erro relatam
+*mais* incidentes, e não menos — e que essa contagem maior corresponde a menos dano, não a mais.
+A leitura ingênua do dado inverte a conclusão: uma equipe com poucos incidentes reportados pode ser
+excelente ou pode ser silenciosa, e as duas se parecem no painel. Isso conecta diretamente ao
+post-mortem sem culpados do capítulo 3.3: a prática não é generosidade, é a única forma de obter
+o dado verdadeiro sobre a falha.
+
+O terceiro mecanismo é o custo de coordenação, que Brooks descreveu em 1975 e que a seção 1.2.3 já
+tratou: os canais de comunicação crescem com o quadrado das pessoas. A implicação prática é que
+toda decisão de organização é também decisão de arquitetura, e vice-versa — assunto que a seção
+3.1.9 retoma.
+
+### 2.6.2 Competências — colaboração, conflito produtivo, feedback
+
+Três competências concentram a maior parte da diferença observável entre profissionais de mesmo
+nível técnico, e nenhuma delas costuma ser ensinada.
+
+A primeira é **revisar código sem transformar a revisão em disputa**. Uma revisão útil separa
+quatro coisas que a maioria mistura: defeito, risco, preferência de estilo e sugestão opcional.
+Marcar explicitamente qual é qual reduce a fricção mais do que qualquer regra de tom, porque o
+custo real não é a rispidez — é a ambiguidade sobre o que é obrigatório. A revisão que só aponta
+problema, sem dizer o que a mudança faz bem, também deforma: ensina a esconder trabalho.
+
+A segunda é **discordar sobre a decisão sem disputar a pessoa**. Conflito técnico é produtivo e sua
+ausência é sinal ruim — uma equipe em que ninguém discorda ou pensa igual demais ou não se sente
+segura. O que o torna produtivo é a disciplina de tornar explícito o critério: quando duas pessoas
+discordam sobre uma escolha de arquitetura, quase sempre estão otimizando atributos de qualidade
+diferentes e nenhuma das duas disse qual. Nomear o critério converte disputa de opinião em escolha
+de trade-off, que é decidível — e é para isso que serve o ADR da seção 3.1.8.
+
+A terceira é **dar e receber devolutiva sobre trabalho**. O padrão que funciona é banal e
+raramente seguido: falar sobre comportamento observável e efeito, não sobre traço de
+personalidade; ser específico quanto ao episódio; e separar a devolutiva da avaliação formal, que
+tem outra função e outra dinâmica de poder. Do lado de quem recebe, a habilidade escassa é ouvir
+até o fim antes de explicar o contexto — a explicação quase sempre é legítima e quase sempre
+encerra a conversa antes que a informação apareça.
+
+Uma observação sobre ensino, para não fingir que isto se resolve em aula: essas competências se
+aprendem por prática com devolutiva, como qualquer outra. O que a formação pode fazer é criar
+situações em que elas sejam exercidas e comentadas — revisão de código entre pares avaliada pela
+qualidade da revisão, e não só do código, é o exemplo mais direto.
+
+### 2.6.3 Autonomia, propriedade e senioridade
+
+Existe uma confusão persistente entre senioridade e tempo de casa, e outra entre senioridade e
+profundidade técnica. Nenhuma das duas sobrevive ao contato com o que as organizações de fato
+compram.
+
+O que distingue níveis, na prática, é o tamanho e a ambiguidade do problema que a pessoa consegue
+absorver. Alguém em início de carreira executa bem uma tarefa definida. O nível seguinte resolve
+um problema definido, escolhendo o caminho. O seguinte pega um problema mal definido, delimita o
+escopo, negocia o que fica de fora e entrega. E o nível acima disso identifica qual problema vale
+a pena resolver, o que envolve dizer não a trabalho que parece legítimo. A progressão não é sobre
+saber mais tecnologia; é sobre operar com menos definição e mais consequência.
+
+**Propriedade** é o segundo eixo, e é o mais mal compreendido. Não significa exclusividade sobre um
+código, que é um antipadrão organizacional — significa considerar-se responsável pelo resultado
+depois da entrega: se funcionou, se está sendo usado, se quebrou de madrugada, se alguém consegue
+manter. A diferença entre "minha parte está pronta" e "o problema está resolvido" é a fronteira que
+mais separa níveis.
+
+**Autonomia** é consequência das duas anteriores, e é concedida, não declarada. Ela cresce quando
+a pessoa demonstra julgamento repetidamente: pediu ajuda na hora certa, escalou o que precisava ser
+escalado, decidiu sozinha o que era decidível. Nenhuma dessas três é sobre capacidade técnica, e é
+por isso que profissionais tecnicamente fortes às vezes estacionam sem entender por quê.
+
+Vale um recorte brasileiro, que o capítulo 3.6 desenvolve: a inflação de títulos no mercado
+nacional tornou o rótulo pouco informativo. É comum encontrar "sênior" com três anos e "pleno" com
+doze, e a variação é maior entre empresas do que dentro delas. A implicação para quem está
+avaliando a própria carreira é usar os critérios acima em vez do crachá.
+
+### 2.6.4 Trilha técnica vs. gestão, e o mito da escada única
+
+Por décadas, a única progressão disponível terminava em gestão, o que produziu duas perdas
+simultâneas: bons engenheiros virando gestores medianos e infelizes, e equipes perdendo a
+competência técnica sênior que mais precisavam. A trilha técnica paralela — engenheiro sênior,
+staff, principal — existe para corrigir isso, e vale entender o que ela é de fato.
+
+O erro comum é imaginar a trilha técnica como "gestão sem reuniões", ou como o lugar de quem não
+quer lidar com pessoas. Não é. Nos níveis altos, ela é majoritariamente trabalho de influência sem
+autoridade formal: alinhar equipes que não se reportam a você, escrever documentos que convencem,
+escolher quais decisões técnicas merecem briga. Will Larson descreve os arquétipos recorrentes —
+resolver o problema mais difícil, sustentar a espinha técnica de uma área, viajar entre equipes
+para desbloqueá-las. Nenhum deles dispensa a habilidade de trabalhar com gente; todos dispensam a
+responsabilidade formal por carreira alheia, que é a diferença real.
+
+Três observações práticas. A primeira é que a mudança entre trilhas é possível nos dois sentidos, e
+a organização que trata a volta como fracasso está apenas garantindo que ninguém experimente. A
+segunda é que gestão é uma mudança de profissão, não uma promoção: o trabalho, a medida de sucesso
+e a fonte de satisfação passam a ser outros, e a competência técnica anterior vira contexto, não
+ferramenta. A terceira é que muitas empresas anunciam a trilha técnica e não a sustentam — o teste
+é olhar quem de fato chegou aos níveis altos por ela, e se essas pessoas têm influência
+comparável à dos gestores do mesmo nível.
+
+### 2.6.5 A transição de carreira e a reinvenção por década
+
+Uma carreira longa em tecnologia não é uma carreira; são várias, e a transição entre elas é a
+habilidade central. Quem entrou na área nos anos 1990 já viveu, no mínimo, a passagem do
+cliente-servidor para a web, da web para o móvel e a nuvem, e do desenvolvimento local para o
+distribuído — e cada passagem exigiu recomeçar em algum grau.
+
+O que a experiência de campo sugere, e aqui é experiência e não estudo, é que a transição bem
+sucedida raramente é uma troca completa. Ela costuma ser lateral: parte do que se sabe é
+transferível, e a transição se apoia nessa parte enquanto o resto é reconstruído. Quem migra de
+sustentação de sistema bancário para engenharia de plataforma leva junto o entendimento de
+criticidade, janela de manutenção, auditoria e reversão — que é justamente o que falta a quem
+chegou pelo caminho oposto. Descartar esse capital por vergonha do legado é o erro mais comum e o
+mais caro.
+
+O mapa que a seção 0.6 desenha para o leitor em transição vale como método: as lacunas prováveis
+estão nas camadas 1 e 2, não na 4. A ansiedade empurra para a ferramenta da moda, que é o item mais
+fácil de aprender e o que menos diferencia. A lacuna real costuma ser sistemas distribuídos, dados
+sob concorrência ou escrita técnica.
+
+Uma nota sobre idade, porque o assunto é evitado e é real no Brasil. O mercado tem preferência
+observável por profissionais mais jovens em algumas faixas, e negar isso não ajuda ninguém. O que
+se pode dizer com honestidade é que a assimetria diminui onde o domínio pesa mais que a
+familiaridade com ferramenta — sistemas críticos, regulação, arquitetura, integração com legado —
+e que essa é uma razão estratégica, e não apenas confortável, para investir em profundidade de
+domínio, como a seção 2.5.7 argumentou.
+
+### 2.6.6 Síndrome do impostor e obsolescência percebida
+
+Dois desconfortos são frequentes o suficiente na profissão para merecerem tratamento técnico em vez
+de consolo.
+
+O primeiro é a sensação persistente de não ser competente o bastante apesar de evidência em
+contrário. A área tem duas características que a alimentam de forma estrutural. A primeira é a
+assimetria de visibilidade: você vê o próprio processo — as tentativas, o que não entendeu, o que
+buscou — e vê dos outros apenas o resultado publicado. A comparação é entre o seu bastidor e a
+vitrine alheia, e ela é sempre desfavorável. A segunda é que o volume do que existe para saber
+cresce mais rápido que a capacidade de qualquer pessoa, de modo que a fração conhecida diminui com
+o tempo mesmo quando o conhecimento absoluto aumenta. Sentir que se sabe proporcionalmente menos a
+cada ano é uma leitura correta de uma métrica errada.
+
+O segundo desconforto é a obsolescência percebida: a impressão de estar ficando para trás a cada
+anúncio. Aqui o livro tem uma resposta estrutural, e é o argumento da seção 0.2. Dos vinte e um
+capítulos de conteúdo, três estão na camada sazonal. A ansiedade que o mercado produz se concentra
+em algo próximo de quinze por cento do currículo, e os outros oitenta e cinco por cento envelhecem
+devagar o bastante para que aprendê-los seja investimento. Quem sente que precisa correr atrás de
+tudo está reagindo à camada 4 como se ela fosse o todo.
+
+Duas ressalvas de honestidade. A primeira: nada disso é aconselhamento clínico, e sofrimento
+persistente que atrapalha a vida pede ajuda profissional, não capítulo de livro técnico. A segunda:
+existe obsolescência real, e distingui-la da percebida é justamente para isso que serve o mapa por
+camadas. Quem não sabe o que é uma transação, o que acontece na falha parcial ou como escrever um
+documento que convence tem uma lacuna concreta — e ela não se resolve aprendendo a ferramenta do
+mês.
+
+### 2.6.7 O envelhecimento do comportamento — de 1990 a 2026
+
+Esta é a seção mais perecível do capítulo, e é a razão de ele ter gatilho de revisão próprio.
+
+O que mudou de substância nas últimas três décadas é o meio em que a colaboração acontece. Nos
+anos 1990, a coordenação era presencial e síncrona por padrão, e a documentação existia porque a
+memória não escalava. A comunicação por texto assíncrono, dominante hoje em boa parte da indústria,
+inverteu isso: a escrita deixou de ser registro e virou o principal instrumento de coordenação. É a
+razão pela qual a escrita técnica subiu para a camada permanente neste livro, na seção 1.5 — ela
+deixou de ser um diferencial e virou a interface primária de trabalho.
+
+O trabalho remoto e assíncrono trouxe ganhos verificáveis em acesso e autonomia, e custos que
+levaram tempo para aparecer: a formação de gente em início de carreira, que dependia de observação
+informal e de perguntas de baixo custo; a transmissão de contexto tácito, que não estava em
+documento nenhum; e a diferença entre estar disponível e estar presente. As soluções que
+funcionam são deliberadas e chatas — escrever mais do que parece necessário, tornar o
+acompanhamento explícito em vez de emergente, criar ocasiões de contato que não dependem de
+alguém sentir falta.
+
+A mudança em curso que merece registro, com toda a cautela que a seção 0.5 recomenda para
+prospecção, é o efeito da assistência por modelos de linguagem sobre a porta de entrada da
+profissão. A hipótese que circula é que a automação de tarefas de baixa complexidade reduz o
+espaço onde iniciantes historicamente aprendiam. É plausível e ainda não está estabelecida — a
+evidência disponível em 2026 é curta, parcial e frequentemente produzida por parte interessada. O
+livro registra a hipótese, recusa-se a afirmá-la, e coloca a discussão de frente no capítulo 4.3,
+que se declara volátil justamente por isto.
+
+O que não mudou merece a última palavra, porque é o argumento do capítulo. A necessidade de
+confiança para que alguém admita um erro; o custo de coordenação que cresce com o número de
+pessoas; a diferença entre uma equipe que discorda e uma que se cala; a diferença entre entregar
+sua parte e resolver o problema. Nada disso é diferente de 1975, quando Brooks escreveu, e não há
+sinal de que seja diferente na próxima década.
+
+**Fontes primárias do capítulo.** Brooks, F., *The Mythical Man-Month*, 1975 · Conway, M., *How Do
+Committees Invent?*, Datamation, 1968 · Edmondson, A., [*Psychological Safety and Learning Behavior
+in Work Teams*](https://web.mit.edu/curhan/www/docs/Articles/15341_Readings/Group_Performance/Edmondson%20Psychological%20safety.pdf),
+Administrative Science Quarterly, 1999, e *The Fearless Organization*, 2018 · Larson, W., *Staff
+Engineer: Leadership Beyond the Management Track*, 2021 · DeMarco, T. e Lister, T., *Peopleware*,
+1987 · Skelton, M. e Pais, M., *Team Topologies*, 2019 · Clance, P. e Imes, S., *The Impostor
+Phenomenon in High Achieving Women*, 1978, para a origem do termo · Dekker, S., *The Field Guide to
+Understanding Human Error*, 2002, para a base do post-mortem sem culpados.
+
+*As afirmações desta seção sobre trabalho remoto e sobre o efeito da assistência por modelos de
+linguagem na formação de iniciantes são hipóteses de campo com evidência parcial, e estão marcadas
+como gatilho de revisão na ficha do capítulo.*
+
+---
+
+# CAMADA 3 — CÍCLICO
+*Meia-vida de 5 a 15 anos · onde mora a maior parte do que se ensina hoje no Brasil*
+
+## 3.1 · Arquitetura de software
+
+A camada 2 tratou de fundamentos que não mudam de substância. Esta trata do que oscila — e
+arquitetura é o exemplo mais claro, porque suas mudanças não são progresso linear: são idas e
+voltas. O mesmo desenho é abandonado e retomado com outro nome a cada década, e quem não viu a
+volta anterior confunde retorno com novidade.
+
+Isso não desqualifica a disciplina. Significa que o conteúdo transferível de arquitetura não é o
+estilo — é o critério de escolha entre estilos, e a capacidade de nomear o que cada um cobra. Um
+aluno que sai sabendo desenhar microsserviços aprendeu algo com meia-vida de dez anos. Um aluno que
+sai sabendo perguntar quanto acoplamento o desenho cria, onde está a falha parcial e qual é o custo
+operacional aprendeu algo que sobrevive ao próximo pêndulo.
+
+Este capítulo depende do 2.3. Toda arquitetura distribuída é uma aposta sobre falha parcial,
+latência e consistência, e discuti-la sem esses fundamentos produz a conversa que a seção 2.3.7
+descreve como cara.
+
+### 3.1.1 Monolito — e a redescoberta do monolito modular
+
+Monolito é o desenho em que a aplicação é implantada como uma unidade. Foi o padrão por décadas,
+virou pejorativo por volta de 2014, e voltou com adjetivo. Vale separar o que a palavra passou a
+carregar indevidamente.
+
+O que se criticava não era a unidade de implantação: era a ausência de fronteiras internas. Uma
+base em que qualquer parte chama qualquer outra, em que o esquema de banco é compartilhado sem
+dono e em que uma mudança exige entender o todo — essa é a bola de lama, e ela é ruim
+independentemente de como é implantada. O erro do período foi tratar as duas propriedades como a
+mesma: concluir que, para ter fronteiras, era preciso separar processos.
+
+O **monolito modular** é o reconhecimento de que a fronteira pode ser lógica. Módulos com interface
+explícita, dependências declaradas e proibição de acesso ao interior alheio — verificada por
+ferramenta de build, não por combinação verbal — entregam a maior parte do benefício de
+modularidade sem custo de rede, sem falha parcial e sem consistência eventual. É a aplicação direta
+de Parnas, da seção 1.2.4: o critério de decomposição é esconder decisões que podem mudar, e isso
+independe de topologia de implantação.
+
+As vantagens que o monolito conserva são subestimadas porque são invisíveis quando funcionam:
+transação local com garantia real, refatoração entre módulos com apoio do compilador, um único
+artefato para depurar, rastreamento de pilha que atravessa a chamada inteira, e ausência de versões
+incompatíveis coexistindo. Cada uma delas é abandonada explicitamente ao distribuir, e a decisão de
+abandoná-las deveria ser declarada como custo, não descoberta depois.
+
+O limite real do monolito é organizacional antes de ser técnico. Ele aparece quando o número de
+pessoas que precisam mudar a mesma base ao mesmo tempo torna a coordenação de implantação mais cara
+que a coordenação de contratos — e essa fronteira chega bem depois do que a literatura de
+microsserviços sugere.
+
+### 3.1.2 Camadas, hexagonal, ports & adapters, Clean Architecture
+
+Esta família de estilos responde sempre à mesma pergunta: como impedir que a regra de negócio se
+misture com a tecnologia que a cerca. As respostas diferem em vocabulário e em rigor, e é útil ver
+o que compartilham antes do que as distingue.
+
+A **arquitetura em camadas** é a formulação mais antiga: apresentação, aplicação, domínio,
+infraestrutura, com dependências apontando para baixo. O problema clássico é que a camada de
+domínio acaba dependendo da de persistência, porque é ali que os dados estão — e a dependência
+invertida corrói a separação que motivava o desenho.
+
+A **arquitetura hexagonal**, de Alistair Cockburn, resolve isso com uma inversão explícita: o
+domínio define portas — interfaces em seus próprios termos — e a infraestrutura fornece adaptadores
+que as implementam. A direção da dependência passa a apontar sempre para dentro. **Clean
+Architecture**, de Robert Martin, e a *onion* de Jeffrey Palermo são reformulações do mesmo
+princípio com outro diagrama, e a discussão sobre qual é superior costuma render mais do que
+merece.
+
+O ganho real é testabilidade e adiamento: a regra de negócio pode ser exercitada sem banco, sem
+rede e sem framework, e a escolha de tecnologia pode ser trocada sem reescrever o que importa. O
+custo é indireção, e ele é real — cada porta é uma interface a mais, cada adaptador é um arquivo a
+mais, e navegar do controlador ao efeito exige saltos. Em sistema pequeno, com regra de negócio
+fina, essa indireção custa mais do que entrega, e aplicar o estilo por completude é o excesso mais
+comum entre equipes que acabaram de aprendê-lo.
+
+O critério prático: o estilo se paga onde a regra de negócio é o ativo e a tecnologia é
+intercambiável. Onde o sistema é essencialmente um adaptador entre um formulário e uma tabela, a
+camada de domínio não tem o que proteger, e a estrutura vira cerimônia — exatamente a crítica que
+a seção 2.1.2 faz à orientação a objetos que virou ortodoxia.
+
+### 3.1.3 SOA e o legado do ESB
+
+Arquitetura orientada a serviços dominou o discurso corporativo entre o fim dos anos 1990 e a
+primeira década dos 2000, e é hoje o exemplo mais didático de estilo em arqueologia — o que a torna
+mais útil para ensinar do que a moda atual.
+
+A premissa era boa e continua válida: expor capacidades de negócio como serviços com contrato
+explícito, reutilizáveis entre sistemas, para acabar com a integração ponto a ponto que crescia de
+forma quadrática. O problema não estava na premissa; estava na implementação dominante, que
+concentrou orquestração, transformação de mensagem, roteamento e às vezes regra de negócio dentro
+de um barramento — o ESB.
+
+O mecanismo da falha vale ser nomeado porque se repete com outros nomes. O barramento virou um
+ponto único de acoplamento e de disputa: toda mudança passava por ele, a equipe que o mantinha
+virou gargalo organizacional, e a lógica que morava ali não pertencia a nenhum time de negócio.
+É a Lei de Conway com sinal invertido — uma estrutura técnica impondo uma estrutura organizacional
+que ninguém escolheu. Somado a isso, o peso da pilha de padrões WS-* e de ferramentas caras
+tornou o ciclo de mudança lento o bastante para que a promessa de agilidade se invertesse.
+
+O que sobreviveu de SOA é mais do que a caricatura sugere: contrato explícito, versionamento de
+interface, catálogo de serviços, pensar capacidade de negócio como unidade. Microsserviços
+herdaram tudo isso e mudaram a resposta para uma única pergunta — onde mora a inteligência.
+A formulação que ficou é a de pontos de extremidade inteligentes e canos burros: mover
+orquestração e transformação para os serviços, deixando o transporte simples. Vale reparar que
+essa não é uma correção definitiva, e sim uma escolha de onde concentrar complexidade. A malha de
+serviços, dez anos depois, moveu parte dela de volta para a infraestrutura.
+
+### 3.1.4 Microsserviços — promessa, custo real, e quando não usar
+
+A promessa foi bem formulada: serviços pequenos, com fronteira de negócio, implantáveis de forma
+independente, permitindo que equipes autônomas entreguem sem coordenação global, com escala e
+tecnologia escolhidas por serviço. A parte importante da promessa — e a mais esquecida — é a
+independência de implantação. Todo o resto é consequência dela.
+
+O custo real aparece porque a fronteira de processo transforma toda chamada em chamada de rede, e
+com isso importa o capítulo 2.3 inteiro. Uma consulta que era uma junção passa a ser N chamadas
+sujeitas a latência, falha parcial e timeout. Uma operação que era uma transação passa a exigir
+coordenação entre serviços, e a resposta honesta a "como faço transação distribuída?" quase sempre
+é "não faça" — modele com consistência eventual e compensação, ou mantenha a operação dentro de um
+serviço. Testar deixa de ser executar um binário; depurar exige rastreamento distribuído; o
+ferramental operacional deixa de ser opcional.
+
+Há também um custo silencioso e frequentemente fatal: o monólito distribuído. Serviços separados
+que precisam ser implantados juntos, porque compartilham banco ou porque seus contratos mudam em
+conjunto, pagam todos os custos da distribuição e não entregam o único benefício que a justificava.
+É o resultado mais comum de uma decomposição feita por camada técnica em vez de por capacidade de
+negócio.
+
+Quando **não** usar é a pergunta mais útil, e há sinais claros. Quando a equipe é pequena o
+bastante para coordenar implantação sem dor — abaixo de alguma dezena de pessoas, a coordenação
+não é o gargalo. Quando as fronteiras de domínio ainda não são conhecidas, porque fronteira errada
+em processo separado é muito mais cara de mover do que fronteira errada dentro de um módulo.
+Quando não existe maturidade operacional: automação de implantação, observabilidade, plantão. E
+quando o problema real é acoplamento interno, que a separação em processos não resolve — apenas
+transforma em acoplamento de rede, agora com latência.
+
+A recomendação que a prática consolidou, e que Fowler formulou como monolito primeiro, é começar
+modular e extrair serviços quando houver motivo nomeado: uma parte com perfil de escala muito
+diferente, um domínio com ciclo de mudança próprio, uma fronteira de equipe estabilizada, um
+requisito de isolamento. Extrair por motivo é reversível; adotar por estilo, não.
+
+### 3.1.5 Serverless e computação de borda
+
+Serverless nomeia mal o que oferece: há servidores, o que muda é quem os opera e como se paga. O
+modelo de função como serviço leva a granularidade de implantação ao limite e transfere ao provedor
+o provisionamento, a escala e boa parte da resiliência, cobrando por execução em vez de por tempo
+ligado.
+
+Onde ele ganha é previsível: carga irregular ou imprevisível, em que máquinas ociosas dominam o
+custo; tarefas orientadas a evento e de curta duração; equipes pequenas sem capacidade operacional
+para manter infraestrutura. O ganho é real e frequentemente grande.
+
+Os custos também são conhecidos e devem entrar na decisão. A partida a frio impõe latência de
+cauda difícil de eliminar, com impacto exatamente no percentil que a seção 2.3.2 diz importar. O
+modelo é sem estado por construção, o que empurra todo estado para serviços externos e multiplica
+chamadas de rede. Limites de tempo de execução e de tamanho tornam certos trabalhos inviáveis. O
+custo por execução, excelente em carga baixa, inverte-se em carga alta e constante — há um ponto
+de cruzamento, e ele deve ser calculado, não presumido. E o acoplamento ao provedor é mais forte
+do que em qualquer outro estilo, porque não está apenas no tempo de execução: está no
+encadeamento de eventos, no modelo de identidade e nos serviços gerenciados ao redor.
+
+A computação de borda é a resposta ao único problema que dinheiro não resolve: a velocidade da luz.
+Executar perto de quem consome elimina a viagem intercontinental da seção 2.3.2, e é por isso que
+faz sentido para entrega de conteúdo, personalização leve, autenticação e decisões de roteamento. O
+que ela não elimina é a necessidade de coordenar estado — e distribuir estado geograficamente
+reintroduz, com força total, a escolha da seção 2.2.5 entre coordenar e esperar ou não coordenar e
+conviver com divergência.
+
+Um registro de honestidade sobre perecibilidade: esta é a seção do capítulo mais próxima da camada
+4. Os limites concretos de tempo, memória e latência de partida mudam a cada ciclo de produto, e
+qualquer número específico aqui envelhece em meses. O que permanece é a estrutura da decisão —
+quem opera, como se paga, o que se perde em controle, onde está o ponto de cruzamento de custo.
+
+### 3.1.6 Event-driven, CQRS e Event Sourcing
+
+Os três termos aparecem juntos e são independentes, e essa confusão custa caro. Vale separá-los.
+
+**Arquitetura orientada a eventos** é uma escolha de acoplamento: em vez de A chamar B, A publica
+um fato e quem se interessa reage. O ganho é que o produtor não conhece os consumidores, o que
+permite acrescentar comportamento sem tocar em quem publica. O custo é que o fluxo deixa de ser
+legível no código — para saber o que acontece quando um pedido é criado, é preciso descobrir quem
+assina, e nenhuma ferramenta de navegação responde isso sozinha. Depuração passa a exigir
+correlação, e a ordem entre eventos vira preocupação de projeto, com tudo que a seção 2.3.4 diz
+sobre ordenação.
+
+**CQRS** separa o modelo de escrita do modelo de leitura. Faz sentido quando os dois têm
+requisitos genuinamente diferentes — escrita com invariante forte e volume baixo, leitura com
+consultas variadas e volume alto. O custo é que os dois modelos precisam ser sincronizados, e essa
+sincronização é assíncrona na prática: a leitura fica atrás da escrita por uma janela. Isso é uma
+mudança de contrato com o usuário, não um detalhe interno — o clássico "gravei e não apareceu" é
+consequência direta, e precisa ser tratado no desenho da interface, não escondido.
+
+**Event Sourcing** é a decisão mais radical: guardar a sequência de eventos como fonte da verdade e
+derivar o estado atual por reprodução. Entrega auditoria completa, capacidade de reconstruir o
+estado em qualquer ponto do tempo e de responder perguntas que não haviam sido feitas quando o dado
+foi gravado — o que é valioso em domínios regulados. Cobra caro: o esquema dos eventos é imutável e
+precisa ser versionado para sempre, porque eventos antigos continuarão sendo lidos; consultas
+exigem projeções mantidas à parte; e corrigir um erro passado significa acrescentar um evento
+compensatório, nunca alterar o histórico. É um estilo excelente para uma parte pequena de um
+sistema e desastroso como decisão global.
+
+A regra que fecha a seção: adotar os três juntos por parecerem um pacote é o erro característico
+aqui. Cada um resolve um problema distinto, cada um cobra separadamente, e a maioria dos sistemas
+precisa de zero ou um deles.
+
+### 3.1.7 Estrangulamento de legado e migração incremental
+
+A reescrita completa é a decisão mais tentadora e a mais frequentemente errada da profissão, e vale
+entender por que ela falha em vez de repetir a advertência.
+
+Falha por três razões. O sistema antigo continua mudando enquanto o novo é construído, e o alvo se
+move. O comportamento a ser replicado não está documentado — está no código, incluindo os defeitos
+dos quais alguém já depende. E o novo sistema não entrega valor nenhum até estar completo, o que
+significa um período longo de custo sem retorno, período em que a decisão fica vulnerável a
+qualquer mudança de prioridade. Joel Spolsky chamou a reescrita do zero de o pior erro estratégico
+possível, e a formulação é forte demais para todos os casos, mas o mecanismo que ele descreve é
+real.
+
+A **figueira estranguladora**, nome que Martin Fowler tomou emprestado da botânica, é a alternativa
+que funciona: construir o novo em volta do antigo, desviar tráfego funcionalidade por
+funcionalidade, e remover a parte antiga só depois que a nova está em uso. A propriedade essencial
+é que cada passo é pequeno, entrega valor e é reversível — o sistema está sempre inteiro, nunca em
+estado de transição irreversível.
+
+Na prática, três mecanismos sustentam isso. Uma fachada na frente do sistema antigo, que decide o
+que vai para onde e é o ponto onde a migração é controlada. Escrita dupla ou sincronização durante
+a transição, com a mesma disciplina de expansão e contração da seção 2.2.7 — inclusive o passo do
+meio, que aqui também é o pulado. E um critério explícito de conclusão por fatia, porque a falha
+mais comum não é técnica: é a migração que fica pela metade por anos, com os dois sistemas vivos,
+dobrando o custo de manutenção e a superfície de erro.
+
+Michael Feathers acrescenta a peça que falta quando o legado não tem testes: costurar pontos de
+articulação para conseguir testar antes de mudar. A ordem importa e é contraintuitiva — o teste de
+caracterização não verifica se o comportamento está certo, verifica qual é. Congelar o
+comportamento atual, inclusive o errado, é o que torna a mudança segura.
+
+### 3.1.8 ADR — decisão arquitetural como documento versionado
+
+Um registro de decisão de arquitetura é um documento curto que captura uma decisão, o contexto em
+que foi tomada e as consequências aceitas. Fica versionado junto do código, é imutável depois de
+aceito, e quando a decisão muda escreve-se um novo que substitui o anterior — o histórico
+permanece.
+
+O formato que Michael Nygard propôs em 2011 tem quatro seções e ganha por ser pequeno o bastante
+para ser escrito: **título**, **status** (proposto, aceito, substituído), **contexto** — as forças
+em jogo, incluindo restrições organizacionais e prazos, não só técnicas —, **decisão**, e
+**consequências**, que devem incluir as ruins. Um ADR que só lista vantagens não registrou uma
+decisão; registrou uma justificativa depois do fato.
+
+O valor não está em documentar, está em preservar o contexto. Código mostra o que foi decidido e
+nunca por quê; quando o porquê se perde, a equipe seguinte enfrenta duas opções igualmente ruins —
+manter uma restrição cuja razão desapareceu, ou removê-la e redescobrir o motivo em produção. O ADR
+é o antídoto barato para isso, e é o instrumento que transforma a discordância da seção 2.6.2 em
+escolha de trade-off registrada.
+
+Duas condições práticas separam ADR vivo de teatro documental. A primeira é o escopo: registra-se o
+que é caro de reverter e o que uma pessoa nova questionaria — escolha de banco, fronteira de
+serviço, formato de integração, adoção de um estilo. Registrar tudo mata a prática pelo volume. A
+segunda é a imutabilidade: editar um ADR aceito para refletir o presente destrói exatamente o valor
+que ele tinha, que é mostrar o que se sabia na época. Substituir, nunca reescrever.
+
+O teste da seção é operacional, e é o marco que a Fase 3 do plano cobra: alguém que não conhece o
+sistema deve conseguir reconstruir a decisão lendo apenas os ADRs.
+
+### 3.1.9 Team Topologies — a arquitetura da organização é a do sistema
+
+Se a Lei de Conway está certa, e a evidência acumulada sugere que está, então desenhar arquitetura
+sem desenhar organização é desenhar metade. Team Topologies, de Matthew Skelton e Manuel Pais,
+oferece o vocabulário que faltava para tratar as duas juntas.
+
+O modelo propõe quatro tipos de equipe. A **alinhada a fluxo** é a unidade primária: responsável por
+uma fatia de valor de ponta a ponta, com autonomia para entregar sem depender de outras. As
+demais existem para reduzir a carga cognitiva dessa. A **plataforma** oferece serviços internos
+consumidos como produto — com contrato e documentação, não como favor. A **capacitadora** ajuda
+equipes de fluxo a adquirir uma competência e depois se retira, o que é a parte mais frequentemente
+ignorada. E o **subsistema complicado** concentra uma competência rara demais para ser distribuída.
+
+O conceito operacional mais útil do livro é a **carga cognitiva como critério de fronteira**. Uma
+equipe tem limite de quanto domínio consegue manter na cabeça, e quando o escopo excede esse
+limite a qualidade cai de formas que nenhuma cobrança corrige. Isso dá um critério verificável para
+dimensionar responsabilidade, em vez de dividir por conveniência de organograma — e conecta
+diretamente à seção 1.4.1, que trata carga cognitiva no nível individual.
+
+O terceiro elemento são os **modos de interação**: colaboração, que é cara e deve ser temporária;
+serviço, que é barato e deve ser o estado estável; e facilitação, que é transitória por definição.
+Nomear o modo evita a situação mais comum em organizações grandes, que é colaboração permanente
+entre equipes que deveriam ter um contrato.
+
+A **manobra inversa de Conway** — mudar a estrutura das equipes para induzir a arquitetura
+desejada — é a consequência prática, e é também a mais difícil de executar, porque exige autoridade
+sobre organização que a maioria dos arquitetos não tem. Vale a ressalva de honestidade: o modelo é
+recente, amplamente adotado e ainda sem corpo de evidência independente comparável ao das leis da
+seção 1.2. É vocabulário útil e hipótese razoável, não resultado estabelecido.
+
+### 3.1.10 O pêndulo centralizar ↔ distribuir
+
+A seção 0.1 anunciou que o arco de quatro fases não é irreversível e que a oscilação entre
+centralizar e distribuir merecia nome próprio. É aqui.
+
+A sequência é reconhecível e cobre setenta anos. Mainframe centralizado, com terminal burro. Depois
+cliente-servidor, distribuindo processamento para a estação. Depois a web, recentralizando no
+servidor com o navegador como terminal. Depois cliente rico e aplicação de página única,
+distribuindo de novo para o cliente. Serviços monolíticos, depois microsserviços, depois monolito
+modular. Renderização no servidor, no cliente, e de volta ao servidor com hidratação. Cada volta
+foi anunciada como avanço, e cada uma resolveu um problema real criado pela anterior.
+
+O mecanismo por trás da oscilação não é moda, embora moda participe. É que centralizar e distribuir
+otimizam coisas diferentes e ambas importam. Centralizar dá consistência, simplicidade operacional
+e um lugar único para raciocinar; cobra escalabilidade, disponibilidade e autonomia de quem
+depende do centro. Distribuir dá autonomia, isolamento de falha e escala independente; cobra
+coordenação, latência, complexidade operacional e tudo o que a seção 2.3 descreve. Quando uma
+geração acumula dor suficiente de um lado, a indústria migra para o outro — e acumula a dor
+oposta.
+
+Duas implicações para quem ensina e para quem decide. A primeira: o estilo dominante hoje não é o
+correto, é o que corresponde às restrições predominantes hoje — custo de hardware, tamanho das
+equipes, expectativa de disponibilidade, maturidade das ferramentas. Quando essas restrições
+mudam, o estilo muda, e quem aprendeu o estilo como princípio confunde a mudança com traição. A
+segunda: reconhecer o pêndulo é a defesa mais barata contra o argumento de autoridade da novidade.
+Perguntar "de que lado do pêndulo isto está, e qual dor da volta anterior está resolvendo?" faz o
+argumento de moda desmontar sozinho.
+
+É por isso que este capítulo está na camada cíclica e o 2.3 na geracional. O pêndulo se move; a
+falha parcial, não.
+
+**Fontes primárias do capítulo.** Parnas, D., *On the Criteria To Be Used in Decomposing Systems
+into Modules*, CACM, 1972 · Cockburn, A., [*Hexagonal
+Architecture*](https://alistair.cockburn.us/hexagonal-architecture/), 2005 · Martin, R. C., *Clean
+Architecture*, 2017 · Evans, E., *Domain-Driven Design*, 2003 · Fowler, M. e Lewis, J.,
+[*Microservices*](https://martinfowler.com/articles/microservices.html), 2014, e
+[*MonolithFirst*](https://martinfowler.com/bliki/MonolithFirst.html), 2015 · Fowler, M.,
+[*StranglerFigApplication*](https://martinfowler.com/bliki/StranglerFigApplication.html), 2004 ·
+Newman, S., *Building Microservices*, 2ª ed., 2021, e *Monolith to Microservices*, 2019 ·
+Feathers, M., *Working Effectively with Legacy Code*, 2004 · Nygard, M., [*Documenting Architecture
+Decisions*](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions), 2011 ·
+Skelton, M. e Pais, M., *Team Topologies*, 2019 · Young, G., sobre CQRS e Event Sourcing, e
+Fowler, M., [*Event Sourcing*](https://martinfowler.com/eaaDev/EventSourcing.html), 2005 ·
+Spolsky, J., [*Things You Should Never Do, Part
+I*](https://www.joelonsoftware.com/2000/04/06/things-you-should-never-do-part-i/), 2000.
+
+---
+
+## 3.2 · Processos e metodologias
+
+Este é o único capítulo do livro cuja ficha declara o estado **erosão**, e a declaração é o ponto
+de partida. O consenso ágil que se formou nos anos 2000 rachou: não foi substituído por um sucessor
+nomeado, mas as práticas se diluíram, o vocabulário se descolou da prática, e a literatura recente
+é majoritariamente crítica. Reconhecer isso é diferente de anunciar a morte do ágil — anúncio de
+morte é o gênero menos confiável da área.
+
+O capítulo é o mais brasileiro dos técnicos, porque a trajetória local teve marcos próprios — o
+MPS.BR, a adoção tardia e a convivência com estruturas de governança que nenhum manifesto previu.
+A seção 3.2.8 trata disso de frente.
+
+Uma advertência de leitura vale desde já: processo é o assunto em que a distância entre o que se
+diz e o que se faz é maior em toda a engenharia de software. Qualquer afirmação sobre o que uma
+organização "usa" deve ser lida como declaração de intenção.
+
+### 3.2.1 A era pré-metodológica — code and fix
+
+Antes de haver metodologia havia trabalho, e vale entender o que se fazia, porque o padrão nunca
+desapareceu.
+
+O modo original era escrever e corrigir: programar direto a partir de um entendimento informal do
+problema, testar manualmente, ajustar, repetir. Funcionava — e ainda funciona — enquanto o sistema
+é pequeno, o autor é o usuário e a memória de uma pessoa dá conta do todo. O que falha é a
+escala: sem registro do porquê, sem separação entre decidir e construir, e sem forma de coordenar
+mais de meia dúzia de pessoas, o custo de mudança cresce mais rápido que o sistema.
+
+A conferência da OTAN de 1968, que a seção 1.1.5 tratou, é a data em que essa insuficiência virou
+diagnóstico público. O termo "engenharia de software" foi escolhido como provocação deliberada:
+propunha que a construção de programas precisava de disciplina de engenharia, e o relatório registra
+que os participantes não concordavam sobre o que isso significava.
+
+O ponto que interessa ao livro é que escrever-e-corrigir continua sendo o processo real de boa parte
+do software escrito hoje, inclusive dentro de organizações que declaram usar outra coisa. Não é
+falha moral: é o comportamento padrão quando a estrutura não sustenta nada mais elaborado. Todo
+processo descrito adiante compete com ele.
+
+### 3.2.2 Waterfall — o que Royce realmente escreveu
+
+O caso do Waterfall é o exemplo mais citado de ironia histórica da área, e a versão popular está
+errada o bastante para merecer correção cuidadosa.
+
+Winston Royce publicou em 1970 um artigo sobre desenvolvimento de grandes sistemas de software. Nele
+apresenta um diagrama sequencial — requisitos, projeto, implementação, teste, operação — e o
+descreve explicitamente como arriscado e sujeito a falhar. O restante do artigo propõe correções:
+fazer o projeto duas vezes, envolver o cliente, documentar, e sobretudo iterar entre fases
+adjacentes, com realimentação. A recomendação central de Royce era construir um protótipo
+descartável antes do sistema real.
+
+O que a indústria absorveu foi o primeiro diagrama, sem as ressalvas. O modelo virou padrão
+contratual e regulatório, especialmente em contexto de defesa e governo, onde a sequência com
+marcos documentais servia a necessidades de fiscalização que nada tinham a ver com eficácia técnica.
+Royce ficou conhecido como autor do modelo que criticava.
+
+Duas lições que valem mais do que a curiosidade. A primeira é sobre como conhecimento envelhece de
+forma deformada: a simplificação sobrevive ao original, e a simplificação é o que chega à sala de
+aula. É o mecanismo que a seção 1.2.7 descreve para a curva de custo da mudança e que a seção 2.2.5
+descreve para o CAP — em todos os casos, uma imagem venceu o texto que a acompanhava.
+
+A segunda é que o modelo sequencial não é irracional em todo contexto. Onde o custo de errar é
+catastrófico e irreversível, onde o requisito é imposto por norma e não descoberto, e onde a
+integração física impede entrega incremental, planejar longamente antes de construir é o
+comportamento correto. Ensinar Waterfall como erro de época impede o aluno de reconhecer os casos
+em que a estrutura ainda se aplica.
+
+### 3.2.3 Processos pesados — RUP, CMMI e o MPS.BR
+
+Os anos 1990 responderam à crise de previsibilidade com processo formal, e a resposta foi
+consistente: definir papéis, artefatos, fases e critérios de passagem, e avaliar a maturidade da
+organização que os executa.
+
+O **RUP** organizava o desenvolvimento em quatro fases — concepção, elaboração, construção,
+transição — com disciplinas atravessando todas e iterações dentro de cada uma. É importante
+registrar, contra a caricatura, que o RUP era iterativo e incremental por projeto, e que foi
+concebido para ser adaptado. O que se implantou majoritariamente foi a versão completa, com dezenas
+de artefatos obrigatórios, e o custo do processo passou a competir com o custo do trabalho.
+
+O **CMMI**, herdeiro do CMM do SEI, não é um processo mas um modelo de maturidade: cinco níveis,
+do inicial ao em otimização, avaliando se a organização define, mede e melhora seus processos. Sua
+contribuição duradoura é a ideia de que processo pode ser medido e comparado. Seu efeito colateral
+conhecido é a certificação como objetivo — organizações otimizando para a avaliação, produzindo
+evidência documental sem mudança de prática.
+
+O **MPS.BR** é o capítulo brasileiro dessa história e merece ser ensinado no país. Criado a partir
+de 2003 pela Softex com apoio governamental, propunha um modelo de maturidade compatível com CMMI
+mas adaptado à realidade nacional: níveis mais granulares, da letra G à A, para que empresas
+pequenas pudessem progredir em passos financiáveis, e custo de avaliação compatível com o porte
+das empresas brasileiras. O problema que ele endereçava era concreto — o custo de uma avaliação
+CMMI era proibitivo para a maior parte do parque nacional, e a exigência de maturidade aparecia em
+licitações públicas e em exportação de serviços.
+
+O balanço honesto é misto e depende de qual pergunta se faz. Como política industrial de
+qualificação, o MPS.BR alcançou centenas de avaliações e produziu vocabulário e prática de processo
+em empresas que não tinham nenhum. Como resposta à pergunta "isso produz software melhor?", a
+evidência é mais fraca e sofre do mesmo viés de seleção que afeta o CMMI: organizações que se
+candidatam a avaliação já são diferentes das que não se candidatam. O capítulo 3.6 retoma o
+assunto pelo lado do ecossistema.
+
+### 3.2.4 A era ágil — manifesto, XP, Scrum, Kanban
+
+O Manifesto Ágil, de 2001, é um documento de dezessete pessoas com quatro valores e doze
+princípios, e sua característica mais relevante é a forma: cada valor é comparativo, não absoluto.
+"Indivíduos e interações **mais que** processos e ferramentas" — a segunda metade tem valor, apenas
+menos. Praticamente toda distorção posterior vem de ler a primeira metade e apagar a segunda.
+
+**XP**, formulado por Kent Beck no fim dos anos 1990, é a proposta mais radical e a mais técnica.
+Suas práticas — programação em par, TDD, integração contínua, propriedade coletiva do código,
+refatoração constante, cliente presente — formam um sistema em que uma sustenta a outra. Vale
+notar o que a história fez com ele: XP foi a metodologia ágil com práticas de engenharia mais
+fortes e a que menos sobreviveu como pacote, enquanto suas práticas individuais — integração
+contínua, TDD, refatoração — se tornaram universais fora do rótulo.
+
+**Scrum** venceu em adoção, e é útil entender por quê. Ele é um arcabouço de gestão, não de
+engenharia: define papéis, eventos e artefatos, e é deliberadamente silencioso sobre como se
+escreve software. Isso o torna adotável por qualquer organização sem mudar nada de técnico — o que
+explica simultaneamente sua difusão e a queixa mais comum contra ele, que é entregar cerimônia sem
+melhorar a engenharia. A adoção de Scrum sem as práticas técnicas de XP produz iterações regulares
+sobre uma base que continua difícil de mudar, e o resultado previsível é velocidade decrescente
+com cerimônia constante.
+
+**Kanban**, trazido do sistema Toyota por David Anderson, muda o eixo: em vez de iterações de
+duração fixa, foco em fluxo contínuo, visualização do trabalho, limite de trabalho em progresso e
+medição de tempo de ciclo. O limite de WIP é a ideia mais subestimada do conjunto e a mais bem
+fundamentada — é a Lei de Little da seção 2.3.2 aplicada a pessoas: reduzir trabalho simultâneo
+reduz tempo de entrega, e a intuição contrária custa caro em quase toda organização.
+
+### 3.2.5 Escala — SAFe, LeSS e o mito do modelo Spotify
+
+Assim que o ágil chegou a organizações grandes, apareceu a pergunta de como coordenar dezenas de
+equipes, e as respostas se dividiram em duas famílias com filosofias opostas.
+
+**SAFe** é a resposta por adição: camadas de planejamento, papéis de coordenação, cadências
+sincronizadas, e um evento de planejamento conjunto. É de longe o mais adotado em empresas grandes,
+e a razão é honesta — ele oferece a estrutura de gestão que uma organização hierárquica reconhece,
+permitindo adotar vocabulário ágil sem alterar a estrutura de poder. A crítica, feita inclusive por
+signatários do manifesto, é que isso reconstrói o processo pesado que o ágil pretendia substituir,
+agora com nomes novos.
+
+**LeSS** é a resposta por subtração: manter um Scrum, um backlog e um dono de produto, e escalar
+por mais equipes no mesmo processo, removendo estrutura em vez de acrescentar. É intelectualmente
+mais coerente com o manifesto e muito menos adotado, porque exige mudar a organização de verdade —
+o que é precisamente o custo que a maioria não quer pagar.
+
+O **modelo Spotify** é o caso mais instrutivo dos três, e não é um modelo. Origina-se de um artigo
+de 2012 de Henrik Kniberg e Anders Ivarsson descrevendo como a empresa estava organizada naquele
+momento, com o aviso explícito de que era um retrato e não uma receita. O vocabulário de squads,
+tribes, chapters e guilds foi copiado por centenas de organizações como se fosse um método, e o
+próprio Spotify depois publicou que havia abandonado partes daquilo. O mecanismo é o mesmo que a
+seção 3.2.2 descreve para Royce: um artefato descritivo, lido como prescritivo, sobrevivendo às
+ressalvas de quem o escreveu.
+
+A lição transferível é sobre transplante de estrutura. Copiar a organização de outra empresa
+importa a solução sem o contexto — o produto, a escala, a cultura, o momento e os problemas que
+aquela estrutura resolvia. Pela Lei de Conway, a estrutura copiada vai produzir a arquitetura dela,
+não a que você precisa.
+
+### 3.2.6 Pós-ágil — fluxo, produto, descoberta contínua, agile washing
+
+O termo pós-ágil não nomeia um método; nomeia o período em que o rótulo perdeu valor
+discriminante. Três movimentos ocupam esse espaço, e nenhum deles se apresenta como sucessor.
+
+O primeiro é o deslocamento da **iteração para o fluxo**. A pergunta deixa de ser quanto cabe no
+sprint e passa a ser quanto tempo leva uma mudança da ideia à produção. As métricas DORA — frequência
+de implantação, tempo de espera, taxa de falha de mudança, tempo de restauração — deram a esse
+deslocamento uma base empírica que o ágil original não tinha, e o capítulo 3.3 as retoma. A
+contribuição relevante do trabalho de Forsgren, Humble e Kim é mostrar que velocidade e estabilidade
+não são opostas: as organizações que entregam mais rápido também falham menos, o que desmonta o
+trade-off que boa parte da governança assume.
+
+O segundo é o deslocamento do **projeto para o produto**. Equipes estáveis responsáveis por um
+resultado continuado, em vez de equipes montadas por projeto e dissolvidas na entrega. É a mesma
+ideia de propriedade da seção 2.6.3, no nível organizacional, e casa com o modelo de equipe
+alinhada a fluxo da seção 3.1.9.
+
+O terceiro é a **descoberta contínua**: reconhecer que o problema não vem pronto e que a equipe
+precisa investigar demanda continuamente, e não apenas construir o que foi pedido. É o capítulo 2.5
+como atividade permanente em vez de fase inicial.
+
+E há o fenômeno que dá nome à erosão: **agile washing**. Organizações que adotaram o vocabulário e
+os eventos sem transferir decisão para quem faz o trabalho. O sintoma diagnóstico não é a
+cerimônia — é a ausência de mudança na estrutura de decisão. Se a equipe não pode alterar escopo,
+não pode dizer não a trabalho, não pode escolher como construir e não pode parar a linha, então
+retrospectiva é conversa sem consequência, e o processo é Waterfall com reuniões diárias. Quem já
+viveu os dois reconhece a diferença rapidamente, e é o que faz um profissional que atravessou a
+transição ler o pós-ágil melhor do que quem chegou já dentro dele — o argumento da seção 0.2 sobre
+por que a camada cíclica premia quem viu a volta anterior.
+
+### 3.2.7 Estimativa, #NoEstimates e a política das estimativas
+
+Poucos assuntos produzem tanto atrito com tão pouca clareza sobre o que está em disputa. Vale
+separar três questões que costumam ser tratadas como uma.
+
+A primeira é **cognitiva**: pessoas estimam mal tarefas de software, de forma sistemática e na mesma
+direção. A falácia do planejamento, descrita por Kahneman e Tversky, prevê subestimação persistente
+mesmo com experiência prévia contrária, e software tem um agravante — boa parte do trabalho é
+descoberta, e não se estima bem o tempo de descobrir o que não se sabe.
+
+A segunda é **estatística**: uma estimativa é uma distribuição, e reportá-la como número único
+descarta a informação que importa. "Duas semanas" não distingue algo com variância baixa de algo
+que pode levar dois meses. Práticas que preservam a incerteza — faixas, níveis de confiança,
+previsão a partir de dados históricos de fluxo — dão respostas mais úteis do que a soma de palpites,
+e a previsão baseada em tempo de ciclo medido supera a estimativa em pontos na maioria dos
+contextos em que ambos foram comparados.
+
+A terceira é **política**, e é a que raramente se admite. Estimativas frequentemente não são pedidas
+para planejar: são pedidas para criar compromisso, distribuir responsabilidade por atraso ou
+sustentar uma data já decidida em outro lugar. Nesse uso, nenhuma melhoria de técnica ajuda,
+porque o problema não é de precisão. O sintoma clássico é a estimativa questionada até baixar — o
+que transforma o exercício em negociação com aparência de análise.
+
+**#NoEstimates** é mais bem compreendido como provocação do que como método. A pergunta que ele
+faz é legítima: qual decisão será tomada de forma diferente em função desta estimativa? Quando não
+há resposta, o esforço é desperdício. Quando há — investimento, contrato, coordenação com terceiros,
+obrigação regulatória —, a estimativa é necessária, e o caminho é fazê-la com honestidade
+estatística. Fatiar o trabalho em unidades pequenas e semelhantes e medir vazão real costuma
+entregar previsibilidade melhor do que estimar cada item, e é a resposta que sobrevive à discussão
+ideológica.
+
+### 3.2.8 Do campo: ágil dentro de janela de GMUD em ambiente bancário
+
+*Esta seção é relato de campo. As afirmações abaixo são o argumento; os episódios concretos que as
+sustentam entram na revisão, pela mesma regra da seção 2.2.8.*
+
+O manifesto pressupõe uma coisa que ambientes bancários brasileiros não oferecem por padrão: que a
+equipe controla quando o software chega à produção. Onde existe gestão formal de mudança — comitê
+de aprovação, janela definida, congelamento em fechamento contábil, segregação de funções exigida
+por auditoria —, entrega contínua não é uma escolha de engenharia. É uma negociação com governança
+que responde a regulador, e o regulador não é parte do time.
+
+A primeira observação é que o conflito costuma ser mal diagnosticado. A leitura fácil é que a
+governança é burocracia atrasada; a leitura correta é que ela existe para responder a uma pergunta
+legítima — quem autorizou, o que exatamente mudou, como se reverte e quem responde. O ágil não
+tem, no manifesto, resposta para essas quatro perguntas. Tem nas práticas: controle de versão como
+registro de autoria, implantação automatizada como descrição exata do que mudou, reversão testada
+como plano de contingência, e teste automatizado como evidência. O caminho que funciona é
+substituir controle manual por controle automatizado auditável — não pedir dispensa de controle.
+
+A segunda é sobre o efeito da janela no tamanho do lote. Quando a implantação só pode acontecer em
+datas fixas e espaçadas, o lote cresce, e lote grande é a causa mecânica de risco: mais mudanças
+por implantação, mais interação entre elas, diagnóstico mais difícil quando falha, reversão que
+desfaz o que estava certo junto com o que estava errado. É um resultado bem estabelecido, e produz
+um argumento que a governança aceita melhor do que o argumento de agilidade: janelas raras não
+reduzem risco, concentram risco. Separar implantação de liberação — subir código desativado por
+chave de funcionalidade, liberar depois — é a técnica que permite frequência alta de implantação
+mantendo o controle formal sobre a liberação, e é o meio-termo que costuma passar.
+
+A terceira é sobre o que sobrevive quando o ambiente não permite o pacote completo. Não se
+consegue implantar dez vezes por dia dentro de janela de GMUD; consegue-se integrar continuamente,
+manter a base sempre implantável, automatizar teste e reversão, reduzir o lote, e ter
+retrospectiva com consequência. Essas são práticas de engenharia, e a maior parte delas não pede
+autorização de comitê nenhum. É a diferença entre adotar ágil como identidade — que trava no
+primeiro conflito com a governança — e adotá-lo como conjunto de práticas com valor independente,
+que é o que atravessa.
+
+**Fontes primárias do capítulo.** Naur, P. e Randell, B. (eds.), *Software Engineering: NATO
+Conference Report*, Garmisch, 1968 · Royce, W., [*Managing the Development of Large Software
+Systems*](https://www.praxisframework.org/files/royce1970.pdf), IEEE WESCON, 1970 · Beck, K. et
+al., [*Manifesto for Agile Software Development*](https://agilemanifesto.org/), 2001 · Beck, K.,
+*Extreme Programming Explained*, 1999 · Schwaber, K. e Sutherland, J., [*The Scrum
+Guide*](https://scrumguides.org/) · Anderson, D., *Kanban*, 2010 · Larman, C. e Vodde, B.,
+*Large-Scale Scrum (LeSS)*, 2016 · Kniberg, H. e Ivarsson, A., [*Scaling Agile @
+Spotify*](https://blog.crisp.se/wp-content/uploads/2012/11/SpotifyScaling.pdf), 2012 · Forsgren,
+N., Humble, J. e Kim, G., *Accelerate*, 2018 · Humble, J. e Farley, D., *Continuous Delivery*,
+2010 · Kahneman, D. e Tversky, A., *Intuitive Prediction: Biases and Corrective Procedures*, 1979 ·
+SEI, *CMMI for Development*, v1.3, 2010 · Softex, [*MPS.BR — Guia
+Geral*](https://softex.br/mpsbr/), a partir de 2003.

@@ -29,6 +29,11 @@ fichas = {
  '2.1': ('15–20 anos','consolidado','técnico','/paradigmas'),
  '2.2': ('15–20 anos','consolidado','técnico','/dados'),
  '2.3': ('15–20 anos','consolidado','técnico','/distribuidos'),
+ '2.4': ('15–20 anos','consolidado','técnico','/linguagens'),
+ '2.5': ('15–20 anos','consolidado','humano · produto','/requisitos'),
+ '2.6': ('15–20 anos','consolidado','humano','/carreira'),
+ '3.1': ('5–15 anos','cíclico','técnico','/arquitetura'),
+ '3.2': ('5–15 anos','erosão','humano · organizacional','/processos'),
 }
 def ficha(num):
     if num not in fichas: return ''
