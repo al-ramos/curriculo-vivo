@@ -22,6 +22,7 @@ HEAD = """<meta charset="utf-8">
 :root[data-fonte="menor"]{--fonte-ajuste:0px}
 :root[data-fonte="padrao"]{--fonte-ajuste:2px}
 :root[data-fonte="maior"]{--fonte-ajuste:4px}
+:root[data-fonte="extra-grande"]{--fonte-ajuste:6px}
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
     --ground:#0F1312; --surface:#161B19; --ink:#DCE3DB; --muted:#98A19A; --faint:#79827C;
@@ -487,6 +488,7 @@ HTML = HEAD + f"""
             <button type="button" data-fonte="menor">Menor</button>
             <button type="button" data-fonte="padrao">Padrão</button>
             <button type="button" data-fonte="maior">Maior</button>
+            <button type="button" data-fonte="extra-grande">Extra grande</button>
           </div></div>
         <div class="ctrl"><span>Tema</span>
           <div class="seg" role="group" aria-label="Tema">
