@@ -1,6 +1,9 @@
 import markdown, re
+from pathlib import Path
 
-HEAD = open('_head.html').read().replace('<title>Currículo Vivo</title>',
+BASE = Path(__file__).resolve().parent
+
+HEAD = (BASE / '_head.html').read_text(encoding='utf-8').replace('<title>Currículo Vivo</title>',
     '<title>Plano Mestre de Estudos</title>')
 
 EXTRA = """<style>
@@ -55,7 +58,7 @@ def validar(html):
         raise SystemExit('HTML mal aninhado: %s | abertas: %s' % (v.erros[:3], v.pilha[:3]))
     return html
 
-md = open('plano-estudos.md').read()
+md = (BASE.parent / 'conteudo' / 'plano-estudos.md').read_text(encoding='utf-8')
 md = md.split('---', 1)[1].strip()
 body = markdown.markdown(md, extensions=['tables','smarty'])
 
@@ -108,7 +111,7 @@ HTML = HEAD + EXTRA + f"""
 <header class="masthead">
   <div class="mast-in">
     <div>
-      <div class="eyebrow"><a href="index.html">&larr; Portal</a> &nbsp;·&nbsp; <a href="livro.html">O livro</a></div>
+      <div class="eyebrow"><a href="index.html">&larr; O livro</a> &nbsp;·&nbsp; <a href="portal.html">Planejamento</a></div>
       <h1 class="book">Plano mestre<br><em>de estudos</em></h1>
       <p class="dek">Um currículo autodirigido de Engenharia de Software, calibrado para
       quem já tem estrada: seis trilhas, um livro-espinha por trilha, um projeto obrigatório
@@ -156,11 +159,12 @@ HTML = HEAD + EXTRA + f"""
   infraestrutura e entrega contínua — e por isso omite fundamentos que a experiência já
   cobriu. Um leitor com outro ponto de partida deve refazer a trilha 0 antes de seguir a
   ordem proposta.</p>
-  <p>Companheiro de <a href="livro.html">Engenharia de Software: Envelhecimento Macro</a>.
+  <p>Companheiro de <a href="index.html">Engenharia de Software: Envelhecimento Macro</a>.
   O livro descreve o território; este plano descreve o percurso.</p>
 </footer>
 """
 
-SPY = open('_spy.html').read() if False else ""
-open('estudos.html','w').write(HTML)
+_livro = (BASE / 'curriculo-vivo.html').read_text(encoding='utf-8')
+HTML += '\n\n'.join(re.findall(r'<script>.*?</script>', _livro, re.S)) + '\n'
+(BASE / 'estudos.html').write_text(HTML, encoding='utf-8')
 print(len(HTML))

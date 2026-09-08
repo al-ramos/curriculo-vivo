@@ -93,7 +93,7 @@ body = re.sub(r'<p><strong>(Meses [^<]*|Duas semanas[^<]*)</strong></p>',
 
 PORTAS = """
 <div class="portas">
-  <a class="porta" href="livro.html">
+  <a class="porta" href="index.html">
     <span class="k">O território</span>
     <h3>Engenharia de Software: Envelhecimento Macro</h3>
     <p>O livro. Vinte e dois capítulos organizados por velocidade de envelhecimento, cada
@@ -145,7 +145,7 @@ HTML = HEAD + EXTRA + f"""
  <div class="layout">
   <nav class="rail" aria-label="Sumário">
     <div class="grp"><span>O portal</span>
-      <a href="livro.html">O livro</a>
+      <a href="index.html">O livro</a>
       <a href="estudos.html">Plano de estudos</a></div>
     <div class="grp"><span>Linha do tempo</span>
       <a href="#a-regra-que-costura-tudo">A regra que costura tudo</a>
@@ -163,8 +163,8 @@ HTML = HEAD + EXTRA + f"""
       <a href="#o-que-fazer-se-atrasar">Se atrasar</a></div>
   </nav>
   <article>
-   {PORTAS}
-   {body}
+{PORTAS}
+{body}
   </article>
  </div>
 </div>

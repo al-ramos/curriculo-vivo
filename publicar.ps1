@@ -34,9 +34,14 @@ if ($temMarkdown) {
     & python build.py
     $okBuild = ($LASTEXITCODE -eq 0)
     if ($okBuild) { & python page.py; $okBuild = ($LASTEXITCODE -eq 0) }
+    if ($okBuild) { & python portal.py; $okBuild = ($LASTEXITCODE -eq 0) }
+    if ($okBuild) { & python estudos.py; $okBuild = ($LASTEXITCODE -eq 0) }
     Pop-Location
     if ($okBuild) {
         Copy-Item ferramentas\curriculo-vivo.html livro.html -Force
+        Copy-Item ferramentas\curriculo-vivo.html index.html -Force
+        Copy-Item ferramentas\portal.html portal.html -Force
+        Copy-Item ferramentas\estudos.html estudos.html -Force
         Write-Host "Página regerada." -ForegroundColor DarkGray
     } else {
         Write-Host "Regeração falhou — publicando o livro.html como está." -ForegroundColor Yellow

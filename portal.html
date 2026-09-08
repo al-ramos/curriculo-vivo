@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Plano Mestre de Estudos</title>
+<title>Currículo Vivo</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%225%22%20fill%3D%22%23F2F4F0%22%2F%3E%3Crect%20x%3D%226%22%20y%3D%224%22%20%20%20%20width%3D%2220%22%20height%3D%225.5%22%20rx%3D%221%22%20fill%3D%22%2322403A%22%2F%3E%3Crect%20x%3D%226%22%20y%3D%2210.5%22%20width%3D%2220%22%20height%3D%226.5%22%20rx%3D%221%22%20fill%3D%22%233E6B5B%22%2F%3E%3Crect%20x%3D%226%22%20y%3D%2218%22%20%20%20width%3D%2220%22%20height%3D%227.5%22%20rx%3D%221%22%20fill%3D%22%236F9481%22%2F%3E%3Crect%20x%3D%226%22%20y%3D%2226.5%22%20width%3D%2220%22%20height%3D%222.5%22%20rx%3D%221%22%20fill%3D%22%23A9C0B0%22%2F%3E%3C%2Fsvg%3E">
 <meta name="theme-color" content="#F2F4F0" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0F1312" media="(prefers-color-scheme: dark)">
@@ -380,46 +380,64 @@ footer p{margin:0 0 .6rem;max-width:44rem}
 @media(min-width:40rem){.preferencias:not([open])>.ctrls{display:flex}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style><style>
-.plano h3{font-size:.72rem}
-.trilha{margin-top:3.4rem;padding-top:1.6rem;border-top:1px solid var(--rule)}
-.trilha:first-of-type{border-top:0}
-.tnum{font-family:"IBM Plex Mono",monospace;font-size:.7rem;letter-spacing:.16em;
-  text-transform:uppercase;color:var(--accent);display:block;margin-bottom:.25rem}
+.portas{display:grid;grid-template-columns:1fr;gap:1px;background:var(--rule);
+  border:1px solid var(--rule);border-radius:2px;overflow:hidden;margin:0 0 3rem}
+@media(min-width:44rem){.portas{grid-template-columns:1fr 1fr}}
+.porta{background:var(--surface);padding:1.5rem 1.4rem;text-decoration:none;display:block;color:inherit}
+.porta:hover{background:var(--accent-soft)}
+.porta .k{font-family:"IBM Plex Mono",monospace;font-size:.62rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--accent);display:block;margin-bottom:.6rem}
+.porta h3{font-family:"Newsreader",serif;font-size:1.4rem;font-weight:500;margin:0 0 .5rem}
+.porta p{margin:0;font-size:.92rem;color:var(--muted);line-height:1.5}
+.porta .st{display:block;margin-top:.9rem;font-family:"IBM Plex Mono",monospace;
+  font-size:.64rem;color:var(--faint);letter-spacing:.04em}
+.fase{position:relative;padding-left:2.2rem;padding-bottom:2.4rem}
+.fase::before{content:"";position:absolute;left:.42rem;top:1.5rem;bottom:0;width:1px;background:var(--rule)}
+.fase:last-of-type::before{display:none}
+.fase::after{content:"";position:absolute;left:0;top:.75rem;width:.9rem;height:.9rem;
+  border-radius:50%;border:2px solid var(--accent);background:var(--ground)}
+.fase.feita::after{background:var(--accent)}
+.fase>h3{display:flex;flex-wrap:wrap;align-items:baseline;gap:.6rem;margin:0 0 .2rem;
+  font-family:"Newsreader",serif;font-size:1.3rem;font-weight:500}
+.fase>h3 .quando{font-family:"IBM Plex Mono",monospace;font-size:.66rem;color:var(--faint);
+  letter-spacing:.06em;text-transform:uppercase}
+article table{width:100%;border-collapse:collapse;font-size:.88rem}
+article th{text-align:left;font-family:"IBM Plex Mono",monospace;font-size:.6rem;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--faint);font-weight:400;
+  padding:.45rem .7rem .45rem 0;border-bottom:1px solid var(--rule)}
+article td{padding:.5rem .7rem .5rem 0;border-bottom:1px solid var(--rule-soft);vertical-align:top}
+.tabelinha{overflow-x:auto;margin:.6rem 0 1.3rem}
 article ul{margin:0 0 1.2rem;padding-left:1.15rem}
 article li{margin-bottom:.5rem}
-article ol{margin:0 0 1.2rem;padding-left:1.35rem}
-article blockquote{margin:1.4rem 0;padding-left:1rem;border-left:2px solid var(--accent);
-  color:var(--muted);font-style:italic}
-.tabelinha{overflow-x:auto;margin:0 0 1.6rem}
-article table{width:100%;border-collapse:collapse;font-size:.9rem}
-article th{text-align:left;font-family:"IBM Plex Mono",monospace;font-size:.62rem;
-  letter-spacing:.1em;text-transform:uppercase;color:var(--faint);font-weight:400;
-  padding:.5rem .7rem .5rem 0;border-bottom:1px solid var(--rule)}
-article td{padding:.5rem .7rem .5rem 0;border-bottom:1px solid var(--rule-soft);
-  vertical-align:top}
-article td:first-child{font-family:"IBM Plex Mono",monospace;font-size:.8rem;color:var(--accent);white-space:nowrap}
+article blockquote{margin:1.5rem 0;padding:.2rem 0 .2rem 1.1rem;border-left:2px solid var(--accent);
+  color:var(--ink);font-style:italic;font-size:1.02rem}
 </style>
 <header class="masthead">
   <div class="mast-in">
     <div>
-      <div class="eyebrow"><a href="index.html">&larr; O livro</a> &nbsp;·&nbsp; <a href="portal.html">Planejamento</a></div>
-      <h1 class="book">Plano mestre<br><em>de estudos</em></h1>
-      <p class="dek">Um currículo autodirigido de Engenharia de Software, calibrado para
-      quem já tem estrada: seis trilhas, um livro-espinha por trilha, um projeto obrigatório
-      e um marco que se pode provar falso.</p>
+      <div class="eyebrow">Currículo vivo · o portal</div>
+      <h1 class="book">Uma formação<br><em>com data de validade</em></h1>
+      <p class="dek">Um livro sobre como o conhecimento de Engenharia de Software envelhece,
+      um plano de estudos calibrado para quem já tem estrada, e uma linha do tempo que
+      costura os dois: cada capítulo é escrito depois da trilha que o sustenta.</p>
       <div class="status">
-        <span class="chip on">6 trilhas</span>
-        <span class="chip">~2,5 a 3 anos</span>
-        <span class="chip">6–8 h / semana</span>
-        <span class="chip">40+ livros</span>
+        <span class="chip on">39 meses</span>
+        <span class="chip">8 fases</span>
+        <span class="chip">22 capítulos</span>
+        <span class="chip">6 trilhas</span>
         <span class="chip data" id="chip-data">—</span>
       </div>
     </div>
     <div class="strata">
-      <h2>Arco do plano</h2>
-      <div class="band"><div class="lab">A fundação que falta<em>trilha 1</em></div><div class="bar" style="background:var(--s1);height:3.92rem"></div><div class="hv">5–6 meses</div></div><div class="band"><div class="lab">Dados e distribuídos<em>trilha 2</em></div><div class="bar" style="background:var(--s2);height:3.92rem"></div><div class="hv">6 meses</div></div><div class="band"><div class="lab">Projeto e arquitetura<em>trilha 3</em></div><div class="bar" style="background:var(--s2);height:3.92rem"></div><div class="hv">6 meses</div></div><div class="band"><div class="lab">Qualidade e testes<em>trilha 4</em></div><div class="bar" style="background:var(--s3);height:3.08rem"></div><div class="hv">4 meses</div></div><div class="band"><div class="lab">Plataforma e segurança<em>trilha 5</em></div><div class="bar" style="background:var(--s3);height:3.08rem"></div><div class="hv">3–4 meses</div></div><div class="band"><div class="lab">Escrita e carreira<em>trilha 6</em></div><div class="bar" style="background:var(--s4);height:2.66rem"></div><div class="hv">contínua</div></div>
-      <p class="note">A espessura é a duração. As trilhas 1, 2 e 6 são as lacunas reais do
-      perfil; a 5 é curta porque <b>a experiência já cobre a maior parte dela.</b></p>
+      <h2>Onde o plano está</h2>
+      <div class="band"><div class="lab">Escrito<em>capítulos</em></div>
+        <div class="bar" style="background:var(--s1);height:3.6rem"></div><div class="hv">13 de 22</div></div>
+      <div class="band"><div class="lab">Com ficha<em>capítulos</em></div>
+        <div class="bar" style="background:var(--s2);height:1.6rem"></div><div class="hv">22 de 22</div></div>
+      <div class="band"><div class="lab">Trilhas<em>concluídas</em></div>
+        <div class="bar" style="background:var(--s4);height:1.5rem"></div><div class="hv">0 de 6</div></div>
+      <p class="note">O livro já concluiu as <b>camadas 0 a 2</b>. As trilhas continuam como
+      ciclos de prática, validação e revisão das conclusões publicadas.</p>
     </div>
   </div>
 </header>
@@ -427,386 +445,424 @@ article td:first-child{font-family:"IBM Plex Mono",monospace;font-size:.8rem;col
 <div class="wrap">
  <div class="layout">
   <nav class="rail" aria-label="Sumário">
-<div class="grp"><span>Antes de começar</span>
-<a href="#antes-do-mapa-onde-voc-come-a">Onde você começa</a>
-<a href="#como-o-plano-organizado">Como o plano é organizado</a></div>
-<div class="grp"><span>Trilhas</span>
-<a href="#trilha-0-diagn-stico">0 · Diagnóstico</a>
-<a href="#trilha-1-a-funda-o-que-falta">1 · A fundação que falta</a>
-<a href="#trilha-2-dados-e-sistemas-distribu-dos">2 · Dados e distribuídos</a>
-<a href="#trilha-3-projeto-e-arquitetura">3 · Projeto e arquitetura</a>
-<a href="#trilha-4-qualidade-testes-e-refatora-o">4 · Qualidade e testes</a>
-<a href="#trilha-5-plataforma-confiabilidade-e-seg">5 · Plataforma e segurança</a>
-<a href="#trilha-6-escrita-influ-ncia-e-carreira">6 · Escrita e carreira</a></div>
-<div class="grp"><span>Referência</span>
-<a href="#os-dez-atemporais">Os dez atemporais</a>
-<a href="#seis-regras-que-decidem-se-o-plano-funci">Seis regras</a>
-<a href="#o-que-ficou-deliberadamente-de-fora">O que ficou de fora</a>
-<a href="#correspond-ncia-com-o-livro">Correspondência com o livro</a></div>
-</nav>
-  <article class="plano">
-   <details class="toc"><summary>Sumário</summary>
-     <a href="#antes-do-mapa-onde-voc-come-a">Onde você começa</a>
-     <a href="#trilha-0-diagn-stico">Trilha 0 · Diagnóstico</a>
-     <a href="#trilha-1-a-funda-o-que-falta">Trilha 1 · A fundação que falta</a>
-     <a href="#trilha-2-dados-e-sistemas-distribu-dos">Trilha 2 · Dados e distribuídos</a>
-     <a href="#trilha-3-projeto-e-arquitetura">Trilha 3 · Projeto e arquitetura</a>
-     <a href="#trilha-4-qualidade-testes-e-refatora-o">Trilha 4 · Qualidade e testes</a>
-     <a href="#trilha-5-plataforma-confiabilidade-e-seg">Trilha 5 · Plataforma e segurança</a>
-     <a href="#trilha-6-escrita-influ-ncia-e-carreira">Trilha 6 · Escrita e carreira</a>
-     <a href="#os-dez-atemporais">Os dez atemporais</a>
-   </details>
-   <section class="trilha"><h3 id="antes-do-mapa-onde-voc-come-a"><span class="ttl">Antes do mapa: onde você começa</span></h3>
-<p>Um plano honesto tem que começar dizendo uma coisa desconfortável: <strong>você não começa do
-zero, e tratar você como iniciante custaria um ano.</strong></p>
-<p>O ponto de partida real é mais de uma década em ambientes de missão crítica no mercado
-financeiro, sustentação de legado com alta volumetria, ciclos de entrega com GMUD, bases
-críticas em SQL Server, Oracle e Sybase, e uma migração já feita para stack moderna —
-.NET 8, React com TypeScript, Terraform, GitHub Actions, contêineres em AWS. Isso não é a
-base de um currículo: é a metade dele já cumprida, por experiência em vez de por livro.</p>
-<p>Isso muda duas coisas no desenho do plano.</p>
-<p><strong>A primeira é o que sai.</strong> Não há trilha de &ldquo;introdução à programação&rdquo;, nem de
-&ldquo;fundamentos de banco de dados&rdquo;, nem de &ldquo;o que é CI/CD&rdquo;. Você opera essas coisas há anos.
-O que falta nelas não é o conteúdo — é o vocabulário formal que permite discutir a decisão
-em vez de executá-la. Isso se resolve com leitura dirigida, não com curso.</p>
-<p><strong>A segunda é onde estão as lacunas de verdade.</strong> Quem vem de sustentação de legado e
-infraestrutura costuma ter uma fundação melhor do que imagina e três buracos previsíveis:
-o formalismo de <strong>algoritmos e complexidade</strong>, que nunca foi exercitado porque o trabalho
-não pedia; a teoria de <strong>sistemas distribuídos</strong>, que foi aprendida por sintoma e não por
-princípio; e a <strong>escrita técnica de projeto</strong> — ADR, RFC, proposta de arquitetura —, que é
-o que separa quem executa decisões de quem as toma.</p>
-<p>Este plano ataca esses três primeiro. Se ao final do diagnóstico você discordar do
-recorte, ele se reorganiza; mas comece duvidando da vontade de recomeçar do começo, que é
-a armadilha mais cara de quem tem experiência e sente defasagem.</p>
+    <div class="grp"><span>O portal</span>
+      <a href="index.html">O livro</a>
+      <a href="estudos.html">Plano de estudos</a></div>
+    <div class="grp"><span>Linha do tempo</span>
+      <a href="#a-regra-que-costura-tudo">A regra que costura tudo</a>
+      <a href="#fase-0-funda-o">0 · Fundação</a>
+      <a href="#fase-1-a-funda-o-que-falta">1 · A fundação que falta</a>
+      <a href="#fase-2-dados-e-sistemas-distribu-dos">2 · Dados e distribuídos</a>
+      <a href="#fase-3-projeto-e-arquitetura">3 · Projeto e arquitetura</a>
+      <a href="#fase-4-qualidade-e-testes">4 · Qualidade e testes</a>
+      <a href="#fase-5-plataforma-confiabilidade-e-seguran-a">5 · Plataforma e segurança</a>
+      <a href="#fase-6-os-cap-tulos-sem-trilha">6 · Capítulos sem trilha</a>
+      <a href="#fase-7-a-camada-contextual">7 · A camada contextual</a>
+      <a href="#fase-8-o-cap-tulo-perec-vel-e-o-fechamento">8 · Fechamento</a>
+      <a href="#conceito-e-pr-tica-lado-a-lado">Conceito e prática</a>
+      <a href="#o-quadro-completo">O quadro completo</a>
+      <a href="#o-que-fazer-se-atrasar">Se atrasar</a></div>
+  </nav>
+  <article>
 
-</section><section class="trilha"><h3 id="como-o-plano-organizado"><span class="ttl">Como o plano é organizado</span></h3>
-<p>Seis trilhas, em ordem de dependência. Cada uma tem <strong>um livro-espinha</strong> — o que se lê de
-capa a capa — e livros de apoio, que se consultam por capítulo conforme a necessidade
-aparece. Ler cinco livros em paralelo é o modo mais confiável de não terminar nenhum.</p>
-<p>Cada trilha tem quatro elementos obrigatórios:</p>
-<p><strong>Pré-requisito</strong> — o que precisa estar de pé antes, e por quê.
-<strong>Projeto</strong> — uma entrega concreta. Trilha sem projeto vira leitura, e leitura sem uso
-evapora em seis meses.
-<strong>Marco verificável</strong> — uma frase que você consegue provar que é verdadeira ou falsa. Não
-&ldquo;entendi sistemas distribuídos&rdquo;, mas &ldquo;reproduzi uma falha de partição e o sistema degradou
-como eu previ por escrito antes do teste&rdquo;.
-<strong>Escrita</strong> — cada trilha termina em um texto público. É o que transforma leitura em
-conhecimento defensável, e é a habilidade da trilha 6 sendo treinada desde a primeira.</p>
-<h4>Cadência</h4>
-<p>O plano assume <strong>6 a 8 horas por semana</strong> — o que sobra de quem trabalha em tempo integral
-sem destruir o resto da vida. Nesse ritmo, o arco completo leva de dois anos e meio a três.</p>
-<p>Se a tentação for comprimir, comprima <strong>escopo</strong>, nunca cadência: três trilhas bem-feitas
-valem mais que seis atropeladas, e a fundação que você pular vai reaparecer como teto
-daqui a cinco anos.</p>
+<div class="portas">
+  <a class="porta" href="index.html">
+    <span class="k">O território</span>
+    <h3>Engenharia de Software: Envelhecimento Macro</h3>
+    <p>O livro. Vinte e dois capítulos organizados por velocidade de envelhecimento, cada
+    seção com meia-vida, estado e data de revisão declarados.</p>
+    <span class="st">Camada 0, 1.1 a 1.4, 2.1 a 2.6, 3.1 e 3.2 · 13 de 22 capítulos</span>
+  </a>
+  <a class="porta" href="estudos.html">
+    <span class="k">O percurso</span>
+    <h3>Plano mestre de estudos</h3>
+    <p>O currículo autodirigido. Seis trilhas, um livro-espinha por trilha, projeto
+    obrigatório e um marco que se pode provar falso.</p>
+    <span class="st">6 trilhas · 40+ livros · 6–8 h por semana</span>
+  </a>
+</div>
+
+<section class="bloco"><h3 id="a-regra-que-costura-tudo"><span>A regra que costura tudo</span></h3>
+<p>O portal tinha três planos que não se falavam: o índice do livro, o plano técnico do site
+e o plano de estudos. Esta página os transforma em uma sequência só, e ela se apoia numa
+regra única:</p>
+<blockquote>
+<p><strong>Cada capítulo do livro é validado e revisto depois da trilha de estudo que o sustenta.
+Quando a primeira redação já existe, ela funciona como hipótese pública a ser corrigida.</strong></p>
+</blockquote>
+<p>Isso resolve dois problemas ao mesmo tempo. O plano de estudos exige um texto público ao
+fim de cada trilha, e a revisão desse texto já é o entregável. E o livro não congela opinião:
+cada capítulo atravessa leitura dirigida, projeto e confronto com fontes, mesmo quando sua
+primeira versão foi adiantada durante a construção editorial.</p>
+<p>Três consequências que valem declarar:</p>
+<p><strong>Os capítulos contextuais não seguem trilha.</strong> Ensino formal, contexto brasileiro,
+economia da decisão e ética não se aprendem em livro técnico — exigem pesquisa de fonte
+primária, legislação e dado. Eles ficam concentrados no terceiro ano, quando a fundação
+já não compete por atenção.</p>
+<p><strong>O capítulo sobre IA é escrito por último, de propósito.</strong> É o mais perecível do livro.
+Escrevê-lo cedo garante que ele estará errado na publicação — e um livro sobre
+envelhecimento que erra assim perde o direito de dar lição.</p>
+<p><strong>O portal evolui junto, não depois.</strong> Cada fase carrega uma melhoria técnica do site,
+dimensionada para caber ao lado do estudo, não para competir com ele.</p>
+
+</section><section class="fase feita"><h3 id="fase-0-funda-o"><span class="quando">Fase 0</span><span>Fundação</span></h3>
+<p class="quandoP"><em>Duas semanas · agora</em></p>
 <div class="tabelinha"><table>
 <thead>
 <tr>
+<th>Estudo</th>
+<th>Livro</th>
+<th>Portal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Trilha 0 — diagnóstico, cinco artefatos guardados</td>
+<td>Fichas dos 22 capítulos preenchidas, sem prosa</td>
+<td>Três páginas no ar, navegação entre elas</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Entregável:</strong> o portal navegável e um retrato honesto do ponto de partida. Os cinco
+artefatos do diagnóstico ficam guardados para comparação no fim do segundo ano.</p>
+
+</section><section class="fase"><h3 id="fase-1-a-funda-o-que-falta"><span class="quando">Fase 1</span><span>A fundação que falta</span></h3>
+<p class="quandoP"><em>Meses 1 a 6 · Teoria: 1.4 e 2.1 · Prática: Trilha 1</em></p>
+<div class="tabelinha"><table>
+<thead>
+<tr>
+<th>Estudo</th>
+<th>Livro</th>
+<th>Portal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Trilha 1 — Skiena como espinha; CSAPP e OSTEP de apoio; interpretador como projeto</td>
+<td><strong>1.4 Cognição e metacognição</strong> e <strong>2.1 Paradigmas de programação</strong></td>
+<td>Migração para Astro com o schema Zod da ficha; a compilação passa a falhar sem data de revisão</td>
+</tr>
+</tbody>
+</table></div>
+<p>Por que estes dois capítulos, e não os da Camada 1: o 1.1 e o 1.2 já estão escritos, e o
+que a trilha de fato destrava é outra coisa. O 1.4 se apoia direto no <em>The Programmer&rsquo;s
+Brain</em>, lido na trilha; e o 2.1 exige a experiência de escrever um interpretador para falar
+de paradigmas sem repetir manual.</p>
+<p><strong>Marco:</strong> prever por escrito onde uma função sua quebra por volume, e acertar.</p>
+
+</section><section class="fase"><h3 id="fase-2-dados-e-sistemas-distribu-dos"><span class="quando">Fase 2</span><span>Dados e sistemas distribuídos</span></h3>
+<p class="quandoP"><em>Meses 7 a 12 · Teoria: 2.2 e 2.3 · Prática: Trilha 2</em></p>
+<div class="tabelinha"><table>
+<thead>
+<tr>
+<th>Estudo</th>
+<th>Livro</th>
+<th>Portal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Trilha 2 — Kleppmann como espinha; Petrov, Winand e Nygard de apoio; serviço resiliente como projeto</td>
+<td>Revisão crítica de <strong>2.2 Dados e persistência</strong> e <strong>2.3 Sistemas distribuídos</strong></td>
+<td>Radar de frescor e glossário vivo, gerados do frontmatter</td>
+</tr>
+</tbody>
+</table></div>
+<p>Os dois capítulos mais valiosos do livro para o seu perfil voltam à bancada no momento em
+que você acaba de provar as garantias em código. A seção &ldquo;do campo&rdquo; de 2.2 confronta sua
+experiência com Sybase e SQL Server em produção contínua com os experimentos da trilha.</p>
+<p><strong>Marco:</strong> os capítulos 2.2 e 2.3 recebem revisão baseada em experimento, e o radar passa a
+apontar sozinho o que está vencendo.</p>
+
+</section><section class="fase"><h3 id="fase-3-projeto-e-arquitetura"><span class="quando">Fase 3</span><span>Projeto e arquitetura</span></h3>
+<p class="quandoP"><em>Meses 13 a 18 · Teoria: 3.1 e 1.5 · Prática: Trilha 3</em></p>
+<div class="tabelinha"><table>
+<thead>
+<tr>
+<th>Estudo</th>
+<th>Livro</th>
+<th>Portal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Trilha 3 — Ousterhout como espinha; Fowler, Evans, Feathers e Newman de apoio; estrangulamento do legado VB6 como projeto</td>
+<td><strong>3.1 Arquitetura de software</strong> e <strong>1.5 Comunicação e escrita técnica</strong></td>
+<td>Grafo de pré-requisitos e matriz de dependências</td>
+</tr>
+</tbody>
+</table></div>
+<p>Aqui a integração fica mais evidente: os três ADRs exigidos pela trilha 3 são o material
+bruto do capítulo 1.5. Você escreve sobre escrita técnica tendo acabado de praticá-la sob
+pressão de um sistema real.</p>
+<p><strong>Marco:</strong> um arquiteto que não conhece o sistema reconstrói sua decisão lendo só os ADRs.</p>
+
+</section><section class="fase"><h3 id="fase-4-qualidade-e-testes"><span class="quando">Fase 4</span><span>Qualidade e testes</span></h3>
+<p class="quandoP"><em>Meses 19 a 22 · Teoria: 3.3 · Prática: Trilha 4</em></p>
+<div class="tabelinha"><table>
+<thead>
+<tr>
+<th>Estudo</th>
+<th>Livro</th>
+<th>Portal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Trilha 4 — Khorikov como espinha; Beck, Freeman &amp; Pryce, Fowler de apoio; caracterização de legado como projeto</td>
+<td><strong>3.3 Qualidade, testes e débito técnico</strong></td>
+<td>Linha do tempo 1847–2026, ancorada nas quatro fases</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Marco:</strong> você defende com dados do próprio projeto a forma da sua pirâmide de testes — e
+sabe apresentar o argumento contrário, que é o que 3.3.6 exige.</p>
+
+</section><section class="fase"><h3 id="fase-5-plataforma-confiabilidade-e-seguran-a"><span class="quando">Fase 5</span><span>Plataforma, confiabilidade e segurança</span></h3>
+<p class="quandoP"><em>Meses 23 a 26 · Teoria: 4.1 e 4.2 · Prática: Trilha 5</em></p>
+<div class="tabelinha"><table>
+<thead>
+<tr>
+<th>Estudo</th>
+<th>Livro</th>
+<th>Portal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Trilha 5 — SRE do Google como espinha; Shostack e Anderson de apoio; SLO e falha controlada como projeto</td>
+<td><strong>4.1 Segurança e cadeia de suprimentos</strong> e <strong>4.2 Ferramentas e infraestrutura</strong></td>
+<td>Arco de transformação do aluno, derivado dos pré-requisitos</td>
+</tr>
+</tbody>
+</table></div>
+<p>Trilha curta porque sua experiência já cobre a maior parte. É a fase em que o livro anda
+mais rápido que o estudo — dois capítulos em quatro meses, porque a matéria-prima é o seu
+trabalho diário.</p>
+<p><strong>Marco:</strong> existe um orçamento de erro publicado e uma decisão de priorização tomada com
+base nele.</p>
+
+</section><section class="fase"><h3 id="fase-6-os-cap-tulos-sem-trilha"><span class="quando">Fase 6</span><span>Os capítulos sem trilha</span></h3>
+<p class="quandoP"><em>Meses 27 a 32 · Teoria: 2.4, 2.5, 2.6 e 3.2 · Prática: Trilha 6, contínua</em></p>
+<div class="tabelinha"><table>
+<thead>
+<tr>
+<th>Estudo</th>
+<th>Livro</th>
+<th>Portal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Trilha 6 em regime contínuo — Brooks, DeMarco &amp; Lister, Larson</td>
+<td>Revisão de <strong>2.4 Linguagens</strong>, <strong>2.5 Requisitos e IHC</strong>, <strong>2.6 Carreira</strong>; redação de <strong>3.2 Processos</strong></td>
+<td>Verificação de todas as fontes primárias, com checagem de link na CI</td>
+</tr>
+</tbody>
+</table></div>
+<p>Quatro capítulos que dependem menos de estudo novo e mais de organizar o que você já viveu
+— trinta anos de linguagens, requisitos mal levantados, transições de carreira e a
+travessia do RUP ao ágil dentro de banco.</p>
+
+</section><section class="fase"><h3 id="fase-7-a-camada-contextual"><span class="quando">Fase 7</span><span>A camada contextual</span></h3>
+<p class="quandoP"><em>Meses 33 a 36 · Teoria: 3.4 a 3.7 · Prática: pesquisa de fonte primária</em></p>
+<div class="tabelinha"><table>
+<thead>
+<tr>
+<th>Estudo</th>
+<th>Livro</th>
+<th>Portal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pesquisa de fonte primária: DCN e SBC, legislação, dados de mercado</td>
+<td><strong>3.4 Ética e legislação</strong>, <strong>3.5 Ensino formal</strong>, <strong>3.6 Contexto brasileiro</strong>, <strong>3.7 Economia da decisão</strong></td>
+<td>Bibliografia completa e revisão de frescor de tudo escrito antes</td>
+</tr>
+</tbody>
+</table></div>
+<p>É a fase mais brasileira do livro e a que mais depende de fonte verificável. Deixá-la para
+o fim é deliberado: exige mais rigor de citação do que de leitura técnica, e é o tipo de
+trabalho que se faz melhor com o resto do argumento já de pé.</p>
+
+</section><section class="fase"><h3 id="fase-8-o-cap-tulo-perec-vel-e-o-fechamento"><span class="quando">Fase 8</span><span>O capítulo perecível e o fechamento</span></h3>
+<p class="quandoP"><em>Meses 37 a 39 · Teoria: 4.3 · Prática: revisão e publicação</em></p>
+<div class="tabelinha"><table>
+<thead>
+<tr>
+<th>Estudo</th>
+<th>Livro</th>
+<th>Portal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>—</td>
+<td><strong>4.3 IA no ciclo de desenvolvimento</strong>, escrito por último</td>
+<td>Geração de PDF e EPUB; versão 1.0</td>
+</tr>
+</tbody>
+</table></div>
+<p>O capítulo mais volátil do livro é escrito na última janela possível, com meia-vida
+declarada de um a dois anos e data de revisão já marcada na ficha. É a única forma
+honesta de publicá-lo.</p>
+
+</section><section class="bloco"><h3 id="conceito-e-pr-tica-lado-a-lado"><span>Conceito e prática, lado a lado</span></h3>
+<p>A linha do tempo diz <em>quando</em>. Esta tabela diz <em>o que corresponde a quê</em> — o capítulo do
+livro à esquerda, a exigência prática que o sustenta à direita.</p>
+<div class="tabelinha"><table>
+<thead>
+<tr>
+<th>No livro</th>
+<th>Na prática</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1.1 a 1.3 — Fundação e invariantes.</strong> Os alicerces que sobrevivem a mudanças de paradigma: Conway, Lehman, Brooks, Parnas, e o critério que separa o perene do que só parece.</td>
+<td><strong>Trilha 1 — a base cognitiva.</strong> Os dez atemporais lidos antes do avanço técnico, e um interpretador escrito do zero como prova de que a fundação é operacional, não decorativa.</td>
+</tr>
+<tr>
+<td><strong>1.4 — Cognição e metacognição.</strong> Carga cognitiva, níveis de abstração, depuração como método científico, a habilidade de desaprender.</td>
+<td><strong>Trilha 1 — o marco.</strong> Prever por escrito em que volume uma função real quebra, e conferir a previsão contra a medição.</td>
+</tr>
+<tr>
+<td><strong>2.2 e 2.3 — Dados e sistemas distribuídos.</strong> As regras duradouras de persistência e rede, com o CAP lido como ele é e o &ldquo;exactly-once&rdquo; desmontado.</td>
+<td><strong>Trilha 2 — engenharia de resiliência.</strong> Um serviço com dependência instável: idempotência, backoff, circuit breaker, e um teste de partição que confirma o comportamento previsto.</td>
+</tr>
+<tr>
+<td><strong>3.1 — Arquitetura de software.</strong> A evolução dos sistemas, do monolito ao estrangulamento de legado, com a decisão registrada em ADR.</td>
+<td><strong>Trilha 3 — refatoração estrutural.</strong> Estrangular uma capacidade do legado VB6/Sybase, com fachada, coexistência, caminho de volta e três ADRs.</td>
+</tr>
+<tr>
+<td><strong>3.3 — Qualidade e débito técnico.</strong> A degradação inevitável, a definição de Feathers, e a cobertura tratada como armadilha e não como meta.</td>
+<td><strong>Trilha 4 — ação corretiva.</strong> Cobrir um módulo antigo com testes de caracterização até poder refatorá-lo, e defender a forma da própria pirâmide com dados.</td>
+</tr>
+<tr>
+<td><strong>4.1 e 4.2 — Segurança, plataforma e confiabilidade.</strong> A operação como disciplina: SLI, SLO, orçamento de erro, cadeia de suprimentos, post-mortem sem culpado.</td>
+<td><strong>Trilha 5 — simulação e processo.</strong> SLO publicado, falha controlada executada, e um post-mortem escrito sobre o processo, sem nomes.</td>
+</tr>
+<tr>
+<td><strong>1.5 — Comunicação e escrita técnica.</strong> A escrita como artefato de engenharia: ADR, RFC, Diátaxis, diagramas que explicam.</td>
+<td><strong>Trilha 6 — influência contínua.</strong> A escrita como exercício perpétuo, com o marco de maturidade sendo um texto seu citado por quem você não conhece.</td>
+</tr>
+<tr>
+<td><strong>2.6 — Comportamento e carreira.</strong> A gestão do envelhecimento da própria carreira, e por que comportamento é infraestrutura.</td>
+<td><strong>Trilha 6 — o projeto.</strong> O próprio livro: ele consome as cinco trilhas anteriores e é a prova de que elas aconteceram.</td>
+</tr>
+</tbody>
+</table></div>
+<p>A leitura da tabela nos dois sentidos é deliberada. Da esquerda para a direita, ela diz o
+que estudar para poder escrever. Da direita para a esquerda, diz o que se está de fato
+aprendendo ao executar cada projeto — e é essa direção que sustenta a regra de abertura.</p>
+</section><section class="bloco"><h3 id="o-quadro-completo"><span>O quadro completo</span></h3>
+<div class="tabelinha"><table>
+<thead>
+<tr>
+<th>Fase</th>
+<th>Meses</th>
 <th>Trilha</th>
-<th>Foco</th>
-<th>Duração</th>
-<th>Situação de partida</th>
+<th>Capítulos escritos</th>
+<th>Acumulado</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>0</td>
-<td>Diagnóstico</td>
-<td>2 semanas</td>
-<td>—</td>
+<td>0–0,5</td>
+<td>0</td>
+<td>— (fichas)</td>
+<td>5 de 22</td>
 </tr>
 <tr>
 <td>1</td>
-<td>A fundação que falta</td>
-<td>5–6 meses</td>
-<td>lacuna real</td>
+<td>1–6</td>
+<td>1</td>
+<td>1.4 ✓, 2.1</td>
+<td>6</td>
 </tr>
 <tr>
 <td>2</td>
-<td>Dados e sistemas distribuídos</td>
-<td>6 meses</td>
-<td>lacuna real</td>
+<td>7–12</td>
+<td>2</td>
+<td>2.2, 2.3</td>
+<td>8</td>
 </tr>
 <tr>
 <td>3</td>
-<td>Projeto e arquitetura</td>
-<td>6 meses</td>
-<td>parcial</td>
+<td>13–18</td>
+<td>3</td>
+<td>3.1, 1.5</td>
+<td>10</td>
 </tr>
 <tr>
 <td>4</td>
-<td>Qualidade, testes e refatoração</td>
-<td>4 meses</td>
-<td>parcial</td>
+<td>19–22</td>
+<td>4</td>
+<td>3.3</td>
+<td>11</td>
 </tr>
 <tr>
 <td>5</td>
-<td>Plataforma, confiabilidade e segurança</td>
-<td>3–4 meses</td>
-<td>forte</td>
+<td>23–26</td>
+<td>5</td>
+<td>4.1, 4.2</td>
+<td>13</td>
 </tr>
 <tr>
 <td>6</td>
-<td>Escrita, influência e carreira</td>
-<td>contínua</td>
-<td>lacuna real</td>
+<td>27–32</td>
+<td>6</td>
+<td>2.4, 2.5, 2.6, 3.2</td>
+<td>17</td>
+</tr>
+<tr>
+<td>7</td>
+<td>33–36</td>
+<td>pesquisa</td>
+<td>3.4, 3.5, 3.6, 3.7</td>
+<td>22</td>
+</tr>
+<tr>
+<td>8</td>
+<td>37–39</td>
+<td>—</td>
+<td>4.3 + revisão</td>
+<td>22 + v1.0</td>
 </tr>
 </tbody>
 </table></div>
-
-</section><section class="trilha"><h3 id="trilha-0-diagn-stico"><span class="tnum">Trilha 0</span><span class="ttl">Diagnóstico</span></h3>
-<p><strong>Duas semanas. Não pule — é o que impede o plano de te ensinar o que você já sabe.</strong></p>
-<p>Cinco tarefas. Cada uma revela uma lacuna específica, e o resultado reordena as trilhas
-seguintes.</p>
-<ol>
-<li><strong>Escreva, sem consultar nada, a diferença entre <code>at-least-once</code> e <code>exactly-once</code> na
-   entrega de mensagens, e por que a segunda é discutível.</strong> Revela a lacuna de
-   distribuídos.</li>
-<li><strong>Pegue uma consulta lenta de um sistema que você mantém, leia o plano de execução e
-   explique por escrito por que o otimizador escolheu aquele caminho.</strong> Revela a lacuna
-   entre operar banco e entender banco.</li>
-<li><strong>Implemente um cache LRU do zero, sem biblioteca, e justifique a estrutura de dados
-   escolhida em termos de complexidade.</strong> Revela a lacuna de algoritmos.</li>
-<li><strong>Escreva um ADR de uma página sobre uma decisão técnica que você tomou nos últimos
-   dois anos</strong> — contexto, alternativas, decisão, consequências. Revela a lacuna de escrita.</li>
-<li><strong>Descreva a arquitetura de um sistema que você mantém em um diagrama de contexto e um
-   de contêineres (modelo C4).</strong> Revela se você consegue subir o nível de abstração.</li>
-</ol>
-<p>Guarde os cinco artefatos. Ao fim da trilha 3, refaça os itens 1, 4 e 5 e compare — é a
-sua única medida honesta de progresso.</p>
-
-</section><section class="trilha"><h3 id="trilha-1-a-funda-o-que-falta"><span class="tnum">Trilha 1</span><span class="ttl">A fundação que falta</span></h3>
-<p><strong>5 a 6 meses · pré-requisito: nenhum</strong></p>
-<p>O objetivo não é passar em entrevista de algoritmos. É adquirir o vocabulário que permite
-raciocinar sobre custo, e a intuição de que toda estrutura de dados é uma aposta sobre
-qual operação vai ser frequente.</p>
-<p><strong>Livro-espinha:</strong> <em>The Algorithm Design Manual</em> — <strong>Steven Skiena</strong>. Escolhido no lugar do
-CLRS de propósito: o CLRS é referência de consulta e livro de curso, denso em prova formal;
-o Skiena é escrito para quem vai <em>usar</em>, tem um catálogo de problemas que funciona como
-dicionário, e as &ldquo;war stories&rdquo; mostram o raciocínio de escolha, que é exatamente o que
-falta a quem aprendeu na prática.</p>
-<p><strong>Apoio:</strong>
-- <em>Introduction to Algorithms</em> — <strong>Cormen, Leiserson, Rivest, Stein</strong>. Consulta, não leitura.
-- <em>Grokking Algorithms</em> — <strong>Aditya Bhargava</strong>. Se a intuição visual ajudar no arranque; é curto e honesto sobre ser uma porta de entrada.
-- <em>Computer Systems: A Programmer&rsquo;s Perspective</em> — <strong>Bryant &amp; O&rsquo;Hallaron</strong>. O melhor livro para entender o que acontece embaixo do seu código: memória, cache, ligação, concorrência.
-- <em>Operating Systems: Three Easy Pieces</em> — <strong>Arpaci-Dusseau</strong>. Gratuito e excelente. Virtualização, concorrência, persistência — os três problemas que todo sistema resolve.
-- <em>Introduction to the Theory of Computation</em> — <strong>Michael Sipser</strong>. Leitura seletiva: os capítulos de decidibilidade e complexidade. É o que dá base ao capítulo 1.1.3 do livro.
-- <em>The Programmer&rsquo;s Brain</em> — <strong>Felienne Hermans</strong>. Curto, sobre carga cognitiva e como se aprende a ler código. Encaixa direto na camada 1.4.</p>
-<p><strong>Projeto:</strong> escrever um interpretador seguindo <em>Crafting Interpreters</em> — <strong>Robert Nystrom</strong>
-(gratuito online). É o projeto de melhor relação entre esforço e retorno que existe nesta
-fase: obriga a lidar com estruturas de dados, recursão, árvores, tabelas de símbolos,
-gerenciamento de memória e design de linguagem, tudo com feedback imediato.</p>
-<p><strong>Marco verificável:</strong> dada uma função de um sistema real que você mantém, você consegue
-declarar a complexidade dela, apontar a estrutura de dados que a domina e prever em que
-volume ela quebra — antes de medir. Depois meça e confira a previsão.</p>
-<p><strong>Escrita:</strong> um texto explicando a decisão de estrutura de dados de um trecho de código
-real seu, para um público de desenvolvedores juniores.</p>
-
-</section><section class="trilha"><h3 id="trilha-2-dados-e-sistemas-distribu-dos"><span class="tnum">Trilha 2</span><span class="ttl">Dados e sistemas distribuídos</span></h3>
-<p><strong>6 meses · pré-requisito: trilha 1 (complexidade e concorrência)</strong></p>
-<p>A trilha mais valiosa do plano para o seu perfil, e a que mais muda a conversa em uma
-entrevista sênior. Você já opera sistemas distribuídos; falta o modelo mental que explica
-por que eles falham do jeito que falham.</p>
-<p><strong>Livro-espinha:</strong> <em>Designing Data-Intensive Applications</em> — <strong>Martin Kleppmann</strong>. Se você
-ler um único livro técnico nos próximos três anos, é este. Ele costura banco de dados,
-replicação, particionamento, transações, consenso e processamento de fluxo em um argumento
-só, e é escrito com um rigor de citação que quase nenhum livro da área tem.</p>
-<p><strong>Apoio:</strong>
-- <em>Database Internals</em> — <strong>Alex Petrov</strong>. O andar de baixo do Kleppmann: árvores B, LSM, motores de armazenamento, protocolos de replicação.
-- <em>SQL Performance Explained</em> — <strong>Markus Winand</strong>. Curto, direto, sobre índices e planos de execução. Retorno imediato no seu dia a dia com bases críticas.
-- <em>Distributed Systems</em> — <strong>Maarten van Steen &amp; Andrew Tanenbaum</strong> (gratuito). O tratado acadêmico, para quando o Kleppmann apontar um tema e você quiser o fundamento.
-- <em>Release It!</em> — <strong>Michael Nygard</strong>. Padrões de estabilidade e antipadrões de falha, escrito por quem viu sistemas caírem. Circuit breaker, bulkhead, e o mais importante: por que os sistemas caem em cascata.
-- <em>Streaming Systems</em> — <strong>Akidau, Chernyak, Lax</strong>, se processamento de eventos entrar no seu caminho.</p>
-<p><strong>Projeto:</strong> construir um serviço com uma dependência externa instável e provar as
-garantias. Idempotência real, retry com backoff e jitter, circuit breaker, fila com
-entrega ao menos uma vez, e um teste que injeta partição de rede e latência. O entregável
-não é o código: é o <strong>documento que previu o comportamento antes do teste</strong> e o resultado
-comparado.</p>
-<p><strong>Marco verificável:</strong> você consegue explicar, sem consultar, por que &ldquo;exactly-once&rdquo; é uma
-propriedade de processamento e não de entrega — e mostrar no seu código onde a
-idempotência sustenta essa afirmação.</p>
-<p><strong>Escrita:</strong> um post sobre a diferença entre o que o CAP diz e o que as pessoas citam que
-ele diz.</p>
-
-</section><section class="trilha"><h3 id="trilha-3-projeto-e-arquitetura"><span class="tnum">Trilha 3</span><span class="ttl">Projeto e arquitetura</span></h3>
-<p><strong>6 meses · pré-requisito: trilhas 1 e 2</strong></p>
-<p>Aqui entra a parte que você já pratica sem o vocabulário formal. O risco desta trilha é o
-oposto do das anteriores: excesso de literatura opinativa. A ordem abaixo é deliberada — o
-Ousterhout primeiro porque é curto, contrário ao senso comum e desarma o dogmatismo dos
-outros.</p>
-<p><strong>Livro-espinha:</strong> <em>A Philosophy of Software Design</em> — <strong>John Ousterhout</strong>. Cento e
-noventa páginas sobre uma única ideia — profundidade de módulo e ocultação de informação —
-que é Parnas atualizado. Discorda explicitamente de partes do <em>Clean Code</em>, e ler os dois
-em sequência é o melhor exercício de julgamento arquitetural disponível.</p>
-<p><strong>Apoio, em ordem de leitura:</strong>
-- <em>Clean Code</em> — <strong>Robert C. Martin</strong>. Leia sabendo que é contestado: os capítulos sobre nomes e funções envelheceram bem, as regras rígidas de tamanho e os exemplos, nem tanto. Vale pelo contraste com o Ousterhout.
-- <em>Refactoring</em> (2ª ed.) — <strong>Martin Fowler</strong>. O catálogo. Consulta permanente.
-- <em>Working Effectively with Legacy Code</em> — <strong>Michael Feathers</strong>. Para o seu caso específico, este é quase um manual de trabalho: costuras, caracterização, como testar o que não foi feito para ser testado.
-- <em>Design Patterns</em> — <strong>Gamma, Helm, Johnson, Vlissides</strong>. Histórico e ainda útil, com a ressalva de que metade dos padrões existe para contornar limitações de linguagens dos anos 1990.
-- <em>Patterns of Enterprise Application Architecture</em> — <strong>Martin Fowler</strong>. O vocabulário que ainda sustenta quase todo sistema corporativo.
-- <em>Domain-Driven Design</em> — <strong>Eric Evans</strong>, e <em>Implementing Domain-Driven Design</em> — <strong>Vaughn Vernon</strong>. Comece pelo Vernon, que é mais prático, e volte ao Evans pelos capítulos estratégicos.
-- <em>Fundamentals of Software Architecture</em> e <em>Software Architecture: The Hard Parts</em> — <strong>Mark Richards &amp; Neal Ford</strong>. O segundo é o melhor livro existente sobre decomposição e trade-off explícito.
-- <em>Building Microservices</em> (2ª ed.) — <strong>Sam Newman</strong>. Leia especialmente os capítulos sobre quando <em>não</em> usar.
-- <em>Team Topologies</em> — <strong>Matthew Skelton &amp; Manuel Pais</strong>. Conway aplicado. Curto.</p>
-<p><strong>Projeto:</strong> aplicar <em>strangler fig</em> em um sistema legado real — e você tem o caso ideal
-em mãos, com VB6 e Sybase. Extraia <strong>uma</strong> capacidade para um serviço novo, com fachada,
-migração de dados, coexistência e caminho de volta. Entregue com três ADRs.</p>
-<p><strong>Marco verificável:</strong> um arquiteto sênior que não conhece o sistema consegue, lendo só
-os seus três ADRs, reconstruir a decisão e apontar em que condição ela estaria errada.</p>
-<p><strong>Escrita:</strong> os três ADRs, publicados.</p>
-
-</section><section class="trilha"><h3 id="trilha-4-qualidade-testes-e-refatora-o"><span class="tnum">Trilha 4</span><span class="ttl">Qualidade, testes e refatoração</span></h3>
-<p><strong>4 meses · pré-requisito: trilha 3</strong></p>
-<p><strong>Livro-espinha:</strong> <em>Unit Testing: Principles, Practices, and Patterns</em> — <strong>Vladimir
-Khorikov</strong>. Escolhido no lugar dos clássicos porque é o mais rigoroso sobre a pergunta que
-importa — o que torna um teste valioso — e porque os exemplos são em C#, o que elimina
-atrito de tradução no seu caso.</p>
-<p><strong>Apoio:</strong>
-- <em>Test-Driven Development by Example</em> — <strong>Kent Beck</strong>. Curto, original, e diferente do TDD que se prega hoje.
-- <em>Growing Object-Oriented Software, Guided by Tests</em> — <strong>Freeman &amp; Pryce</strong>. O TDD de fora para dentro, com testes de aceitação guiando o desenho.
-- <em>xUnit Test Patterns</em> — <strong>Gerard Meszaros</strong>. Consulta: o dicionário de dublês e cheiros de teste.
-- <em>Accelerate</em> — <strong>Forsgren, Humble, Kim</strong>. A base empírica das métricas DORA, e o argumento de que qualidade e velocidade não se opõem.</p>
-<p><strong>Projeto:</strong> pegar um módulo legado sem teste algum e cobri-lo com testes de
-caracterização até poder refatorá-lo com segurança. Meça antes e depois: tempo de ciclo,
-taxa de falha em mudança.</p>
-<p><strong>Marco verificável:</strong> você consegue defender, com dados do seu próprio projeto, por que
-sua pirâmide de testes tem a forma que tem — e sabe apresentar o argumento contrário.</p>
-<p><strong>Escrita:</strong> um texto sobre cobertura como métrica e como armadilha.</p>
-
-</section><section class="trilha"><h3 id="trilha-5-plataforma-confiabilidade-e-seg"><span class="tnum">Trilha 5</span><span class="ttl">Plataforma, confiabilidade e segurança</span></h3>
-<p><strong>3 a 4 meses · pré-requisito: trilha 2 · você já está forte aqui</strong></p>
-<p>Trilha curta de propósito: é onde sua experiência já cobre a maior parte. O objetivo é
-formalizar e preencher o que a prática não ensina — sobretudo segurança e confiabilidade
-como disciplinas, não como ferramentas.</p>
-<p><strong>Livro-espinha:</strong> <em>Site Reliability Engineering</em> — <strong>Google</strong> (gratuito). SLI, SLO,
-orçamento de erro, post-mortem sem culpado, trabalho manual como dívida.</p>
-<p><strong>Apoio:</strong>
-- <em>Continuous Delivery</em> — <strong>Jez Humble &amp; David Farley</strong>. O livro fundador do que você faz todo dia; vale pelo raciocínio, não pelas ferramentas.
-- <em>The DevOps Handbook</em> — <strong>Kim, Humble, Debois, Willis</strong>.
-- <em>Building Secure and Reliable Systems</em> — <strong>Google</strong> (gratuito). A ponte entre segurança e confiabilidade.
-- <em>Threat Modeling</em> — <strong>Adam Shostack</strong>. STRIDE e como conduzir a sessão.
-- <em>Security Engineering</em> (3ª ed.) — <strong>Ross Anderson</strong> (gratuito). O tratado. Consulta por capítulo.
-- <em>Terraform: Up &amp; Running</em> — <strong>Yevgeniy Brikman</strong>.</p>
-<p><strong>Projeto:</strong> definir SLI e SLO reais para um serviço em produção, instrumentar, e conduzir
-um exercício de falha controlada com post-mortem escrito.</p>
-<p><strong>Marco verificável:</strong> existe um orçamento de erro publicado, e pelo menos uma decisão de
-priorização foi tomada com base nele.</p>
-<p><strong>Escrita:</strong> o post-mortem, publicado sem nomes.</p>
-
-</section><section class="trilha"><h3 id="trilha-6-escrita-influ-ncia-e-carreira"><span class="tnum">Trilha 6</span><span class="ttl">Escrita, influência e carreira</span></h3>
-<p><strong>Contínua, do primeiro dia ao último</strong></p>
-<p>Não é uma trilha final. É a que roda em paralelo a todas as outras, porque cada uma delas
-termina em um texto.</p>
-<p><strong>Livro-espinha:</strong> <em>The Mythical Man-Month</em> — <strong>Fred Brooks</strong>. Cinquenta anos e continua
-descrevendo a sua semana.</p>
-<p><strong>Apoio:</strong>
-- <em>Peopleware</em> — <strong>Tom DeMarco &amp; Timothy Lister</strong>. Sobre por que problemas de projeto quase nunca são técnicos.
-- <em>The Pragmatic Programmer</em> (ed. de 20 anos) — <strong>Hunt &amp; Thomas</strong>. O livro de postura profissional que mais envelheceu bem.
-- <em>Staff Engineer</em> e <em>An Elegant Puzzle</em> — <strong>Will Larson</strong>. A trilha técnica sênior, que é a sua, descrita sem romantismo.
-- <em>The Manager&rsquo;s Path</em> — <strong>Camille Fournier</strong>. Leia mesmo sem querer ser gestor: descreve o outro lado da mesa.
-- <em>Docs for Developers</em> — <strong>Bhatti, Corleissen, Lambourne, Nunez, Waterhouse</strong>. Documentação como produto.
-- <em>On Writing Well</em> — <strong>William Zinsser</strong>. Escrita de não ficção. O ganho por página é maior do que o de qualquer livro técnico desta lista.
-- O framework <strong>Diátaxis</strong> (diataxis.fr) para estruturar documentação.</p>
-<p><strong>Projeto:</strong> o livro que você já está escrevendo. É o projeto desta trilha, e ele consome
-tudo das outras cinco.</p>
-<p><strong>Marco verificável:</strong> um texto seu foi citado ou usado por alguém que você não conhece.</p>
-
-</section><section class="trilha"><h3 id="os-dez-atemporais"><span class="ttl">Os dez atemporais</span></h3>
-<p>Se o tempo apertar e só couberem dez, esta é a lista — escolhida por sobreviver à mudança
-de linguagem, de plataforma e de moda:</p>
-<ol>
-<li><em>Designing Data-Intensive Applications</em> — Kleppmann</li>
-<li><em>The Mythical Man-Month</em> — Brooks</li>
-<li><em>A Philosophy of Software Design</em> — Ousterhout</li>
-<li><em>The Pragmatic Programmer</em> — Hunt &amp; Thomas</li>
-<li><em>Working Effectively with Legacy Code</em> — Feathers</li>
-<li><em>Refactoring</em> — Fowler</li>
-<li><em>The Algorithm Design Manual</em> — Skiena</li>
-<li><em>Release It!</em> — Nygard</li>
-<li><em>Site Reliability Engineering</em> — Google</li>
-<li><em>Peopleware</em> — DeMarco &amp; Lister</li>
-</ol>
-<p>Cinco deles têm mais de vinte anos. Isso não é acidente: é a tese do outro livro deste
-portal aplicada à própria bibliografia.</p>
-
-</section><section class="trilha"><h3 id="seis-regras-que-decidem-se-o-plano-funci"><span class="ttl">Seis regras que decidem se o plano funciona</span></h3>
-<p><strong>Um livro-espinha por vez.</strong> Os de apoio existem para consulta. Cinco livros em paralelo
-é o modo mais confiável de terminar nenhum.</p>
-<p><strong>Nenhuma trilha sem projeto.</strong> Leitura sem uso evapora em seis meses, e você não vai
-perceber que evaporou.</p>
-<p><strong>Escreva em público.</strong> O texto no fim de cada trilha não é enfeite: é o teste de que você
-entendeu. Explicar é o único jeito honesto de descobrir que não entendeu.</p>
-<p><strong>Não estude camada sazonal por livro.</strong> Ferramenta se aprende na documentação e no uso.
-Livro sobre ferramenta nasce desatualizado — e o tempo dele sai do seu orçamento de
-fundamentos.</p>
-<p><strong>Releia.</strong> Os livros das trilhas 3 e 6 mudam de sentido conforme sua experiência muda.
-<em>The Mythical Man-Month</em> lido aos vinte anos de carreira é outro livro.</p>
-<p><strong>Meça pelo marco, não pelas páginas.</strong> Terminar um livro não é um marco. Prever um
-comportamento por escrito e acertar, é.</p>
-
-</section><section class="trilha"><h3 id="o-que-ficou-deliberadamente-de-fora"><span class="ttl">O que ficou deliberadamente de fora</span></h3>
-<p><strong>Frontend moderno em profundidade.</strong> Você já opera React com TypeScript no nível que o
-seu trabalho exige, e essa área envelhece rápido demais para investimento de fundação.</p>
-<p><strong>Mobile.</strong> Não aparece na sua trajetória nem no seu destino aparente. Entra se o destino
-mudar.</p>
-<p><strong>Aprendizado de máquina como campo.</strong> O que importa para engenharia de software está na
-trilha 2 e no capítulo 4.3 do livro: LLM como componente de sistema, com custo, avaliação
-e não-determinismo. Formação em ML é outro currículo, não um módulo deste.</p>
-<p><strong>Certificações.</strong> Não são conhecimento; são sinalização — e sinalização tem valor real no
-mercado brasileiro. Se forem necessárias, tire-as em paralelo, sem consumir o orçamento
-das trilhas.</p>
-
-</section><section class="trilha"><h3 id="correspond-ncia-com-o-livro"><span class="ttl">Correspondência com o livro</span></h3>
-<p>Este plano e o <em>Envelhecimento Macro</em> são o mesmo mapa visto de dois ângulos: o livro
-descreve o território, o plano descreve o percurso.</p>
-<div class="tabelinha"><table>
-<thead>
-<tr>
-<th>Trilha</th>
-<th>Capítulos correspondentes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1 · Fundação</td>
-<td>1.1, 1.2, 1.4, 2.1</td>
-</tr>
-<tr>
-<td>2 · Dados e distribuídos</td>
-<td>2.2, 2.3</td>
-</tr>
-<tr>
-<td>3 · Projeto e arquitetura</td>
-<td>3.1, 1.2</td>
-</tr>
-<tr>
-<td>4 · Qualidade e testes</td>
-<td>3.3</td>
-</tr>
-<tr>
-<td>5 · Plataforma e segurança</td>
-<td>4.1, 4.2</td>
-</tr>
-<tr>
-<td>6 · Escrita e carreira</td>
-<td>1.5, 2.6, 3.4</td>
-</tr>
-</tbody>
-</table></div>
-<p>A camada 4 do livro — sazonal — não tem trilha própria de propósito. Ela se aprende
-trabalhando, e é a única parte do currículo que não vale planejar com três anos de
-antecedência.</p></section>
+<p>Trinta e nove meses. Pouco mais de três anos, no ritmo de seis a oito horas por semana —
+e ao fim deles existem duas coisas que não existiam: uma formação que cobre as lacunas
+reais do seu perfil, e um livro publicado que é a prova de que ela aconteceu.</p>
+</section><section class="bloco"><h3 id="o-que-fazer-se-atrasar"><span>O que fazer se atrasar</span></h3>
+<p>Vai atrasar. Todo plano de três anos atrasa, e a pergunta útil é o que cortar.</p>
+<p><strong>Corte escopo, nunca cadência.</strong> Três fases bem-feitas valem mais que oito atropeladas.</p>
+<p><strong>A ordem das fases 1 a 3 é inegociável.</strong> São dependências reais: não dá para escrever
+sobre arquitetura sem ter os fundamentos de distribuídos, e a trilha 2 pressupõe a
+complexidade da trilha 1.</p>
+<p><strong>As fases 6 e 7 podem trocar de lugar</strong> conforme a oportunidade — se aparecer material de
+pesquisa ou um contato acadêmico, antecipe a contextual.</p>
+<p><strong>A fase 8 fica sempre por último.</strong> Se ela for antecipada, o capítulo sobre IA estará
+desatualizado na publicação, e o livro perde exatamente o argumento que veio defender.</p></section>
   </article>
  </div>
 </div>
 
+<section class="bloco" id="publicacoes">
+  <h3 id="publicacoes-t"><span>Publicações</span></h3>
+  <p>Cada mudança no portal é um commit datado. Esta lista vem do histórico do repositório,
+  ao vivo — se ela estiver desatualizada, o portal também está.</p>
+  <div class="pubs" id="lista-pubs"><span class="aviso">Carregando o histórico…</span></div>
+</section>
+
 <footer>
-  <p><strong>Como este plano foi calibrado.</strong> Ele parte de um perfil concreto —
-  mais de uma década em missão crítica no mercado financeiro, sustentação de legado,
-  infraestrutura e entrega contínua — e por isso omite fundamentos que a experiência já
-  cobriu. Um leitor com outro ponto de partida deve refazer a trilha 0 antes de seguir a
-  ordem proposta.</p>
-  <p>Companheiro de <a href="index.html">Engenharia de Software: Envelhecimento Macro</a>.
-  O livro descreve o território; este plano descreve o percurso.</p>
+  <p><strong>Como ler este portal.</strong> O livro descreve o território; o plano de
+  estudos descreve o percurso; esta página diz em que ordem as duas coisas acontecem. A
+  regra que as une é simples: cada capítulo é validado pela trilha que o sustenta.</p>
+  <p>Conteúdo sob CC BY-SA 4.0, código sob MIT.
+  Fonte em <a href="https://github.com/al-ramos/curriculo-vivo">github.com/al-ramos/curriculo-vivo</a>.</p>
 </footer>
 <script>
 (function(){

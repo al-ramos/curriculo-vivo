@@ -29,8 +29,9 @@ concentra em 14% do currículo.
 ## Estrutura
 
 ```
-index.html                    portal — a linha do tempo que costura tudo
-livro.html                    o livro
+index.html                    o livro — página principal
+livro.html                    o livro — rota legada preservada
+portal.html                   planejamento e linha do tempo
 estudos.html                  o plano mestre de estudos
 conteudo/linha-do-tempo.md    as 8 fases, 39 meses
 conteudo/indice-v3.md         índice do livro, 21 capítulos

@@ -1,4 +1,6 @@
-<title>Envelhecimento Macro</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Currículo Vivo — Livro</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%225%22%20fill%3D%22%23F2F4F0%22%2F%3E%3Crect%20x%3D%226%22%20y%3D%224%22%20%20%20%20width%3D%2220%22%20height%3D%225.5%22%20rx%3D%221%22%20fill%3D%22%2322403A%22%2F%3E%3Crect%20x%3D%226%22%20y%3D%2210.5%22%20width%3D%2220%22%20height%3D%226.5%22%20rx%3D%221%22%20fill%3D%22%233E6B5B%22%2F%3E%3Crect%20x%3D%226%22%20y%3D%2218%22%20%20%20width%3D%2220%22%20height%3D%227.5%22%20rx%3D%221%22%20fill%3D%22%236F9481%22%2F%3E%3Crect%20x%3D%226%22%20y%3D%2226.5%22%20width%3D%2220%22%20height%3D%222.5%22%20rx%3D%221%22%20fill%3D%22%23A9C0B0%22%2F%3E%3C%2Fsvg%3E">
 <meta name="theme-color" content="#F2F4F0" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0F1312" media="(prefers-color-scheme: dark)">
@@ -60,7 +62,9 @@ h1.book em{font-style:italic;color:var(--accent)}
 .chip.on{background:var(--accent-soft);border-color:transparent;color:var(--accent)}
 
 /* ---------- controles ---------- */
-.ctrls{display:flex;flex-wrap:wrap;gap:1.1rem;margin-top:1.6rem}
+.preferencias{margin-top:1.6rem}
+.preferencias>summary{display:none}
+.ctrls{display:flex;flex-wrap:wrap;gap:1.1rem}
 .ctrl{display:flex;align-items:center;gap:.5rem}
 .ctrl>span{font-family:"IBM Plex Mono",monospace;font-size:.6rem;letter-spacing:.12em;
   text-transform:uppercase;color:var(--faint)}
@@ -335,17 +339,56 @@ footer{border-top:1px solid var(--rule);color:var(--muted);font-size:.85rem;
   padding:2.2rem 1.1rem 3.5rem;max-width:76rem;margin:0 auto}
 @media(min-width:40rem){footer{padding:2.5rem 1.5rem 4rem}}
 footer p{margin:0 0 .6rem;max-width:44rem}
+@media(max-width:39.99rem){
+  body{font-size:17px;line-height:1.72}
+  .wrap{padding:0 1rem}
+  .mast-in{padding:1.45rem 1rem 1.35rem;gap:1rem}
+  h1.book{font-size:2.15rem;line-height:1.04}
+  .dek{font-size:1rem;line-height:1.58;margin-top:.9rem}
+  .eyebrow{font-size:.64rem;line-height:1.5;margin-bottom:.75rem}
+  .preferencias{margin-top:1rem;border-top:1px solid var(--rule-soft);border-bottom:1px solid var(--rule-soft)}
+  .preferencias>summary{display:block;cursor:pointer;padding:.65rem 0;font-family:"IBM Plex Mono",monospace;
+    font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .preferencias[open]>summary{color:var(--accent)}
+  .preferencias:not([open])>.ctrls{display:none}
+  .ctrls{display:grid;gap:.55rem;padding:0 0 .75rem}
+  .ctrl{justify-content:space-between;gap:.75rem}
+  .seg{max-width:100%}
+  .seg button{font-size:.62rem;padding:.34rem .45rem}
+  .status{margin-top:.9rem}
+  .status .chip:not(.on):not(.voltar){display:none}
+  .chip{font-size:.61rem;line-height:1.45;white-space:normal}
+  .strata{display:none}
+  .layout{padding:1.35rem 0 3.5rem;gap:1.4rem}
+  details.toc{margin-bottom:1.4rem;padding:.75rem .85rem}
+  h2.camada{margin-top:3.5rem;padding-top:1.15rem}
+  section.chapter{margin-top:2.9rem}
+  section.chapter h3{gap:.55rem}
+  section.chapter h3 .ttl{font-size:1.38rem}
+  .ficha{gap:.3rem 1rem;margin-bottom:1.65rem}
+  details.sec>summary{margin:2.15rem 0 .65rem;gap:.38rem;align-items:flex-start}
+  details.sec>summary::before{margin-top:.08rem}
+  details.sec>summary h4{font-size:1.06rem;line-height:1.35}
+  .sec-corpo{padding-left:.72rem}
+  .dobrar,.tempo,.copiar{display:none}
+  .nota-btn{font-size:0;width:1.7rem;height:1.7rem;padding:0;position:relative}
+  .nota-btn::after{content:"✎";font-size:.9rem;position:absolute;inset:0;display:grid;place-items:center}
+  .marcar{width:1.2rem;height:1.2rem;margin-top:.22rem}
+  .recup{padding:.8rem .85rem;margin-top:1.5rem}
+  .roadmap{margin-top:3.5rem}
+}
+@media(min-width:40rem){.preferencias:not([open])>.ctrls{display:flex}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 <header class="masthead">
   <div class="mast-in">
     <div>
-      <div class="eyebrow"><a href="index.html">&larr; Portal</a> &nbsp;·&nbsp; volume um &nbsp;·&nbsp; <a href="estudos.html">Plano de estudos &rarr;</a></div>
+      <div class="eyebrow"><a href="portal.html">Planejamento</a> &nbsp;·&nbsp; volume um &nbsp;·&nbsp; <a href="estudos.html">Plano de estudos &rarr;</a></div>
       <h1 class="book">Engenharia de Software:<br><em>Envelhecimento Macro</em></h1>
       <p class="dek">Um currículo organizado por uma pergunta só — em quanto tempo cada
       conhecimento envelhece. Vinte e dois capítulos distribuídos em quatro camadas de
       velocidade, cada seção com data de revisão e gatilho declarados.</p>
-      <div class="ctrls">
+      <details class="preferencias"><summary>Preferências de leitura</summary><div class="ctrls">
         <div class="ctrl"><span>Tema</span>
           <div class="seg" role="group" aria-label="Tema">
             <button type="button" data-tema="auto">Auto</button>
@@ -372,7 +415,7 @@ footer p{margin:0 0 .6rem;max-width:44rem}
             <button type="button" data-ficha="on">Mostrar</button>
             <button type="button" data-ficha="off">Ocultar</button>
           </div></div>
-      </div>
+      </div></details>
       <div class="status">
         <span class="chip on">Camadas 0 a 2 e 3.1–3.2 escritas · 13 de 22 capítulos</span>
         <span class="chip">~34.000 palavras</span>
@@ -2976,9 +3019,9 @@ Geral</em></a>, a partir de 2003.</p><div class="recup"><h5>Recuperação</h5><p
 </div>
 <input type="file" id="sinc-arquivo" accept="application/json,.json" hidden>
 <footer>
-  <p><strong>Estado desta publicação.</strong> Texto integral das camadas 0 e 1; índice
-  completo das camadas 2 a 4. As datas e atribuições das fontes primárias ainda não foram
-  conferidas contra as edições originais.</p>
+  <p><strong>Estado desta publicação.</strong> Texto integral das camadas 0 a 2 e dos
+  capítulos 3.1 e 3.2; índice dos capítulos 3.3 a 4.3. As datas e atribuições das fontes
+  primárias ainda não foram conferidas contra as edições originais.</p>
   <p>Classificação por eixo único de velocidade (índice v3). O assunto de cada capítulo é
   etiqueta na ficha, não divisão estrutural. Cada capítulo tem slug estável — a numeração
   é apenas exibição, para que renumerações futuras não quebrem links.</p>
