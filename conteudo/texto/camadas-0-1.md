@@ -1409,9 +1409,10 @@ dia da reversão.
 
 ### 2.2.8 Do campo: bases críticas em Sybase e SQL Server em produção contínua
 
-*Esta seção é relato de campo. As afirmações abaixo são o argumento; os episódios concretos que as
-sustentam entram na revisão — a regra da seção 1.3.4 vale aqui com força particular, porque
-experiência pessoal é a evidência mais fácil de generalizar indevidamente.*
+*Esta seção é relato de campo delimitado às regularidades que a experiência permite sustentar.
+Episódios não documentados não são reconstruídos nem usados como prova: a regra da seção 1.3.4
+vale aqui com força particular, porque experiência pessoal é a evidência mais fácil de generalizar
+indevidamente.*
 
 Sybase e SQL Server compartilham ancestral: o Microsoft SQL Server nasceu, no fim dos anos 1980,
 de um acordo de licenciamento sobre o código do Sybase, e as bases seguiram caminhos separados
