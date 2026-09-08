@@ -22,8 +22,8 @@ concentra em 14% do currículo.
 
 ## Estado
 
-- Camadas 0 a 2: texto integral (11 de 22 capítulos)
-- Capítulos 3.1 a 4.3: índice completo, texto pendente
+- Camadas 0 a 2 e capítulos 3.1–3.2: texto integral (13 de 22 capítulos)
+- Capítulos 3.3 a 4.3: índice completo, texto pendente
 - Fontes primárias da Camada 2 incorporadas ao texto; revisão bibliográfica continua a cada ciclo
 
 ## Estrutura

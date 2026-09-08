@@ -356,8 +356,6 @@ for cam,nome,cor,n,hv in BANDS:
 
 ROADMAP = [
  ("3","Cíclico","5–15 anos",[
-   ("3.1","Arquitetura de software","10 seções",0),
-   ("3.2","Processos e metodologias","erosão · 8 seções",0),
    ("3.3","Qualidade, testes e débito técnico","9 seções",0),
    ("3.4","Ética, legislação e impacto","7 seções",0),
    ("3.5","O ensino formal","7 seções",0),
@@ -404,7 +402,7 @@ for _, tipo, idd, a, b in marcas:
 if em_sub: partes.append('</div>')
 if em_grupo: partes.append('</div>')
 partes.append('<div class="grp"><span>A escrever</span>'
-              '<a class="cap" href="#roteiro">Capítulos 3.1 a 4.3</a></div></nav>')
+              '<a class="cap" href="#roteiro">Capítulos 3.3 a 4.3</a></div></nav>')
 RAIL = ''.join(partes)
 
 HTML = HEAD + f"""
@@ -445,8 +443,8 @@ HTML = HEAD + f"""
           </div></div>
       </div>
       <div class="status">
-        <span class="chip on">Camadas 0 a 2 escritas · 11 de 22 capítulos</span>
-        <span class="chip">~21.000 palavras</span>
+        <span class="chip on">Camadas 0 a 2 e 3.1–3.2 escritas · 13 de 22 capítulos</span>
+        <span class="chip">~34.000 palavras</span>
         <span class="chip">Índice v3</span>
         <span class="chip data" id="chip-data">—</span>
       </div>
@@ -478,13 +476,15 @@ HTML = HEAD + f"""
      <a href="#c2-4">2.4 · Linguagens de programação</a>
      <a href="#c2-5">2.5 · Requisitos, produto e IHC</a>
      <a href="#c2-6">2.6 · Comportamento e carreira</a>
-     <a href="#roteiro">Capítulos 3.1 a 4.3 · a escrever</a>
+     <a href="#c3-1">3.1 · Arquitetura de software</a>
+     <a href="#c3-2">3.2 · Processos e metodologias</a>
+     <a href="#roteiro">Capítulos 3.3 a 4.3 · a escrever</a>
    </details>
    {body}
    <div class="roadmap" id="roteiro">
      <h2 class="camada" style="border:0;padding:0;margin:0 0 .5rem">
-       <span class="cnum">A escrever</span><span class="cname">Capítulos 3.1 a 4.3</span></h2>
-     <p style="color:var(--muted);font-size:.95rem">Dez capítulos com a ficha definida
+       <span class="cnum">A escrever</span><span class="cname">Capítulos 3.3 a 4.3</span></h2>
+     <p style="color:var(--muted);font-size:.95rem">Oito capítulos com a ficha definida
      e o texto pendente. A ordem de escrita segue a regra do plano: fichas antes de prosa.</p>
      {rm}
    </div>

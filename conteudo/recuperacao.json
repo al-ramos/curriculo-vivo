@@ -152,155 +152,227 @@
     "Concorrência estrutura atividades que progridem em períodos sobrepostos; paralelismo executa atividades simultaneamente. Todo modelo precisa declarar propriedade do estado, cancelamento, propagação de erro, ordem e controle da pressão entre produtor e consumidor."
   ],
   "s2-2-1": [
-    "Qual é o propósito da normalização e quando desnormalizar deixa de ser improviso?",
-    "Normalização organiza fatos segundo suas dependências para evitar anomalias de inserção, atualização e exclusão. Desnormalizar vira engenharia quando há uma carga medida e se declaram autoridade, sincronização, atraso tolerável e reconstrução das cópias."
+    "Por que a ordem importa: normalizar primeiro e desnormalizar depois, e não o contrário?",
+    "Porque só uma das duas operações é barata de desfazer. Desnormalizar um esquema normalizado é decisão local, tomada com medição e reversível. Normalizar um esquema que nasceu achatado exige descobrir dependências funcionais em dados que já divergiram — arqueologia que costuma custar mais que reescrever a aplicação."
   ],
   "s2-2-2": [
-    "Por que snapshot isolation não é sinônimo de serialização?",
-    "Porque uma fotografia coerente pode permitir write skew: transações concorrentes atualizam itens diferentes e, juntas, violam um invariante. O isolamento deve ser escolhido a partir das anomalias que o domínio não tolera."
+    "Seu banco está em read committed e você acredita ter serializabilidade. Que classe de defeito isso produz, e por que ele é difícil de reproduzir?",
+    "Produz violação de invariante por concorrência — o caso clássico é a escrita enviesada, em que duas transações leem o mesmo estado, cada uma decide algo válido isoladamente, e a combinação quebra uma regra que nenhuma delas quebrou sozinha. É difícil de reproduzir porque depende de uma janela temporal estreita: em baixa concorrência o defeito não aparece, e surge quando o volume cresce, como um dado impossível sem passo a passo."
   ],
   "s2-2-3": [
-    "O que permaneceu do movimento NoSQL e que promessa não resistiu?",
-    "Permaneceram modelos especializados, particionamento horizontal, replicação administrada e atenção a padrões de acesso e consistência. Não resistiu a oposição simples entre SQL e escala nem a ideia de que ausência de DDL elimina esquema."
+    "O que exatamente está errado no adjetivo schemaless?",
+    "Não existe dado sem esquema — existe esquema não declarado. Tirar o esquema do banco não o elimina: move para o código da aplicação, e para todas as versões da aplicação que já escreveram naquela coleção. Ele deixa de ser verificado na escrita e passa a ser descoberto na leitura, em geral por um if defensivo escrito depois do incidente."
   ],
   "s2-2-4": [
-    "Qual pergunta deve anteceder a escolha de um modelo de dados especializado?",
-    "Qual operação crítica ficará naturalmente mais barata, sob qual volume, consistência, retenção e padrão de acesso. Se essa vantagem não pode ser nomeada, a especialização provavelmente acrescenta custo sem remover o gargalo."
+    "Qual é a pergunta certa ao escolher um modelo de dados, e por que o modelo de documento é o mais escolhido pelo motivo errado?",
+    "A pergunta não é qual modelo é melhor, e sim qual consulta é quente e qual pode ser respondida devagar — cada modelo é uma aposta em um padrão de acesso. O documento é escolhido pelo motivo errado porque a fase inicial premia a ausência de migração; o agregado, porém, é uma decisão irreversível disfarçada de conveniência, e a conta chega quando o agregado errado já tem volume."
   ],
   "s2-2-5": [
-    "O que CAP realmente limita e por que consistência precisa de sobrenome?",
-    "Durante uma partição, não se pode garantir ao mesmo tempo resposta bem-sucedida de todos os lados e consistência linearizável. Consistência precisa de sobrenome porque linearizável, causal, read-your-writes e eventual oferecem observações diferentes."
+    "Por que a leitura de CAP como escolha dois entre três é falsa? O que o PACELC acrescenta?",
+    "Porque tolerância a partição não é opção de projeto: a partição é um evento que a rede impõe. CAP só diz que, durante uma partição, escolhe-se entre responder com dado possivelmente velho e não responder — fora dela, dá para ter consistência forte e disponibilidade. O PACELC acrescenta a metade que descreve o dia a dia: fora da partição ainda se escolhe entre latência e consistência, porque esperar a confirmação das réplicas é permanente e partições são raras."
   ],
   "s2-2-6": [
-    "Diferencie OLTP e OLAP e explique o limite do termo lakehouse.",
-    "OLTP otimiza muitas mudanças pequenas, concorrentes e de baixa latência; OLAP otimiza varreduras e agregações amplas. Lakehouse descreve uma convergência técnica útil, mas não elimina decisões de catálogo, semântica, motor, qualidade e propriedade."
+    "Separe o permanente do sazonal na história warehouse → lake → lakehouse.",
+    "Permanente: separar a carga transacional da analítica (o conflito é físico — poucas linhas com latência baixa contra varredura de milhões em poucas colunas), declarar a transformação, definir granularidade e manter linhagem. Sazonal: os nomes das plataformas e a promessa recorrente, a cada oito ou dez anos, de unificar as duas cargas sem custo. O lakehouse é reconquista, não invenção: devolve ao lago as garantias de que o armazém já dispunha."
   ],
   "s2-2-7": [
-    "Quais são as três etapas de expandir–migrar–contrair?",
-    "Primeiro adiciona-se uma forma compatível; depois movem-se dados, escritas e leituras com verificação; só então remove-se a forma antiga. A sequência permite convivência de versões e reduz a necessidade de rollback destrutivo."
+    "Descreva expandir e contrair. Qual passo costuma ser pulado e qual propriedade se perde com isso?",
+    "Expandir: criar a estrutura nova sem remover a antiga e escrever nas duas. Migrar: passar a ler da nova, com a antiga intacta e o código anterior ainda funcionando. Contrair: remover a antiga quando nenhuma versão em produção depende dela. O passo do meio é o pulado, e com ele se perde a coexistência de duas versões da aplicação sobre o mesmo banco — condição de qualquer implantação gradual e de qualquer reversão. Sem ela, a janela de indisponibilidade cai exatamente no momento em que seria preciso reverter."
   ],
   "s2-2-8": [
-    "Qual é a principal lição de operar bases críticas antigas em produção contínua?",
-    "Estabilidade e conhecimento operacional são ativos, não justificativas para imobilidade. Mudanças seguras isolam estrutura de dados, usam lotes e métricas, preservam invariantes e migram por fatias verificáveis."
+    "Uma base em Sybase com a regra de negócio em procedimento armazenado: por que a decisão original era correta e o que ela cobra depois?",
+    "Era correta porque dava garantia transacional, evitava tráfego de rede por linha e concentrava a regra num ponto único para clientes escritos em linguagens diferentes. Cobra depois: o banco vira dependência que não se testa isoladamente, o código escapa do versionamento e da revisão do resto da equipe, e trocar de motor deixa de ser mudança de dialeto para virar reescrita. É a Lei de Conway pelo lado dos dados — quem tinha permissão de escrever ficou registrado no lugar onde a regra foi parar."
   ],
   "s2-2-9": [
-    "Por que distância vetorial não deve ser tratada como verdade?",
-    "Porque ela expressa semelhança no espaço aprendido por um modelo e uma tarefa. Recuperação precisa ser avaliada por relevância, filtros, frescor, autorização e evidência, geralmente combinando sinais semânticos e lexicais."
+    "Por que distância vetorial não deve ser tratada como verdade, e como busca híbrida reduz essa limitação?",
+    "Distância expressa semelhança no espaço aprendido por um modelo e uma tarefa; não prova significado nem veracidade. Busca híbrida combina o sinal semântico com correspondência lexical, filtros e reordenação, e deve ser avaliada por relevância, recall, latência, frescor e autorização em perguntas reais."
   ],
   "s2-2-10": [
     "O que um contrato de dados precisa declarar além do esquema?",
-    "Semântica, unidade, chave, tempo, significado de ausência, propriedade, compatibilidade, qualidade, atraso, retenção e sensibilidade. Um registro de esquema automatiza tipos; não detecta uma mudança de significado."
+    "Semântica, unidade, chave, tempo, significado de ausência, propriedade, compatibilidade, qualidade, atraso, retenção e sensibilidade. Um registro de esquema automatiza tipos; não detecta que uma medida mudou de significado."
   ],
   "s2-3-1": [
-    "Para que servem as oito falácias da computação distribuída?",
-    "Elas expõem premissas falsas sobre confiabilidade, latência, banda, segurança, topologia, administração, custo e homogeneidade da rede, transformando conveniências implícitas em contratos e cenários testáveis."
+    "Por que os oito itens da lista parecem óbvios isoladamente e ainda assim continuam sendo violados?",
+    "Porque todos os oito são verdadeiros dentro de um processo. Uma chamada de função não perde pacote, não custa milissegundos, não é interceptada e não muda de destino no meio. Programar distribuído é desaprender oito hábitos que a programação local ensinou como naturais — e o sinal de alerta é a abstração que não deixa onde declarar timeout, política de repetição e comportamento em falha: ela não removeu essas decisões, tomou-as por você."
   ],
   "s2-3-2": [
-    "Como latência, throughput e fila se relacionam?",
-    "Latência mede o tempo por operação e throughput a taxa concluída; aumentar concorrência melhora vazão só até a capacidade. Pela Lei de Little, concorrência média equivale à taxa vezes o tempo; quando chegada supera saída, timeout não cria capacidade e a fila cresce."
+    "Acrescentar paralelismo reduz latência? E o que a média esconde na cauda?",
+    "Não: paralelismo aumenta vazão e não move o piso de latência — dez conexões não fazem a luz andar mais rápido; sobre recurso saturado, ainda aumenta a latência porque a fila cresce. A média esconde que a experiência mora na cauda: com leque de cem chamadas paralelas e uma chance em cem de cada uma estar lenta, a maioria das requisições encontra pelo menos uma lenta. O p99 do componente vira o caso típico da requisição composta."
   ],
   "s2-3-3": [
-    "Por que um timeout produz incerteza e quais controles tornam retry seguro?",
-    "Sem resposta, o pedido pode não ter chegado, estar rodando ou ter concluído. Retry pede operação idempotente, deadline, backoff com jitter, limite de tentativas e um único nível responsável por repetir."
+    "Um cliente não recebe resposta. Quais são as três situações possíveis, e por que repetir sem idempotência é perigoso?",
+    "A requisição pode ter se perdido na ida, ter sido processada com a resposta perdida na volta, ou estar sendo processada agora — indistinguíveis do lado do cliente. Repetir sem idempotência aplica o efeito duas vezes: é corrupção de dados com passos adicionais. A repetição também amplifica carga sobre quem já está degradado, produzindo falha metaestável — o incidente continua depois que o gatilho acabou. Correções: recuo exponencial, aleatorização e orçamento de tentativa por caminho, não por camada."
   ],
   "s2-3-4": [
-    "Qual é a diferença entre ordenação causal, quórum e consenso?",
-    "Ordenação causal preserva relações de influência; quórum consulta subconjuntos que se intersectam; consenso faz participantes não faltosos concordarem com uma decisão. Nenhum deles substitui automaticamente os demais."
+    "Por que a resolução de conflito por última escrita vence é perigosa, e o que Lamport propôs no lugar do tempo físico?",
+    "Porque desempata com relógios que ninguém audita: um nó adiantado faz escritas legítimas mais novas serem descartadas em favor de antigas, em silêncio e sem erro — um dos poucos mecanismos que perde dado confirmado sem emitir sinal. Lamport propôs abandonar o tempo físico e definir ordem por causalidade: um evento acontece-antes de outro se o precede no mesmo processo ou se há mensagem entre eles; eventos sem essa relação são concorrentes e não têm ordem, porque a pergunta não faz sentido."
   ],
   "s2-3-5": [
-    "Por que exactly-once precisa sempre declarar escopo?",
-    "Porque uma transação pode cobrir um log e seu estado, mas não necessariamente banco externo, e-mail ou mundo físico. Fora da fronteira, redelivery, idempotência e reconciliação continuam necessários."
+    "Por que exatamente uma vez não existe como propriedade da rede, e o que existe no lugar?",
+    "Pelo problema dos dois generais: saber que a mensagem chegou exige confirmação, saber que a confirmação chegou exige outra, e a recursão não termina — em nenhum ponto finito os dois lados compartilham certeza. Existe o efeito de uma vez só: entrega pelo menos uma vez com processamento idempotente no destino. Quando um sistema de mensageria anuncia exactly-once, o que oferece é transação dentro do próprio domínio; ao tocar um efeito externo, a garantia termina na fronteira."
   ],
   "s2-3-6": [
-    "Que falhas circuit breaker, bulkhead e backpressure procuram conter?",
-    "Circuit breaker evita insistir num destino degradado; bulkhead impede que uma carga consuma todos os recursos; backpressure faz a demanda respeitar a capacidade do consumidor. Os três precisam ser testados em conjunto com filas, timeouts e retries."
+    "Qual é o objetivo comum dos padrões de resiliência? Por que rejeitar trabalho é recurso de projeto?",
+    "Impedir que uma falha local vire global. Rejeitar é recurso de projeto porque, sem contrapressão, a fila cresce sem limite — e fila sem limite não amortece, amplifica latência até faltar memória. Um sistema que aceita tudo promete o que não pode cumprir e degrada uniformemente, respondendo devagar para todos em vez de bem para quem consegue atender. Descartar cedo e por prioridade, com prazo propagado como orçamento a cada salto, é preferível."
   ],
   "s2-3-7": [
-    "Por que fundamentos distribuídos são geracionais e estilos arquiteturais são cíclicos?",
-    "Topologias oscilam conforme custos e organizações; física, falha parcial, discordância de relógios e custo de coordenação permanecem. Aprender os limites permite avaliar cada nova forma sem confundi-la com garantia."
+    "Qual o critério que separa este capítulo do 3.1, e por que a ordem de estudo é assimétrica?",
+    "O fundamento não muda de substância — falácias de 1994, acontece-antes de 1978, FLP de 1985 descrevem 2026 sem ajuste — enquanto estilos de arquitetura oscilam em ciclos de cinco a quinze anos, com retornos. A assimetria: quem aprende o fundamento e depois o estilo consegue avaliar o estilo — onde está a falha parcial, quanto consenso o desenho exige, quem exerce contrapressão. Quem aprende só o estilo redescobre cada falha pela via cara e fica sem nada transferível quando a moda passa."
   ],
   "s2-4-1": [
-    "Por que as gerações de linguagem devem ser lidas como narrativa, não como substituição linear?",
-    "Porque a taxonomia varia e todas as gerações continuam coexistindo: assembly em fronteiras, linguagens de alto nível, SQL e lógica dentro dos mesmos sistemas. Cada salto muda o nível de abstração e a responsabilidade do tradutor."
+    "Até onde a taxonomia por gerações descreve, e a partir de onde ela vira artefato de ementa?",
+    "Descreve bem até a terceira geração e razoavelmente a quarta, cujo sobrevivente é o SQL, por ser genuinamente declarativo. A quinta ficou órfã quando a ambição de IA dos anos 1980 não se cumpriu, e a sexta nunca teve definição estável — já serviu para redes neurais, linguagens visuais e assistência por modelo de linguagem. Um esquema que precisa ser reinterpretado a cada década para acomodar o presente parou de descrever e virou vocabulário cerimonial."
   ],
   "s2-4-2": [
-    "Quais forças levam uma linguagem da emergência à manutenção?",
-    "Problema oportuno e implementação iniciam adoção; ferramentas, bibliotecas e comunidade permitem crescimento; compatibilidade domina o platô; novas cargas reduzem uso até nicho e manutenção. A base instalada governa o custo de saída."
+    "O que de fato mata uma linguagem? Dê dois exemplos.",
+    "Não é uma linguagem melhor: é o desaparecimento da plataforma ou do nicho que a sustentava. ActionScript não perdeu para outra linguagem, perdeu com o fim do Flash; Visual Basic 6 não perdeu em comparação técnica, perdeu quando a Microsoft mudou de plataforma. A implicação prática é que avaliar o risco de longo prazo de uma linguagem é avaliar a saúde e a independência da plataforma à qual ela está amarrada."
   ],
   "s2-4-3": [
-    "O que a longevidade do COBOL ensina sobre linguagens atuais?",
-    "O valor está nas regras, dados, integrações e operação acumulados, não na sintaxe. Qualquer tecnologia pode virar legado; testes de comportamento, contratos e fronteiras interoperáveis reduzem o custo de sua futura troca."
+    "Três forças mantêm COBOL vivo. Quais são, e o que elas generalizam?",
+    "Assimetria de risco — reescrever o que movimenta dinheiro tem prejuízo ilimitado e ganho limitado; a regra de negócio não está documentada fora do código, o que torna a reescrita uma pesquisa arqueológica; e ele é bom no que faz, com aritmética decimal exata que a auditoria exige. Generaliza assim: o que mantém um sistema vivo não é a qualidade da tecnologia, é o custo de substituí-lo comparado ao benefício. Todo software moderno de hoje será o legado de alguém em vinte anos, se der certo."
   ],
   "s2-4-4": [
-    "Por que o gerenciador de pacotes faz parte da decisão de linguagem?",
-    "Porque ele importa um grafo de versões, manutenção, licença, proveniência e risco transitivo. Lockfiles ajudam reprodutibilidade, mas não provam segurança nem saúde futura do ecossistema."
+    "Por que a escolha de linguagem é decisão de cadeia de suprimentos, e por que biblioteca padrão abrangente importa?",
+    "Porque o gerenciador de pacotes resolveu o reúso e criou a dependência transitiva: vinte dependências declaradas viram mil e duzentas instaladas, cada uma executando com os privilégios do seu código, sob governança não verificada — o incidente do pacote de onze linhas removido do npm em 2016 expôs que ninguém sabia que dependia dele. Biblioteca padrão abrangente não é conforto: é árvore de dependências rasa, menos superfície de ataque e menos manutenção."
   ],
   "s2-4-5": [
-    "Que valor e que limite runtimes como JVM, CLR e WASM compartilham?",
-    "Eles estabilizam uma máquina intermediária e ampliam portabilidade e interoperabilidade. Não apagam diferenças de sistema, tipos, recursos nativos, coleta, versões nem as garantias da fronteira entre componentes."
+    "Por que apostar no runtime costuma ser mais seguro do que apostar na linguagem?",
+    "Porque o runtime sobrevive à linguagem que o originou: a JVM foi construída para Java e hoje hospeda Kotlin, Scala e Clojure, compartilhando coletor, modelo de memória e ferramental — migrar de Java para Kotlin é trocar de sintaxe sobre a mesma plataforma, o que torna a migração incremental e barata. A CLR repetiu o padrão. A lição: ao avaliar longevidade, olhe uma camada abaixo do que está sendo vendido."
   ],
   "s2-4-6": [
-    "Como distinguir escolha de linguagem de escolha de moda?",
-    "A escolha de engenharia parte de restrições, pondera evidências de ecossistema e operação, testa o maior risco, contabiliza diversidade e registra gatilhos de revisão e saída. Moda substitui esse contexto por popularidade."
+    "Cite três dos critérios de escolha e diga por que índices de popularidade não servem.",
+    "Evidência de uso em produção na sua escala, contada por quem operou; governança de quem mantém, e o que acontece se essa parte perder o interesse; histórico de compatibilidade — Python 2 para 3 levou uma década, contra a promessa explícita de Go; capacidade de contratar e formar; e custo de saída. Índices de popularidade medem atenção, não adequação, e não respondem a nenhum desses — usá-los é terceirizar arquitetura para uma métrica que ninguém auditou."
   ],
   "s2-4-7": [
-    "O que WIT e o modelo de capacidades acrescentam ao WebAssembly?",
-    "WIT descreve interfaces, imports, exports e mundos entre componentes; o hospedeiro concede capacidades específicas. Isso amplia composição e menor autoridade por padrão, mas não torna código confiável nem substitui toda a operação de contêineres."
+    "O que WIT e o modelo de capacidades acrescentam ao WebAssembly, e qual limite permanece?",
+    "WIT descreve interfaces, importações, exportações e mundos entre componentes; o hospedeiro concede capacidades específicas. Isso amplia composição e menor autoridade por padrão, mas não torna código confiável, não corrige uma capacidade ampla e não substitui redes, identidade, armazenamento ou operação."
   ],
   "s2-5-1": [
-    "Como descoberta separa problema, interpretação e solução?",
-    "Ela registra observações, formula explicações como hipóteses e testa propostas por valor, usabilidade, viabilidade e sustentabilidade. Assim, um pedido de solução deixa de ser confundido com a necessidade que o originou."
+    "Qual a diferença entre o pedido e o problema, e que tipo de pergunta produz informação em vez de especulação?",
+    "O pedido é uma solução já escolhida por quem tem o problema — pedir um botão de exportar pode significar que a pessoa precisa conferir números com um colega sem acesso ao sistema. Perguntas sobre o passado observável produzem informação: o que faz hoje, quando fez a última vez, quanto tempo levou, o que deu errado. Perguntas sobre preferência futura produzem especulação educada. O produto do levantamento é um enunciado do problema que sobrevive à mudança de solução."
   ],
   "s2-5-2": [
-    "Como transformar um atributo de qualidade vago em requisito útil?",
-    "Nomeando fonte, estímulo, ambiente, artefato, resposta e medida. O cenário torna custo e conflito observáveis e permite aceitar ou testar, em vez de apenas desejar que o sistema seja rápido, seguro e disponível."
+    "Por que não funcional é um nome ruim, e o que falta para uma intenção virar requisito?",
+    "Porque sugere secundário, quando são justamente esses os requisitos que determinam a arquitetura — cadastrar cliente se faz em qualquer desenho; latência, volume, disponibilidade e regulação é que decidem. Vira requisito quando tem cenário: sob qual carga, medido em qual percentil, em qual caminho de código, com qual valor-limite, e o que acontece ao ultrapassá-lo. Falsificável, e com o comportamento de falha declarado."
   ],
   "s2-5-3": [
-    "Qual é a fronteira entre história, critério de aceite e teste?",
-    "História convida à conversa sobre valor; critério delimita comportamento observável; testes produzem evidência em vários níveis. Um exemplo automatizado não substitui qualidade, segurança, desempenho nem usabilidade."
+    "Cartão, conversa e confirmação: qual é a menos importante, e onde o critério de aceite encosta no teste?",
+    "O cartão é a menos importante — a história nasceu como dispositivo de conversa, e a degradação previsível a transformou em especificação em miniatura sem conversa nenhuma. O critério de aceite é a confirmação: observável de fora, sem mencionar implementação, incluindo os casos de erro. Ele encosta no teste quando é escrito em formato executável — mas o ganho real não é a automação, é ter forçado a conversa sobre exemplos concretos antes do código."
   ],
   "s2-5-4": [
-    "Por que as heurísticas de Nielsen não são uma certificação de boa experiência?",
-    "Porque são princípios gerais para orientar julgamento e encontrar violações prováveis. Usabilidade depende de pessoa, tarefa e contexto e precisa também de observação com usuários reais."
+    "Cite as três heurísticas mais violadas por software corporativo e o conceito que amarra todas.",
+    "Visibilidade do estado — operação demorada sem sinal transfere ao usuário a incerteza entre lento e quebrado, e ele clica de novo, gerando a duplicata que a aplicação não trata; prevenção de erro, sempre mais barata que boa mensagem de erro; e recuperação de erro, que precisa dizer o que houve, por que, e qual é o próximo passo. O conceito que amarra é o modelo mental: o usuário constrói uma teoria a partir do que a interface mostra, e quase todo problema de usabilidade é um dos dois golfos de Norman."
   ],
   "s2-5-5": [
-    "Por que acessibilidade e internacionalização não funcionam bem como retrofit?",
-    "Porque semântica, foco, teclado, conteúdo, plural, direção, datas e formatos são decisões estruturais. Incluí-las nos requisitos orienta componentes e arquitetura; uma camada tardia não reconstrói essas bases."
+    "Por que acessibilidade não pode ser adicionada depois?",
+    "Porque depende de semântica: um botão precisa ser um botão para que a tecnologia assistiva o anuncie, o foco precisa seguir uma ordem coerente, o estado precisa ser exposto de forma programática. Interface montada com elementos genéricos e comportamento à mão precisa ser reconstruída, não ajustada. E é qualidade para todos, não atendimento a minoria: contraste serve a quem tem baixa visão e a quem está no sol. No Brasil ainda é exigência legal, com base na Lei Brasileira de Inclusão."
   ],
   "s2-5-6": [
-    "Que cuidados permitem a uma pessoa não designer fazer pesquisa útil?",
-    "Partir de pergunta de aprendizagem, recrutar o contexto certo, obter consentimento, perguntar por comportamento passado, evitar indução, separar observação de interpretação e limitar conclusões ao método e à amostra."
+    "Qual a regra que quase todo iniciante quebra num teste de usabilidade, e por que métrica de uso não basta?",
+    "Intervir: no instante em que se explica, o dado é perdido, porque a pergunta é justamente se a pessoa consegue sozinha. Métrica de uso diz o que acontece e não diz por que — inferir motivo a partir de comportamento agregado é o erro mais comum de equipe técnica com acesso a dados. E qualquer coleta que permita identificar alguém é tratamento de dado pessoal, o que traz a LGPD para dentro da decisão de instrumentação."
   ],
   "s2-5-7": [
-    "Por que conhecimento de negócio aumenta a longevidade profissional?",
-    "Porque permite reenquadrar necessidades em novas tecnologias, distinguir invariante de acidente histórico e conectar falha e qualidade ao impacto real. A ferramenta muda mais rápido que o fluxo de valor."
+    "Por que um capítulo sobre requisitos aparece num livro sobre envelhecimento de conhecimento?",
+    "Porque conhecimento de domínio é o ativo profissional que envelhece mais devagar de todos: regras de liquidação, apuração de tributo e concessão de crédito mudam em ritmo de legislação, não de tecnologia. Quem entende o domínio permanece útil depois de duas trocas completas de stack, e a recíproca não vale. Quem se define pela tecnologia recomeça a cada ciclo; quem acumula domínio soma."
   ],
   "s2-6-1": [
-    "Em que sentido comportamento funciona como infraestrutura?",
-    "Confiança, clareza e responsabilidade sustentam circulação de informação, contestação e correção. Quando falham, riscos ficam ocultos e a capacidade coletiva cai, mesmo que a arquitetura formal permaneça."
+    "Em que sentido comportamento é infraestrutura? Dê dois mecanismos.",
+    "No sentido literal de que o sistema construído depende dele. Lei de Conway: equipes que não conversam produzem acoplamento por contorno — um campo sobrecarregado, uma tabela compartilhada em segredo —, de modo que problema de comunicação vira dívida técnica com endereço no código. Segurança psicológica: equipes seguras relatam mais incidentes e sofrem menos dano, o que significa que poucos incidentes reportados podem indicar excelência ou silêncio, e os dois se parecem no painel."
   ],
   "s2-6-2": [
-    "O que diferencia conflito produtivo de conflito destrutivo?",
-    "O produtivo discute tarefa, evidência e trade-off sob critérios claros; o destrutivo atribui intenção ou valor à pessoa. Feedback específico sobre comportamento e efeito permite corrigir sem rotular identidade."
+    "O que uma boa revisão de código separa, e o que torna o conflito técnico produtivo?",
+    "Separa defeito, risco, preferência de estilo e sugestão opcional — o custo real não é a rispidez, é a ambiguidade sobre o que é obrigatório. O conflito vira produtivo quando o critério é explicitado: duas pessoas que discordam sobre arquitetura quase sempre estão otimizando atributos de qualidade diferentes sem ter dito qual. Nomear o critério converte disputa de opinião em escolha de trade-off, que é decidível — e é para isso que serve o ADR."
   ],
   "s2-6-3": [
-    "Como autonomia, propriedade e senioridade se relacionam sem produzir heroísmo?",
-    "Autonomia avança dentro de intenção e risco; propriedade cuida do resultado e o torna operável por outros; senioridade amplia consequências e capacidade coletiva. Heroísmo concentra conhecimento, enquanto senioridade reduz dependência."
+    "O que de fato distingue níveis de senioridade, e o que é propriedade?",
+    "O tamanho e a ambiguidade do problema que a pessoa absorve: executar tarefa definida; resolver problema definido, escolhendo o caminho; delimitar problema mal definido, negociando o que fica de fora; e identificar qual problema vale a pena resolver, o que envolve dizer não. Propriedade não é exclusividade sobre um código, que é antipadrão: é considerar-se responsável pelo resultado depois da entrega. A fronteira entre minha parte está pronta e o problema está resolvido é a que mais separa níveis."
   ],
   "s2-6-4": [
-    "Por que gestão não é a promoção natural da trilha técnica?",
-    "Porque gestão trabalha por contexto, equipe, alocação e desempenho; contribuição individual sênior cresce por profundidade, influência e escopo sem subordinados. São profissões paralelas, com movimentos possíveis entre elas."
+    "Qual o erro comum sobre a trilha técnica, e como testar se uma empresa a sustenta de verdade?",
+    "Imaginá-la como gestão sem reuniões, ou como o lugar de quem não quer lidar com pessoas. Nos níveis altos ela é majoritariamente influência sem autoridade formal — alinhar equipes que não se reportam a você, escrever documentos que convencem, escolher quais decisões merecem briga. O que ela dispensa é a responsabilidade formal por carreira alheia. O teste: olhar quem chegou aos níveis altos por ela, e se essas pessoas têm influência comparável à dos gestores do mesmo nível."
   ],
   "s2-6-5": [
-    "Como fazer uma transição de carreira sem tratar experiência anterior como zero?",
-    "Decompondo a identidade em capacidades transferíveis, escolhendo movimentos adjacentes, construindo evidência e fechando lacunas delimitadas. O plano inclui também custo financeiro, status e tempo de adaptação."
+    "Por que a transição de carreira raramente é troca completa, e onde estão as lacunas prováveis?",
+    "Porque costuma ser lateral: parte do que se sabe é transferível e sustenta a transição enquanto o resto é reconstruído. Quem sai de sustentação bancária leva criticidade, janela de manutenção, auditoria e reversão — justamente o que falta a quem veio pelo caminho oposto; descartar esse capital por vergonha do legado é o erro mais caro. As lacunas prováveis estão nas camadas 1 e 2, não na 4: sistemas distribuídos, dados sob concorrência, escrita técnica."
   ],
   "s2-6-6": [
-    "Como distinguir fenômeno do impostor, lacuna real e ambiente excludente?",
-    "Evidência e feedback calibrado ajudam a testar competência; tarefas delimitam lacunas; padrões de critérios secretos, desvalorização ou humilhação apontam para o ambiente. Um único rótulo não deve esconder causas diferentes."
+    "Quais duas características da área alimentam a sensação de impostor, e qual é a resposta estrutural à obsolescência percebida?",
+    "A assimetria de visibilidade — você vê o próprio bastidor e apenas a vitrine dos outros — e o fato de o volume do que existe para saber crescer mais rápido que a capacidade de qualquer pessoa, de modo que a fração conhecida diminui mesmo com o conhecimento absoluto aumentando. Contra a obsolescência percebida: dos vinte e um capítulos de conteúdo, três estão na camada sazonal. Quem sente que precisa correr atrás de tudo está reagindo à camada 4 como se ela fosse o todo."
   ],
   "s2-6-7": [
-    "O que mudou e o que permaneceu no comportamento profissional entre 1990 e 2026?",
-    "Caiu a associação entre presença e contribuição; escrita, transparência e coordenação assíncrona ganharam valor, agora também diante de IA. Permaneceram confiança, contexto, conflito produtivo e responsabilidade pelo resultado."
+    "O que mudou de substância no comportamento profissional desde 1990, e o que não mudou?",
+    "Mudou o meio: a coordenação era presencial e síncrona, e a comunicação assíncrona por texto inverteu isso — a escrita deixou de ser registro e virou o instrumento primário de coordenação, razão de ter subido para a camada permanente. Custos que demoraram a aparecer: a formação de iniciantes, a transmissão de contexto tácito, e a diferença entre estar disponível e estar presente. Não mudou: a necessidade de confiança para admitir erro, o custo de coordenação crescendo com o número de pessoas, e a diferença entre entregar sua parte e resolver o problema."
+  ],
+  "s3-1-1": [
+    "O que de fato se criticava no monolito, e o que ele conserva de vantagem?",
+    "Criticava-se a ausência de fronteiras internas — qualquer parte chamando qualquer outra, esquema sem dono —, não a unidade de implantação. O erro do período foi concluir que ter fronteiras exigia separar processos, quando a fronteira pode ser lógica e verificada pelo build. Conserva transação local com garantia real, refatoração com apoio do compilador, rastreamento de pilha que atravessa a chamada inteira e ausência de versões incompatíveis coexistindo. Seu limite é organizacional antes de ser técnico."
+  ],
+  "s3-1-2": [
+    "Qual problema a família hexagonal e Clean resolve, e quando ela custa mais do que entrega?",
+    "Impedir que a regra de negócio se misture com a tecnologia: o domínio define portas em seus próprios termos e a infraestrutura fornece adaptadores, invertendo a direção da dependência para dentro. O ganho é testabilidade sem banco nem framework, e adiamento da escolha tecnológica. Custa mais do que entrega onde a regra de negócio é fina e o sistema é essencialmente um adaptador entre formulário e tabela — não há o que proteger, e a estrutura vira cerimônia."
+  ],
+  "s3-1-3": [
+    "Como o ESB falhou, e o que sobreviveu de SOA?",
+    "O barramento concentrou orquestração, transformação e às vezes regra de negócio, virando ponto único de acoplamento e de disputa: toda mudança passava por ele, a equipe que o mantinha virou gargalo, e a lógica não pertencia a nenhum time de negócio — Conway com sinal invertido. Sobreviveram contrato explícito, versionamento de interface e capacidade de negócio como unidade. Microsserviços mudaram apenas onde mora a inteligência: pontos de extremidade inteligentes e canos burros — escolha de onde concentrar complexidade, não correção definitiva."
+  ],
+  "s3-1-4": [
+    "Qual é o único benefício que justifica microsserviços, e o que é um monólito distribuído?",
+    "A independência de implantação — todo o resto é consequência dela. Monólito distribuído é o conjunto de serviços separados que precisam ser implantados juntos, por compartilharem banco ou por seus contratos mudarem em conjunto: paga todos os custos da distribuição e não entrega o benefício que a justificava. É o resultado mais comum de decompor por camada técnica em vez de por capacidade de negócio. Extrair por motivo nomeado é reversível; adotar por estilo, não."
+  ],
+  "s3-1-5": [
+    "Onde serverless ganha e onde perde, e qual problema a borda resolve que dinheiro não resolve?",
+    "Ganha em carga irregular, tarefas por evento de curta duração e equipes sem capacidade operacional. Perde na latência de partida a frio, que atinge o percentil que importa; em ser sem estado por construção, empurrando estado para fora; em limites de tempo e tamanho; e no ponto de cruzamento em que o custo por execução se inverte sob carga alta e constante. A borda resolve a velocidade da luz. O que ela não elimina é coordenar estado, que reintroduz a escolha entre coordenar e esperar ou conviver com divergência."
+  ],
+  "s3-1-6": [
+    "Os três termos são independentes. O que cada um cobra separadamente?",
+    "Orientação a eventos cobra legibilidade do fluxo — para saber o que acontece é preciso descobrir quem assina, e depurar exige correlação. CQRS cobra sincronização: a leitura fica atrás da escrita por uma janela, o que é mudança de contrato com o usuário e não detalhe interno. Event Sourcing cobra esquema de evento imutável versionado para sempre, projeções mantidas à parte, e correção por evento compensatório em vez de alteração do histórico. Adotá-los como pacote é o erro característico; a maioria dos sistemas precisa de zero ou um deles."
+  ],
+  "s3-1-7": [
+    "Por que a reescrita completa falha, e qual propriedade essencial a figueira estranguladora garante?",
+    "Falha porque o sistema antigo continua mudando e o alvo se move; porque o comportamento a replicar não está documentado, incluindo defeitos dos quais alguém já depende; e porque não entrega valor até estar completa, criando um período longo de custo sem retorno e vulnerável a mudança de prioridade. A figueira garante que cada passo é pequeno, entrega valor e é reversível — o sistema está sempre inteiro. E o teste de caracterização não verifica se o comportamento está certo, verifica qual é: congelar o atual, inclusive o errado, é o que torna a mudança segura."
+  ],
+  "s3-1-8": [
+    "O que um ADR preserva que o código nunca mostra, e quais duas condições separam ADR vivo de teatro documental?",
+    "Preserva o contexto — o código mostra o que foi decidido e nunca por que; quando o porquê se perde, a equipe seguinte ou mantém uma restrição cuja razão desapareceu, ou a remove e redescobre o motivo em produção. Condições: escopo — registrar o que é caro de reverter e o que alguém novo questionaria, porque registrar tudo mata a prática pelo volume; e imutabilidade — substituir, nunca reescrever, já que editar um ADR aceito destrói o valor de mostrar o que se sabia na época."
+  ],
+  "s3-1-9": [
+    "Qual é o critério de fronteira mais útil de Team Topologies, e qual a ressalva de evidência?",
+    "A carga cognitiva: uma equipe tem limite de quanto domínio consegue manter na cabeça, e quando o escopo excede esse limite a qualidade cai de formas que nenhuma cobrança corrige — o que dá critério verificável para dimensionar responsabilidade, em vez de dividir por conveniência de organograma. A ressalva: o modelo é recente, amplamente adotado e ainda sem corpo de evidência independente comparável ao das leis da seção 1.2. É vocabulário útil e hipótese razoável, não resultado estabelecido."
+  ],
+  "s3-1-10": [
+    "Por que a indústria oscila entre centralizar e distribuir, e qual pergunta desmonta o argumento de moda?",
+    "Porque os dois otimizam coisas diferentes e ambas importam: centralizar dá consistência, simplicidade operacional e um lugar único para raciocinar, cobrando escala, disponibilidade e autonomia de quem depende do centro; distribuir dá autonomia, isolamento de falha e escala independente, cobrando coordenação, latência e complexidade operacional. Quando uma geração acumula dor de um lado, migra para o outro. A pergunta: de que lado do pêndulo isto está, e qual dor da volta anterior está resolvendo?"
+  ],
+  "s3-2-1": [
+    "Por que escrever-e-corrigir merece uma seção num capítulo sobre metodologias?",
+    "Porque continua sendo o processo real de boa parte do software escrito hoje, inclusive em organizações que declaram usar outra coisa — não por falha moral, mas por ser o comportamento padrão quando a estrutura não sustenta nada mais elaborado. Todo processo descrito no capítulo compete com ele. Funciona enquanto o sistema é pequeno e a memória de uma pessoa dá conta do todo; falha na escala, porque sem registro do porquê o custo de mudança cresce mais rápido que o sistema."
+  ],
+  "s3-2-2": [
+    "O que Royce realmente escreveu, e qual a lição sobre como o conhecimento envelhece?",
+    "Apresentou o diagrama sequencial descrevendo-o como arriscado, e dedicou o resto do artigo a correções: fazer o projeto duas vezes, envolver o cliente, iterar entre fases adjacentes e construir um protótipo descartável antes do sistema real. A indústria absorveu o primeiro diagrama sem as ressalvas, e o modelo virou padrão contratual por servir à fiscalização. A lição: a simplificação sobrevive ao original, e é ela que chega à sala de aula — o mesmo mecanismo do custo da mudança tardia e do CAP."
+  ],
+  "s3-2-3": [
+    "O que o MPS.BR endereçava, e qual o balanço honesto sobre ele?",
+    "Endereçava um problema concreto: o custo de uma avaliação CMMI era proibitivo para a maior parte do parque nacional, e exigência de maturidade aparecia em licitação pública e na exportação de serviços. Propôs níveis mais granulares, de G a A, para progressão em passos financiáveis. Como política industrial de qualificação, alcançou centenas de avaliações e produziu prática de processo onde não havia; como resposta à pergunta se produz software melhor, a evidência é mais fraca e sofre do mesmo viés de seleção do CMMI — quem se candidata a avaliação já é diferente de quem não se candidata."
+  ],
+  "s3-2-4": [
+    "Por que Scrum venceu em adoção, e qual o efeito previsível de adotá-lo sem as práticas técnicas?",
+    "Porque é arcabouço de gestão e não de engenharia: define papéis, eventos e artefatos, e é deliberadamente silencioso sobre como se escreve software, o que o torna adotável sem mudar nada de técnico. O efeito previsível é iteração regular sobre uma base que continua difícil de mudar — velocidade decrescente com cerimônia constante. Vale notar que XP tinha as práticas de engenharia mais fortes e foi o que menos sobreviveu como pacote, enquanto TDD, integração contínua e refatoração viraram universais fora do rótulo."
+  ],
+  "s3-2-5": [
+    "Por que o modelo Spotify não é um modelo, e o que isso ensina sobre transplantar estrutura?",
+    "Porque é um artigo de 2012 descrevendo como a empresa estava organizada naquele momento, com aviso explícito de ser um retrato e não uma receita — e a própria empresa depois publicou que havia abandonado partes daquilo. Foi copiado como método por centenas de organizações: o mesmo mecanismo de Royce, um artefato descritivo lido como prescritivo. Copiar a organização de outra empresa importa a solução sem o contexto e, pela Lei de Conway, produz a arquitetura dela, não a que você precisa."
+  ],
+  "s3-2-6": [
+    "Qual é o sintoma diagnóstico de agile washing, e o que as métricas DORA desmontaram?",
+    "O sintoma não é a cerimônia — é a ausência de mudança na estrutura de decisão. Se a equipe não pode alterar escopo, dizer não a trabalho, escolher como construir ou parar a linha, retrospectiva é conversa sem consequência, e o processo é Waterfall com reuniões diárias. As métricas DORA desmontaram o trade-off que boa parte da governança assume: velocidade e estabilidade não são opostas — as organizações que entregam mais rápido também falham menos."
+  ],
+  "s3-2-7": [
+    "Separe as três questões que se confundem sob a palavra estimativa.",
+    "Cognitiva: pessoas subestimam de forma sistemática, e em software boa parte do trabalho é descoberta — não se estima bem o tempo de descobrir o que não se sabe. Estatística: uma estimativa é uma distribuição, e reportá-la como número único descarta a informação que importa; previsão a partir de tempo de ciclo medido supera a estimativa em pontos na maioria das comparações. Política: estimativas frequentemente servem para criar compromisso ou sustentar uma data já decidida, e nesse uso nenhuma melhoria de técnica ajuda — o sintoma é a estimativa questionada até baixar."
+  ],
+  "s3-2-8": [
+    "Como conciliar prática ágil com gestão formal de mudança, e por que janela rara não reduz risco?",
+    "Substituindo controle manual por controle automatizado auditável, em vez de pedir dispensa de controle: a governança pergunta quem autorizou, o que exatamente mudou, como se reverte e quem responde — e controle de versão, implantação automatizada, reversão testada e teste automatizado respondem as quatro. Janela rara não reduz risco, concentra risco: o lote cresce, e lote grande significa mais interação entre mudanças, diagnóstico mais difícil e reversão que desfaz o certo junto com o errado. Separar implantação de liberação por chave de funcionalidade é o meio-termo que costuma passar."
   ]
 }
