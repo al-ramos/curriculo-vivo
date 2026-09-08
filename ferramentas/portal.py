@@ -38,6 +38,13 @@ article ul{margin:0 0 1.2rem;padding-left:1.15rem}
 article li{margin-bottom:.5rem}
 article blockquote{margin:1.5rem 0;padding:.2rem 0 .2rem 1.1rem;border-left:2px solid var(--accent);
   color:var(--ink);font-style:italic;font-size:1.02rem}
+.acessos-topo{display:flex;flex-wrap:wrap;gap:.55rem;margin-top:1.3rem}
+.acessos-topo a{display:inline-flex;align-items:center;min-height:2.7rem;padding:.55rem .85rem;
+  border:1px solid var(--accent);border-radius:2px;text-decoration:none;font-family:"IBM Plex Mono",monospace;
+  font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+.acessos-topo a.principal{background:var(--accent);color:var(--ground)}
+.acessos-topo a:hover{background:var(--accent-soft);color:var(--accent)}
+@media(max-width:39.99rem){.acessos-topo a{flex:1;justify-content:center}.acessos-topo a.principal{flex-basis:100%}}
 </style>"""
 
 def fechar_secoes(html):
@@ -114,11 +121,15 @@ HTML = HEAD + EXTRA + f"""
 <header class="masthead">
   <div class="mast-in">
     <div>
-      <div class="eyebrow">Currículo vivo · o portal</div>
+      <div class="eyebrow"><a href="index.html">Livro · página principal</a> &nbsp;·&nbsp; planejamento</div>
       <h1 class="book">Uma formação<br><em>com data de validade</em></h1>
       <p class="dek">Um livro sobre como o conhecimento de Engenharia de Software envelhece,
       um plano de estudos calibrado para quem já tem estrada, e uma linha do tempo que
       costura os dois: cada capítulo é escrito depois da trilha que o sustenta.</p>
+      <nav class="acessos-topo" aria-label="Acessos principais">
+        <a class="principal" href="index.html">Abrir o livro</a>
+        <a href="estudos.html">Plano de estudos</a>
+      </nav>
       <div class="status">
         <span class="chip on">39 meses</span>
         <span class="chip">8 fases</span>

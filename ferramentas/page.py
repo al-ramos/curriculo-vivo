@@ -476,7 +476,7 @@ HTML = HEAD + f"""
 <header class="masthead">
   <div class="mast-in">
     <div>
-      <div class="eyebrow"><a href="portal.html">Planejamento</a> &nbsp;·&nbsp; volume um &nbsp;·&nbsp; <a href="estudos.html">Plano de estudos &rarr;</a></div>
+      <div class="eyebrow"><strong>Livro · página principal</strong> &nbsp;·&nbsp; <a href="portal.html">Planejamento</a> &nbsp;·&nbsp; <a href="estudos.html">Plano de estudos &rarr;</a></div>
       <h1 class="book">Engenharia de Software:<br><em>Envelhecimento Macro</em></h1>
       <p class="dek">Um currículo organizado por uma pergunta só — em quanto tempo cada
       conhecimento envelhece. Vinte e dois capítulos distribuídos em quatro camadas de
