@@ -14,8 +14,11 @@
   --ground:#F2F4F0; --surface:#FAFBF8; --ink:#1B201D; --muted:#5C645E; --faint:#88908A;
   --rule:#DCE1D8; --rule-soft:#E8EBE4; --accent:#33604F; --accent-soft:#E2ECE5;
   --s1:#22403A; --s2:#3E6B5B; --s3:#6F9481; --s4:#A9C0B0; --alert:#9A6B22;
-  --maxw:38rem;
+  --maxw:38rem; --fonte-ajuste:2px;
 }
+:root[data-fonte="menor"]{--fonte-ajuste:0px}
+:root[data-fonte="padrao"]{--fonte-ajuste:2px}
+:root[data-fonte="maior"]{--fonte-ajuste:4px}
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
     --ground:#0F1312; --surface:#161B19; --ink:#DCE3DB; --muted:#98A19A; --faint:#79827C;
@@ -29,12 +32,12 @@
   --s1:#9FC9B5; --s2:#79AE95; --s3:#54836E; --s4:#3A5B4C; --alert:#C79B4E;
 }
 *{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%}
+html{-webkit-text-size-adjust:100%;font-size:calc(16px + var(--fonte-ajuste))}
 body{background:var(--ground);color:var(--ink);margin:0;
   font-family:"Source Serif 4",Georgia,"Times New Roman",serif;
-  font-size:16.5px;line-height:1.68;-webkit-font-smoothing:antialiased;overflow-x:hidden}
-@media(min-width:40rem){body{font-size:17.5px;line-height:1.72}}
-@media(min-width:90rem){body{font-size:18px}}
+  font-size:calc(16.5px + var(--fonte-ajuste));line-height:1.68;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+@media(min-width:40rem){body{font-size:calc(17.5px + var(--fonte-ajuste));line-height:1.72}}
+@media(min-width:90rem){body{font-size:calc(18px + var(--fonte-ajuste))}}
 img,svg{max-width:100%;height:auto}
 article p,article li,article h4{overflow-wrap:break-word}
 article table{width:100%;border-collapse:collapse}
@@ -341,8 +344,8 @@ footer{border-top:1px solid var(--rule);color:var(--muted);font-size:.85rem;
 footer p{margin:0 0 .6rem;max-width:44rem}
 .leitura-nav{display:none}
 @media(max-width:39.99rem){
-  html{font-size:17px}
-  body{font-size:18px;line-height:1.72}
+  html{font-size:calc(17px + var(--fonte-ajuste))}
+  body{font-size:calc(18px + var(--fonte-ajuste));line-height:1.72}
   .wrap{padding:0 1rem}
   .mast-in{padding:1.45rem 1rem 1.35rem;gap:1rem}
   h1.book{font-size:2.15rem;line-height:1.04}
@@ -410,6 +413,12 @@ footer p{margin:0 0 .6rem;max-width:44rem}
       conhecimento envelhece. Vinte e dois capítulos distribuídos em quatro camadas de
       velocidade, cada seção com data de revisão e gatilho declarados.</p>
       <details class="preferencias"><summary>Preferências de leitura</summary><div class="ctrls">
+        <div class="ctrl"><span>Tamanho do texto</span>
+          <div class="seg" role="group" aria-label="Tamanho geral do texto">
+            <button type="button" data-fonte="menor">Menor</button>
+            <button type="button" data-fonte="padrao">Padrão</button>
+            <button type="button" data-fonte="maior">Maior</button>
+          </div></div>
         <div class="ctrl"><span>Tema</span>
           <div class="seg" role="group" aria-label="Tema">
             <button type="button" data-tema="auto">Auto</button>
@@ -3080,7 +3089,7 @@ Geral</em></a>, a partir de 2003.</p><div class="recup"><h5>Recuperação</h5><p
   function ler(k,p){ try{ return localStorage.getItem(k)||p; }catch(e){ return p; } }
   function salvar(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
   function marcar(attr,valor){
-    [].forEach.call(document.querySelectorAll('[data-'+attr+']'),function(b){
+    [].forEach.call(document.querySelectorAll('button[data-'+attr+']'),function(b){
       b.setAttribute('aria-pressed', b.getAttribute('data-'+attr)===valor ? 'true':'false');
     });
   }
@@ -3088,18 +3097,21 @@ Geral</em></a>, a partir de 2003.</p><div class="recup"><h5>Recuperação</h5><p
     if(v==='auto'){ raiz.removeAttribute('data-theme'); } else { raiz.setAttribute('data-theme',v); }
     marcar('tema',v); salvar('cv-tema',v);
   }
+  function fonte(v){ raiz.setAttribute('data-fonte',v); marcar('fonte',v); salvar('cv-fonte',v); }
   function largura(v){ corpo.classList.toggle('largo', v==='largo'); marcar('larg',v); salvar('cv-larg',v); }
   function fichas(v){ corpo.classList.toggle('sem-ficha', v==='off'); marcar('ficha',v); salvar('cv-ficha',v); }
   function recup(v){ corpo.classList.toggle('sem-recup', v==='off'); marcar('recup',v); salvar('cv-recup',v); }
 
   tema(ler('cv-tema','auto'));
+  fonte(ler('cv-fonte','padrao'));
   largura(ler('cv-larg','normal'));
   fichas(ler('cv-ficha','on'));
   recup(ler('cv-recup','on'));
 
   document.addEventListener('click',function(e){
-    var b=e.target.closest && e.target.closest('button[data-tema],button[data-larg],button[data-ficha],button[data-recup]');
+    var b=e.target.closest && e.target.closest('button[data-fonte],button[data-tema],button[data-larg],button[data-ficha],button[data-recup]');
     if(!b)return;
+    if(b.hasAttribute('data-fonte')) fonte(b.getAttribute('data-fonte'));
     if(b.hasAttribute('data-tema'))  tema(b.getAttribute('data-tema'));
     if(b.hasAttribute('data-larg'))  largura(b.getAttribute('data-larg'));
     if(b.hasAttribute('data-ficha')) fichas(b.getAttribute('data-ficha'));
