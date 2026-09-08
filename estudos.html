@@ -11,14 +11,18 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,500;1,6..72,300&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
 :root{
-  --ground:#F2F4F0; --surface:#FAFBF8; --ink:#1B201D; --muted:#5C645E; --faint:#88908A;
+  --ground:#FFFFFF; --surface:#FFFFFF; --ink:#1B201D; --muted:#5C645E; --faint:#88908A;
   --rule:#DCE1D8; --rule-soft:#E8EBE4; --accent:#33604F; --accent-soft:#E2ECE5;
   --s1:#22403A; --s2:#3E6B5B; --s3:#6F9481; --s4:#A9C0B0; --alert:#9A6B22;
   --maxw:38rem; --fonte-ajuste:2px;
+  --fonte-leitura:"Source Serif 4",Georgia,"Times New Roman",serif;
 }
-:root[data-fonte="menor"]{--fonte-ajuste:0px}
-:root[data-fonte="padrao"]{--fonte-ajuste:2px}
-:root[data-fonte="maior"]{--fonte-ajuste:4px}
+:root[data-fonte="menor"]{--fonte-ajuste:2px}
+:root[data-fonte="padrao"]{--fonte-ajuste:4px}
+:root[data-fonte="maior"]{--fonte-ajuste:6px}
+:root[data-fonte="extra-grande"]{--fonte-ajuste:8px}
+:root[data-tipo-fonte="sem-serifa"]{--fonte-leitura:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+:root[data-tipo-fonte="mono"]{--fonte-leitura:"IBM Plex Mono",ui-monospace,SFMono-Regular,Consolas,monospace}
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
     --ground:#0F1312; --surface:#161B19; --ink:#DCE3DB; --muted:#98A19A; --faint:#79827C;
@@ -34,7 +38,7 @@
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%;font-size:calc(16px + var(--fonte-ajuste))}
 body{background:var(--ground);color:var(--ink);margin:0;
-  font-family:"Source Serif 4",Georgia,"Times New Roman",serif;
+  font-family:var(--fonte-leitura);
   font-size:calc(16.5px + var(--fonte-ajuste));line-height:1.68;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 @media(min-width:40rem){body{font-size:calc(17.5px + var(--fonte-ajuste));line-height:1.72}}
 @media(min-width:90rem){body{font-size:calc(18px + var(--fonte-ajuste))}}
@@ -78,6 +82,8 @@ h1.book em{font-style:italic;color:var(--accent)}
 .seg button:last-child{border-right:0}
 .seg button:hover{color:var(--ink)}
 .seg button[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent)}
+.preferencias-status{margin:.85rem 0 0;font-family:"IBM Plex Mono",monospace;font-size:.62rem;
+  letter-spacing:.04em;line-height:1.6;color:var(--muted)}
 body.sem-ficha .ficha{display:none}
 body.largo{--maxw:45rem}
 
@@ -93,6 +99,8 @@ details.sec>summary:hover::before{color:var(--accent)}
 details.sec>summary h4{margin:0;flex:1}
 details.sec:not([open])>summary{margin-bottom:.3rem}
 .sec-corpo{padding-left:1.4rem;border-left:1px solid var(--rule-soft)}
+.audio-ativa{background:var(--accent-soft);box-shadow:0 0 0 .18rem var(--accent-soft);
+  border-radius:2px;scroll-margin-block:24vh;transition:background .18s ease,box-shadow .18s ease}
 .copiar{flex:none;align-self:center;font-family:"IBM Plex Mono",monospace;font-size:.6rem;
   letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:var(--surface);
   border:1px solid var(--rule);border-radius:2px;padding:.18rem .45rem;cursor:pointer;
@@ -158,7 +166,7 @@ body.so-nao-lidas details.sec.lida{display:none}
 .nota.aberta{display:block}
 .nota textarea{width:100%;min-height:5.5rem;resize:vertical;background:var(--surface);
   color:var(--ink);border:1px solid var(--rule);border-radius:2px;padding:.6rem .7rem;
-  font-family:"Source Serif 4",serif;font-size:.92rem;line-height:1.5}
+  font-family:var(--fonte-leitura);font-size:.92rem;line-height:1.5}
 .nota textarea:focus{outline:none;border-color:var(--accent)}
 .nota .dica{font-family:"IBM Plex Mono",monospace;font-size:.58rem;color:var(--faint);
   letter-spacing:.06em;margin-top:.25rem}
@@ -189,11 +197,15 @@ aside.lado .vazio{font-size:.78rem;color:var(--faint);font-style:italic}
 
 /* sincronização */
 .sinc-fundo{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;
-  align-items:center;justify-content:center;padding:1.2rem;z-index:50}
+  align-items:flex-start;justify-content:center;padding:1.2rem;z-index:50;overflow:auto}
 .sinc-fundo.aberto{display:flex}
 .sinc{background:var(--surface);border:1px solid var(--rule);border-radius:3px;
-  padding:1.4rem;max-width:22rem;width:100%;text-align:center}
+  padding:1.4rem;max-width:22rem;width:100%;text-align:center;position:relative;margin:auto}
 .sinc h3{font-family:"Newsreader",serif;font-size:1.25rem;font-weight:500;margin:0 0 .5rem}
+.sinc-fechar-top{position:absolute;top:.55rem;right:.55rem;width:2rem;height:2rem;padding:0;
+  border:1px solid var(--rule);border-radius:2px;background:var(--surface);color:var(--muted);
+  font:1.25rem/1 "IBM Plex Mono",monospace;cursor:pointer}
+.sinc-fechar-top:hover{color:var(--accent);border-color:var(--accent)}
 .sinc p{margin:0 0 1rem;font-size:.86rem;color:var(--muted);line-height:1.5}
 .sinc .qr{display:flex;justify-content:center;margin-bottom:1rem;min-height:12rem;
   align-items:center;background:#fff;padding:.8rem;border-radius:2px}
@@ -246,7 +258,7 @@ aside.lado .vazio{font-size:.78rem;color:var(--faint);font-style:italic}
 .band .hv{font-size:.62rem;color:var(--faint);white-space:nowrap}
 @media(min-width:40rem){.band .hv{font-size:.66rem}}
 .strata .note{margin-top:.9rem;padding-top:.8rem;border-top:1px solid var(--rule-soft);
-  font-family:"Source Serif 4",serif;font-size:.85rem;color:var(--muted);line-height:1.5}
+  font-family:var(--fonte-leitura);font-size:.85rem;color:var(--muted);line-height:1.5}
 .strata .note b{color:var(--ink);font-weight:600}
 
 /* ---------- corpo ---------- */
@@ -301,7 +313,7 @@ section.chapter h3{display:flex;gap:.85rem;align-items:baseline;margin-bottom:.9
 section.chapter h3 .num{font-size:.82rem;color:var(--accent);flex:none;padding-top:.2rem}
 section.chapter h3 .ttl{font-size:clamp(1.28rem,1rem + 1.4vw,1.55rem);font-weight:500;letter-spacing:-.01em;line-height:1.2}
 h4{margin:2.4rem 0 .7rem;font-size:1.08rem;font-weight:600;color:var(--ink);
-  font-family:"Source Serif 4",serif}
+  font-family:var(--fonte-leitura)}
 h4 .snum{color:var(--faint);font-size:.78rem;margin-right:.45rem;font-weight:400}
 article p{margin:0 0 1.15rem}
 article p strong{font-weight:600}
@@ -383,7 +395,7 @@ footer p{margin:0 0 .6rem;max-width:44rem}
   .roadmap{margin-top:3.5rem}
   footer{padding-bottom:7.2rem}
   .leitura-nav{position:fixed;z-index:80;left:0;right:0;bottom:0;display:grid;
-    grid-template-columns:repeat(4,minmax(0,1fr));gap:.2rem;padding:.42rem .5rem;
+    grid-template-columns:repeat(5,minmax(0,1fr));gap:.16rem;padding:.42rem .4rem;
     padding-bottom:calc(.42rem + env(safe-area-inset-bottom));background:var(--surface);
     border-top:1px solid var(--rule);box-shadow:0 -.55rem 1.6rem color-mix(in srgb,var(--ground) 82%,transparent)}
   .leitura-nav button{appearance:none;border:0;background:transparent;color:var(--muted);
@@ -394,6 +406,23 @@ footer p{margin:0 0 .6rem;max-width:44rem}
   .leitura-nav .ico{font-family:"Source Serif 4",serif;font-size:1.18rem;line-height:1}
   .leitura-nav .rot{font-size:.56rem;line-height:1.2;letter-spacing:.06em;text-transform:uppercase;
     white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+  .leitura-fundo{position:fixed;z-index:90;inset:0;background:color-mix(in srgb,#000 46%,transparent);
+    display:none;align-items:flex-end;padding:0}
+  .leitura-fundo.aberto{display:flex}
+  .leitura-acoes{width:100%;max-height:78vh;overflow:auto;background:var(--surface);border-top:1px solid var(--rule);
+    border-radius:.8rem .8rem 0 0;padding:1.05rem 1rem calc(1rem + env(safe-area-inset-bottom));box-shadow:0 -1rem 3rem rgba(0,0,0,.18)}
+  .leitura-acoes-cab{display:flex;align-items:center;justify-content:space-between;margin-bottom:.85rem}
+  .leitura-acoes h2{font-family:"Newsreader",serif;font-size:1.25rem;font-weight:500;margin:0}
+  .leitura-fechar{border:1px solid var(--rule);background:none;color:var(--muted);border-radius:.2rem;min-width:2.2rem;min-height:2.2rem;font-size:1.25rem}
+  .leitura-resumo{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.4rem;margin-bottom:.9rem}
+  .leitura-resumo div{padding:.5rem .35rem;background:var(--ground);border:1px solid var(--rule-soft);text-align:center}
+  .leitura-resumo b{display:block;font-family:"IBM Plex Mono",monospace;font-size:.75rem;color:var(--ink);margin-top:.15rem}
+  .leitura-resumo span{display:block;font-family:"IBM Plex Mono",monospace;font-size:.54rem;color:var(--faint);letter-spacing:.05em;text-transform:uppercase}
+  .leitura-atalhos{display:grid;grid-template-columns:1fr 1fr;gap:.45rem}
+  .leitura-atalhos button{min-height:2.7rem;padding:.45rem;border:1px solid var(--rule);border-radius:.2rem;background:transparent;
+    color:var(--muted);font-family:"IBM Plex Mono",monospace;font-size:.64rem;line-height:1.25;letter-spacing:.04em;text-transform:uppercase}
+  .leitura-atalhos button:first-child{grid-column:1/-1;color:var(--accent);border-color:var(--accent)}
+  .leitura-atalhos button:active{background:var(--accent-soft);color:var(--accent)}
 }
 @media(min-width:40rem){.preferencias:not([open])>.ctrls{display:flex}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
@@ -429,7 +458,7 @@ article td:first-child{font-family:"IBM Plex Mono",monospace;font-size:.8rem;col
         <span class="chip on">6 trilhas</span>
         <span class="chip">~2,5 a 3 anos</span>
         <span class="chip">6–8 h / semana</span>
-        <span class="chip">40+ livros</span>
+        <span class="chip">20 obras canônicas · 40+ apoios</span>
         <span class="chip data" id="chip-data">—</span>
       </div>
     </div>
@@ -457,6 +486,8 @@ article td:first-child{font-family:"IBM Plex Mono",monospace;font-size:.8rem;col
 <a href="#trilha-5-plataforma-confiabilidade-e-seg">5 · Plataforma e segurança</a>
 <a href="#trilha-6-escrita-influ-ncia-e-carreira">6 · Escrita e carreira</a></div>
 <div class="grp"><span>Referência</span>
+<a href="#biblioteca-can-nica-20-obras-para-estuda">Biblioteca canônica · 20 obras</a>
+<a href="#ordem-estrat-gica-o-que-come-a-agora">Ordem estratégica</a>
 <a href="#os-dez-atemporais">Os dez atemporais</a>
 <a href="#seis-regras-que-decidem-se-o-plano-funci">Seis regras</a>
 <a href="#o-que-ficou-deliberadamente-de-fora">O que ficou de fora</a>
@@ -472,6 +503,8 @@ article td:first-child{font-family:"IBM Plex Mono",monospace;font-size:.8rem;col
      <a href="#trilha-4-qualidade-testes-e-refatora-o">Trilha 4 · Qualidade e testes</a>
      <a href="#trilha-5-plataforma-confiabilidade-e-seg">Trilha 5 · Plataforma e segurança</a>
      <a href="#trilha-6-escrita-influ-ncia-e-carreira">Trilha 6 · Escrita e carreira</a>
+     <a href="#biblioteca-can-nica-20-obras-para-estuda">Biblioteca canônica · 20 obras</a>
+     <a href="#ordem-estrat-gica-o-que-come-a-agora">Ordem estratégica</a>
      <a href="#os-dez-atemporais">Os dez atemporais</a>
    </details>
    <section class="trilha"><h3 id="antes-do-mapa-onde-voc-come-a"><span class="ttl">Antes do mapa: onde você começa</span></h3>
@@ -624,7 +657,8 @@ real seu, para um público de desenvolvedores juniores.</p>
 <p>A trilha mais valiosa do plano para o seu perfil, e a que mais muda a conversa em uma
 entrevista sênior. Você já opera sistemas distribuídos; falta o modelo mental que explica
 por que eles falham do jeito que falham.</p>
-<p><strong>Livro-espinha:</strong> <em>Designing Data-Intensive Applications</em> — <strong>Martin Kleppmann</strong>. Se você
+<p><strong>Livro-espinha:</strong> <em>Designing Data-Intensive Applications</em> (2ª ed.) — <strong>Martin Kleppmann &amp;
+Chris Riccomini</strong>. Se você
 ler um único livro técnico nos próximos três anos, é este. Ele costura banco de dados,
 replicação, particionamento, transações, consenso e processamento de fluxo em um argumento
 só, e é escrito com um rigor de citação que quase nenhum livro da área tem.</p>
@@ -727,6 +761,262 @@ descrevendo a sua semana.</p>
 <p><strong>Projeto:</strong> o livro que você já está escrevendo. É o projeto desta trilha, e ele consome
 tudo das outras cinco.</p>
 <p><strong>Marco verificável:</strong> um texto seu foi citado ou usado por alguém que você não conhece.</p>
+
+</section><section class="trilha"><h3 id="biblioteca-can-nica-20-obras-para-estuda"><span class="ttl">Biblioteca canônica · 20 obras para estudar, não apenas possuir</span></h3>
+<p>Esta não é uma tabela de vendas absolutas — elas variam por país, edição e canal —, mas uma
+curadoria de obras com circulação internacional, impacto comprovado na prática e utilidade
+durável. A regra é simples: <strong>nenhum destes livros é um fim em si</strong>. Cada um entra no plano
+quando há uma pergunta de engenharia, um projeto ou uma decisão que ele ajuda a tornar melhor.</p>
+<h4>1. Fundamentos, programação e pensamento computacional</h4>
+<div class="tabelinha"><table>
+<thead>
+<tr>
+<th>Obra</th>
+<th>Nível</th>
+<th>Por que permanece</th>
+<th>Conceitos-chave</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://books.pragprog.com/titles/tpp20/the-pragmatic-programmer-20th-anniversary-edition/"><em>The Pragmatic Programmer</em> (20th Anniversary Edition)</a> — David Thomas &amp; Andrew Hunt</td>
+<td>Intermediário</td>
+<td>O melhor ponto de entrada para uma prática deliberada: não ensina uma linguagem, ensina responsabilidade, feedback e adaptabilidade.</td>
+<td>DRY, ortogonalidade, reversibilidade, depuração, estimativa, testes, aprendizagem contínua</td>
+</tr>
+<tr>
+<td><em>The Algorithm Design Manual</em> — Steven Skiena</td>
+<td>Intermediário</td>
+<td>Liga estruturas de dados a problemas reais e ensina a escolher, não apenas memorizar, algoritmos.</td>
+<td>complexidade, grafos, programação dinâmica, catálogo de problemas</td>
+</tr>
+<tr>
+<td><em>Introduction to Algorithms</em> — Cormen, Leiserson, Rivest &amp; Stein</td>
+<td>Avançado</td>
+<td>Referência formal para voltar quando a intuição não basta; é base de consulta, não uma maratona obrigatória.</td>
+<td>provas, estruturas de dados, análise assintótica, algoritmos clássicos</td>
+</tr>
+<tr>
+<td><em>Computer Systems: A Programmer’s Perspective</em> — Bryant &amp; O’Hallaron</td>
+<td>Intermediário</td>
+<td>Faz a ponte entre código e máquina, explicando os limites concretos de memória, cache, processos e rede.</td>
+<td>representação, memória, cache, linking, concorrência, I/O</td>
+</tr>
+</tbody>
+</table></div>
+<h4>2. Projeto, arquitetura e código que continua mudável</h4>
+<div class="tabelinha"><table>
+<thead>
+<tr>
+<th>Obra</th>
+<th>Nível</th>
+<th>Por que permanece</th>
+<th>Conceitos-chave</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><em>A Philosophy of Software Design</em> — John Ousterhout</td>
+<td>Intermediário</td>
+<td>Uma tese clara sobre complexidade, profundidade de módulo e ocultação de informação; é o antídoto contra regra de estilo sem contexto.</td>
+<td>complexidade, módulos profundos, interfaces, design estratégico</td>
+</tr>
+<tr>
+<td><a href="https://martinfowler.com/books/refactoring.html"><em>Refactoring</em> (2ª ed.)</a> — Martin Fowler, com Kent Beck</td>
+<td>Intermediário</td>
+<td>Transformações pequenas que preservam comportamento continuam sendo a maneira mais segura de melhorar um sistema vivo.</td>
+<td>code smells, testes, extração, substituição, evolução incremental</td>
+</tr>
+<tr>
+<td><em>Working Effectively with Legacy Code</em> — Michael Feathers</td>
+<td>Avançado</td>
+<td>Livro central para alterar sistemas sem testes: ensina a criar costuras e testes de caracterização antes de arriscar uma mudança.</td>
+<td>legado, seams, testes de caracterização, dependências</td>
+</tr>
+<tr>
+<td><em>Software Architecture: The Hard Parts</em> — Neal Ford, Mark Richards, Pramod Sadalage &amp; Zhamak Dehghani</td>
+<td>Avançado</td>
+<td>Trata arquitetura como decisões difíceis e reversíveis, não como desenho bonito; excelente para decomposição e trade-offs.</td>
+<td>acoplamento, granularidade, migração, dados distribuídos, trade-offs</td>
+</tr>
+<tr>
+<td><em>Domain-Driven Design</em> — Eric Evans</td>
+<td>Avançado</td>
+<td>Continua sendo o vocabulário mais influente para ligar modelo de domínio, linguagem e fronteiras de sistema.</td>
+<td>linguagem ubíqua, bounded contexts, agregados, contexto</td>
+</tr>
+</tbody>
+</table></div>
+<h4>3. Dados, sistemas distribuídos e infraestrutura</h4>
+<div class="tabelinha"><table>
+<thead>
+<tr>
+<th>Obra</th>
+<th>Nível</th>
+<th>Por que permanece</th>
+<th>Conceitos-chave</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://www.oreilly.com/library/view/como-projetar-aplicativos/0642572336226/"><em>Designing Data-Intensive Applications</em> (2ª ed.)</a> — Martin Kleppmann &amp; Chris Riccomini</td>
+<td>Avançado</td>
+<td>O mapa mais coeso para confiabilidade, escala e evolução de sistemas de dados; a edição atual incorpora o cenário cloud e local-first.</td>
+<td>replicação, particionamento, transações, consenso, streams, consistência</td>
+</tr>
+<tr>
+<td><em>Database Internals</em> — Alex Petrov</td>
+<td>Avançado</td>
+<td>Desce ao nível de armazenamento e replicação para que decisões de banco deixem de ser escolhas de produto por moda.</td>
+<td>B-tree, LSM, WAL, compactação, replicação</td>
+</tr>
+<tr>
+<td><a href="https://sre.google/books/"><em>Site Reliability Engineering</em></a> — Betsy Beyer, Chris Jones, Jennifer Petoff &amp; Niall Richard Murphy (eds.)</td>
+<td>Intermediário</td>
+<td>Formaliza operação como engenharia: disponibilidade deixa de ser desejo e vira contrato, medida e aprendizado.</td>
+<td>SLI, SLO, orçamento de erro, incidentes, automação, post-mortem</td>
+</tr>
+<tr>
+<td><em>Continuous Delivery</em> — Jez Humble &amp; David Farley</td>
+<td>Intermediário</td>
+<td>A obra fundadora sobre entrega frequente, reversível e segura; as ferramentas mudaram, os princípios de feedback continuam.</td>
+<td>pipelines, deployment, testes, configuração, risco de mudança</td>
+</tr>
+</tbody>
+</table></div>
+<h4>4. Qualidade, fluxo e segurança</h4>
+<div class="tabelinha"><table>
+<thead>
+<tr>
+<th>Obra</th>
+<th>Nível</th>
+<th>Por que permanece</th>
+<th>Conceitos-chave</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><em>Unit Testing: Principles, Practices, and Patterns</em> — Vladimir Khorikov</td>
+<td>Intermediário</td>
+<td>Troca a pergunta “quantos testes?” por “que confiança este teste compra?”, com rigor raro sobre valor e custo.</td>
+<td>pirâmide de testes, mocks, acoplamento, testes de integração</td>
+</tr>
+<tr>
+<td><em>Accelerate</em> — Nicole Forsgren, Jez Humble &amp; Gene Kim</td>
+<td>Intermediário</td>
+<td>Base empírica para discutir fluxo, confiabilidade e desempenho organizacional sem recorrer a opinião ou ritual.</td>
+<td>métricas DORA, fluxo, cultura, desempenho, capacidade de entrega</td>
+</tr>
+<tr>
+<td><a href="https://www.oreilly.com/library/view/threat-modeling/9781118810057/"><em>Threat Modeling</em></a> — Adam Shostack</td>
+<td>Intermediário</td>
+<td>Segurança entra antes do incidente: o livro transforma ameaça em uma conversa de projeto repetível.</td>
+<td>STRIDE, ativos, fronteiras de confiança, mitigação</td>
+</tr>
+<tr>
+<td><em>Security Engineering</em> (3ª ed.) — Ross Anderson</td>
+<td>Avançado</td>
+<td>O tratado para entender segurança como economia, pessoas e sistemas sociotécnicos, além de controles técnicos.</td>
+<td>autenticação, criptografia aplicada, incentivos, fraude, risco</td>
+</tr>
+</tbody>
+</table></div>
+<h4>5. Produto, experiência e influência técnica</h4>
+<div class="tabelinha"><table>
+<thead>
+<tr>
+<th>Obra</th>
+<th>Nível</th>
+<th>Por que permanece</th>
+<th>Conceitos-chave</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><em>Don’t Make Me Think, Revisited</em> — Steve Krug</td>
+<td>Iniciante</td>
+<td>A porta de entrada mais direta para usabilidade: remove fricção e obriga o desenvolvedor a olhar pela perspectiva de quem usa.</td>
+<td>carga cognitiva, navegação, teste de usabilidade, clareza</td>
+</tr>
+<tr>
+<td><em>Lean UX</em> (3ª ed.) — Jeff Gothelf &amp; Josh Seiden</td>
+<td>Intermediário</td>
+<td>Conecta hipótese, pesquisa e entrega para evitar que design seja apenas uma etapa de aprovação.</td>
+<td>hipóteses, experimentos, colaboração, métricas de resultado</td>
+</tr>
+<tr>
+<td><em>The Staff Engineer’s Path</em> — Tanya Reilly</td>
+<td>Intermediário</td>
+<td>Trata influência técnica como trabalho de sistema: escopo, patrocínio, comunicação e alavancagem sem depender de cargo gerencial.</td>
+<td>liderança técnica, influência, alinhamento, carreira</td>
+</tr>
+</tbody>
+</table></div>
+</section><section class="trilha"><h3 id="ordem-estrat-gica-o-que-come-a-agora"><span class="ttl">Ordem estratégica: o que começa agora</span></h3>
+<p><strong>Primeiro livro: <em>The Pragmatic Programmer</em>.</strong> Ele tem o maior retorno transversal e cria a
+linguagem de trabalho para todos os demais: responsabilidade, feedback, reversibilidade e
+aprendizado contínuo. Não o leia como lista de dicas. Leia em quatro semanas, aplicando uma
+ideia por semana no projeto atual e registrando o resultado.</p>
+<p>O percurso profundo não é “vinte livros em fila”. É uma sequência de seis ciclos, cada um
+terminando num artefato que pode ser revisado:</p>
+<div class="tabelinha"><table>
+<thead>
+<tr>
+<th>Ciclo</th>
+<th style="text-align: right;">Duração</th>
+<th>Livro-espinha</th>
+<th>Produto de estudo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0 · Ativação</td>
+<td style="text-align: right;">4 semanas, em paralelo ao diagnóstico</td>
+<td><em>The Pragmatic Programmer</em></td>
+<td>diário de engenharia com quatro decisões reais, uma por semana</td>
+</tr>
+<tr>
+<td>1 · Fundamentos</td>
+<td style="text-align: right;">5–6 meses</td>
+<td><em>The Algorithm Design Manual</em></td>
+<td>interpretador e análise de complexidade de código real</td>
+</tr>
+<tr>
+<td>2 · Sistemas</td>
+<td style="text-align: right;">6 meses</td>
+<td><em>Designing Data-Intensive Applications</em></td>
+<td>serviço resiliente com falha injetada e previsão escrita</td>
+</tr>
+<tr>
+<td>3 · Arquitetura</td>
+<td style="text-align: right;">6 meses</td>
+<td><em>A Philosophy of Software Design</em></td>
+<td>três ADRs e uma migração incremental de legado</td>
+</tr>
+<tr>
+<td>4 · Qualidade</td>
+<td style="text-align: right;">4 meses</td>
+<td><em>Unit Testing</em> + <em>Refactoring</em></td>
+<td>módulo legado protegido por caracterização e refatorado</td>
+</tr>
+<tr>
+<td>5 · Operação</td>
+<td style="text-align: right;">3–4 meses</td>
+<td><em>Site Reliability Engineering</em></td>
+<td>SLO, exercício de falha e post-mortem sem culpados</td>
+</tr>
+<tr>
+<td>6 · Influência</td>
+<td style="text-align: right;">contínuo</td>
+<td><em>The Staff Engineer’s Path</em></td>
+<td>capítulos, ADRs e textos do próprio Currículo Vivo</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Ritmo por livro-espinha:</strong> uma sessão de leitura ativa, uma sessão de implementação ou
+análise e uma sessão curta de escrita por semana. Ao terminar um capítulo, responda: “que
+decisão do meu sistema isto mudaria?” Se não houver decisão, o capítulo vira consulta, não
+uma obrigação de leitura linear.</p>
 
 </section><section class="trilha"><h3 id="os-dez-atemporais"><span class="ttl">Os dez atemporais</span></h3>
 <p>Se o tempo apertar e só couberem dez, esta é a lista — escolhida por sobreviver à mudança
@@ -857,6 +1147,22 @@ antecedência.</p></section>
   var raiz=document.documentElement, corpo=document.body;
   function ler(k,p){ try{ return localStorage.getItem(k)||p; }catch(e){ return p; } }
   function salvar(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
+  function resumoPreferencias(){
+    var el=document.getElementById('preferencias-status');
+    if(!el) return;
+    var caminho='cv-'+(location.pathname.split('/').pop() || 'index');
+    var nomes={
+      tema:{auto:'automático',light:'claro',dark:'escuro'},
+      fonte:{menor:'menor',padrao:'padrão',maior:'maior',"extra-grande":'extra grande'},
+      "tipo-fonte":{serifada:'serifada',"sem-serifa":'sem serifa',mono:'mono'},
+      larg:{normal:'normal',largo:'larga'},
+      secs:{abertas:'abertas',fechadas:'recolhidas'}
+    };
+    function nome(grupo,chave,padrao){ return nomes[grupo][ler(chave,padrao)] || nomes[grupo][padrao]; }
+    el.textContent='Ativo: tema '+nome('tema','cv-tema','auto')+' · texto '+nome('fonte','cv-fonte','padrao')+
+      ' · letra '+nome('tipo-fonte','cv-tipo-fonte','serifada')+' · coluna '+nome('larg','cv-larg','normal')+
+      ' · seções '+nome('secs',caminho+'-secs','abertas')+'.';
+  }
   function marcar(attr,valor){
     [].forEach.call(document.querySelectorAll('button[data-'+attr+']'),function(b){
       b.setAttribute('aria-pressed', b.getAttribute('data-'+attr)===valor ? 'true':'false');
@@ -864,23 +1170,31 @@ antecedência.</p></section>
   }
   function tema(v){
     if(v==='auto'){ raiz.removeAttribute('data-theme'); } else { raiz.setAttribute('data-theme',v); }
-    marcar('tema',v); salvar('cv-tema',v);
+    marcar('tema',v); salvar('cv-tema',v); resumoPreferencias();
   }
-  function fonte(v){ raiz.setAttribute('data-fonte',v); marcar('fonte',v); salvar('cv-fonte',v); }
-  function largura(v){ corpo.classList.toggle('largo', v==='largo'); marcar('larg',v); salvar('cv-larg',v); }
+  function fonte(v){ raiz.setAttribute('data-fonte',v); marcar('fonte',v); salvar('cv-fonte',v); resumoPreferencias(); }
+  function tipoFonte(v){
+    if(v==='serifada'){ raiz.removeAttribute('data-tipo-fonte'); } else { raiz.setAttribute('data-tipo-fonte',v); }
+    marcar('tipo-fonte',v); salvar('cv-tipo-fonte',v); resumoPreferencias();
+  }
+  function largura(v){ corpo.classList.toggle('largo', v==='largo'); marcar('larg',v); salvar('cv-larg',v); resumoPreferencias(); }
   function fichas(v){ corpo.classList.toggle('sem-ficha', v==='off'); marcar('ficha',v); salvar('cv-ficha',v); }
   function recup(v){ corpo.classList.toggle('sem-recup', v==='off'); marcar('recup',v); salvar('cv-recup',v); }
 
   tema(ler('cv-tema','auto'));
   fonte(ler('cv-fonte','padrao'));
+  tipoFonte(ler('cv-tipo-fonte','serifada'));
   largura(ler('cv-larg','normal'));
   fichas(ler('cv-ficha','on'));
   recup(ler('cv-recup','on'));
+  resumoPreferencias();
+  document.addEventListener('cv:secoes', resumoPreferencias);
 
   document.addEventListener('click',function(e){
-    var b=e.target.closest && e.target.closest('button[data-fonte],button[data-tema],button[data-larg],button[data-ficha],button[data-recup]');
+    var b=e.target.closest && e.target.closest('button[data-fonte],button[data-tipo-fonte],button[data-tema],button[data-larg],button[data-ficha],button[data-recup]');
     if(!b)return;
     if(b.hasAttribute('data-fonte')) fonte(b.getAttribute('data-fonte'));
+    if(b.hasAttribute('data-tipo-fonte')) tipoFonte(b.getAttribute('data-tipo-fonte'));
     if(b.hasAttribute('data-tema'))  tema(b.getAttribute('data-tema'));
     if(b.hasAttribute('data-larg'))  largura(b.getAttribute('data-larg'));
     if(b.hasAttribute('data-ficha')) fichas(b.getAttribute('data-ficha'));
@@ -1063,6 +1377,7 @@ antecedência.</p></section>
       b.setAttribute('aria-pressed', b.getAttribute('data-secs') === v ? 'true' : 'false');
     });
     salvar('secs', v);
+    document.dispatchEvent(new Event('cv:secoes'));
   }
   secoes(ler('secs','abertas'));
   document.addEventListener('click', function(e){
@@ -1127,6 +1442,10 @@ antecedência.</p></section>
         ? Math.floor(restante/60) + ' h ' + (restante%60) + ' min'
         : restante + ' min';
     if(el = document.getElementById('ap-notas')) el.textContent = String(notas);
+    [['ap-lidas','lm-lidas'],['ap-tempo','lm-tempo'],['ap-notas','lm-notas']].forEach(function(p){
+      var origem = document.getElementById(p[0]), destino = document.getElementById(p[1]);
+      if(origem && destino) destino.textContent = origem.textContent;
+    });
     revisar();
   }
   var pintarAntes = pintar;
@@ -1193,6 +1512,31 @@ antecedência.</p></section>
   var navAnterior = document.getElementById('ler-anterior');
   var navAudio = document.getElementById('ler-audio');
   var navProxima = document.getElementById('ler-proxima');
+  var navMais = document.getElementById('ler-mais');
+  var fundoLeitura = document.getElementById('ler-fundo');
+  var fecharLeitura = document.getElementById('ler-fechar');
+
+  function fecharAcoesLeitura(){
+    if(fundoLeitura){ fundoLeitura.classList.remove('aberto'); fundoLeitura.hidden = true; }
+    if(navMais) navMais.setAttribute('aria-expanded','false');
+  }
+  if(navMais) navMais.addEventListener('click', function(){
+    if(!fundoLeitura) return;
+    fundoLeitura.hidden = false;
+    fundoLeitura.classList.add('aberto');
+    navMais.setAttribute('aria-expanded','true');
+    if(fecharLeitura) fecharLeitura.focus();
+  });
+  if(fecharLeitura) fecharLeitura.addEventListener('click', fecharAcoesLeitura);
+  if(fundoLeitura) fundoLeitura.addEventListener('click', function(e){ if(e.target === fundoLeitura) fecharAcoesLeitura(); });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && fundoLeitura && !fundoLeitura.hidden) fecharAcoesLeitura(); });
+  document.addEventListener('click', function(e){
+    var atalho = e.target.closest && e.target.closest('[data-atalho]');
+    if(!atalho) return;
+    var acao = document.getElementById(atalho.getAttribute('data-atalho'));
+    fecharAcoesLeitura();
+    if(acao) acao.click();
+  });
 
   function secaoAtual(){
     var visiveis = secs.filter(function(d){ return d.offsetParent !== null; });
@@ -1229,7 +1573,7 @@ antecedência.</p></section>
   if(navProxima) navProxima.addEventListener('click', function(){ ir(1); });
 
   var sintetizador = ('speechSynthesis' in window && 'SpeechSynthesisUtterance' in window) ? window.speechSynthesis : null;
-  var filaFala = [], posFala = 0, estadoFala = 'parado', versaoFala = 0;
+  var filaFala = [], posFala = 0, estadoFala = 'parado', versaoFala = 0, alvoFalado = null;
   function rotuloAudio(estado){
     if(!navAudio) return;
     var ico = navAudio.querySelector('.ico');
@@ -1248,28 +1592,50 @@ antecedência.</p></section>
     versaoFala++;
     filaFala = []; posFala = 0;
     if(sintetizador) sintetizador.cancel();
+    if(alvoFalado) alvoFalado.classList.remove('audio-ativa');
+    alvoFalado = null;
     rotuloAudio('parado');
   }
-  function textoFalado(d){
-    if(!d) return '';
-    var corpo = d.querySelector('.sec-corpo');
-    if(!corpo) return '';
-    var copia = corpo.cloneNode(true);
-    [].forEach.call(copia.querySelectorAll('.nota,.recup,button,textarea'),function(n){ n.remove(); });
-    return (d.getAttribute('data-num') + '. ' + d.getAttribute('data-tit') + '. ' + copia.textContent)
-      .replace(/\s+/g,' ').trim();
-  }
-  function dividirFala(txt){
-    var frases = txt.match(/[^.!?]+[.!?]+|[^.!?]+$/g) || [txt];
-    var partes = [], atual = '';
+  function frasesDoTexto(txt){
+    var frases = (txt.match(/[^.!?]+[.!?]+|[^.!?]+$/g) || [txt]), partes = [];
     frases.forEach(function(frase){
       frase = frase.trim();
-      if(!frase) return;
-      if(atual && (atual.length + frase.length + 1 > 240)){ partes.push(atual); atual = frase; }
-      else atual += (atual ? ' ' : '') + frase;
+      while(frase.length > 240){
+        var corte = frase.lastIndexOf(' ', 240);
+        if(corte < 80) corte = 240;
+        partes.push(frase.slice(0,corte)); frase = frase.slice(corte).trim();
+      }
+      if(frase) partes.push(frase);
     });
-    if(atual) partes.push(atual);
     return partes;
+  }
+  function montarFilaFala(d){
+    if(!d) return [];
+    var fila = [], titulo = d.querySelector('summary h4');
+    function adicionar(alvo, texto){
+      frasesDoTexto((texto || '').replace(/\s+/g,' ').trim()).forEach(function(frase){
+        fila.push({texto:frase, alvo:alvo});
+      });
+    }
+    if(titulo) adicionar(titulo, d.getAttribute('data-num') + '. ' + d.getAttribute('data-tit'));
+    var corpo = d.querySelector('.sec-corpo');
+    if(!corpo) return fila;
+    [].forEach.call(corpo.querySelectorAll('p,li,blockquote,td,th'),function(alvo){
+      if(alvo.closest('.nota,.recup') || (alvo.tagName === 'BLOCKQUOTE' && alvo.querySelector('p'))) return;
+      adicionar(alvo, alvo.textContent);
+    });
+    return fila;
+  }
+  function acompanharAudio(item){
+    if(!item || !item.alvo) return;
+    if(alvoFalado && alvoFalado !== item.alvo) alvoFalado.classList.remove('audio-ativa');
+    alvoFalado = item.alvo;
+    alvoFalado.classList.add('audio-ativa');
+    var caixa = alvoFalado.getBoundingClientRect();
+    var margem = Math.max(90, window.innerHeight * .22);
+    if(caixa.top < margem || caixa.bottom > window.innerHeight - margem){
+      alvoFalado.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',block:'center'});
+    }
   }
   function vozPortugues(){
     if(!sintetizador || !sintetizador.getVoices) return null;
@@ -1280,7 +1646,9 @@ antecedência.</p></section>
   function falarProxima(versao){
     if(!sintetizador || versao !== versaoFala || estadoFala === 'parado') return;
     if(posFala >= filaFala.length){ pararAudio(); return; }
-    var fala = new window.SpeechSynthesisUtterance(filaFala[posFala++]);
+    var item = filaFala[posFala++];
+    acompanharAudio(item);
+    var fala = new window.SpeechSynthesisUtterance(item.texto);
     fala.lang = 'pt-BR'; fala.rate = .95;
     var voz = vozPortugues(); if(voz) fala.voice = voz;
     fala.onend = function(){ if(versao === versaoFala && estadoFala === 'falando') falarProxima(versao); };
@@ -1289,12 +1657,14 @@ antecedência.</p></section>
   }
   function iniciarAudio(){
     var a = secaoAtual();
-    var txt = textoFalado(a.sec);
-    if(!txt) return;
+    var fila = montarFilaFala(a.sec);
+    if(!fila.length) return;
     if(a.sec) a.sec.open = true;
     versaoFala++;
     sintetizador.cancel();
-    filaFala = dividirFala(txt); posFala = 0;
+    if(alvoFalado) alvoFalado.classList.remove('audio-ativa');
+    alvoFalado = null;
+    filaFala = fila; posFala = 0;
     rotuloAudio('falando');
     falarProxima(versaoFala);
   }
@@ -1368,8 +1738,15 @@ antecedência.</p></section>
   })();
 
   var fundo = document.getElementById('sinc-fundo');
+  var focoAntesSinc = null;
+  function fecharQR(){
+    if(!fundo) return;
+    fundo.classList.remove('aberto');
+    if(focoAntesSinc && focoAntesSinc.focus) focoAntesSinc.focus();
+  }
   function abrirQR(){
     if(!fundo) return;
+    focoAntesSinc = document.activeElement;
     var payload = montarSinc();
     var url = location.origin + location.pathname + '#sinc=' + encodeURIComponent(payload);
     var caixa = document.getElementById('sinc-qr');
@@ -1389,16 +1766,20 @@ antecedência.</p></section>
       }
     }
     fundo.classList.add('aberto');
+    var fecharTopo = document.getElementById('sinc-fechar-top');
+    if(fecharTopo) fecharTopo.focus();
   }
   var bQR = document.getElementById('ap-qr');
   if(bQR) bQR.addEventListener('click', abrirQR);
   var bFechar = document.getElementById('sinc-fechar');
-  if(bFechar) bFechar.addEventListener('click', function(){ fundo.classList.remove('aberto'); });
+  if(bFechar) bFechar.addEventListener('click', fecharQR);
+  var bFecharTopo = document.getElementById('sinc-fechar-top');
+  if(bFecharTopo) bFecharTopo.addEventListener('click', fecharQR);
   if(fundo) fundo.addEventListener('click', function(e){
-    if(e.target === fundo) fundo.classList.remove('aberto');
+    if(e.target === fundo) fecharQR();
   });
   document.addEventListener('keydown', function(e){
-    if(e.key === 'Escape' && fundo && fundo.classList.contains('aberto')) fundo.classList.remove('aberto');
+    if(e.key === 'Escape' && fundo && fundo.classList.contains('aberto')) fecharQR();
   });
   var bCopiarLink = document.getElementById('sinc-copiar');
   if(bCopiarLink) bCopiarLink.addEventListener('click', function(){

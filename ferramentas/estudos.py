@@ -89,6 +89,8 @@ RAIL = """<nav class="rail" aria-label="Sumário">
 <a href="#trilha-5-plataforma-confiabilidade-e-seg">5 · Plataforma e segurança</a>
 <a href="#trilha-6-escrita-influ-ncia-e-carreira">6 · Escrita e carreira</a></div>
 <div class="grp"><span>Referência</span>
+<a href="#biblioteca-can-nica-20-obras-para-estuda">Biblioteca canônica · 20 obras</a>
+<a href="#ordem-estrat-gica-o-que-come-a-agora">Ordem estratégica</a>
 <a href="#os-dez-atemporais">Os dez atemporais</a>
 <a href="#seis-regras-que-decidem-se-o-plano-funci">Seis regras</a>
 <a href="#o-que-ficou-deliberadamente-de-fora">O que ficou de fora</a>
@@ -120,7 +122,7 @@ HTML = HEAD + EXTRA + f"""
         <span class="chip on">6 trilhas</span>
         <span class="chip">~2,5 a 3 anos</span>
         <span class="chip">6–8 h / semana</span>
-        <span class="chip">40+ livros</span>
+        <span class="chip">20 obras canônicas · 40+ apoios</span>
         <span class="chip data" id="chip-data">—</span>
       </div>
     </div>
@@ -146,6 +148,8 @@ HTML = HEAD + EXTRA + f"""
      <a href="#trilha-4-qualidade-testes-e-refatora-o">Trilha 4 · Qualidade e testes</a>
      <a href="#trilha-5-plataforma-confiabilidade-e-seg">Trilha 5 · Plataforma e segurança</a>
      <a href="#trilha-6-escrita-influ-ncia-e-carreira">Trilha 6 · Escrita e carreira</a>
+     <a href="#biblioteca-can-nica-20-obras-para-estuda">Biblioteca canônica · 20 obras</a>
+     <a href="#ordem-estrat-gica-o-que-come-a-agora">Ordem estratégica</a>
      <a href="#os-dez-atemporais">Os dez atemporais</a>
    </details>
    {body}

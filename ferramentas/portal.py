@@ -112,7 +112,7 @@ PORTAS = """
     <h3>Plano mestre de estudos</h3>
     <p>O currículo autodirigido. Seis trilhas, um livro-espinha por trilha, projeto
     obrigatório e um marco que se pode provar falso.</p>
-    <span class="st">6 trilhas · 40+ livros · 6–8 h por semana</span>
+    <span class="st">6 trilhas · 20 obras canônicas · 6–8 h por semana</span>
   </a>
 </div>
 """

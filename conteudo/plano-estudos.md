@@ -138,7 +138,8 @@ A trilha mais valiosa do plano para o seu perfil, e a que mais muda a conversa e
 entrevista sênior. Você já opera sistemas distribuídos; falta o modelo mental que explica
 por que eles falham do jeito que falham.
 
-**Livro-espinha:** *Designing Data-Intensive Applications* — **Martin Kleppmann**. Se você
+**Livro-espinha:** *Designing Data-Intensive Applications* (2ª ed.) — **Martin Kleppmann &
+Chris Riccomini**. Se você
 ler um único livro técnico nos próximos três anos, é este. Ele costura banco de dados,
 replicação, particionamento, transações, consenso e processamento de fluxo em um argumento
 só, e é escrito com um rigor de citação que quase nenhum livro da área tem.
@@ -275,6 +276,85 @@ descrevendo a sua semana.
 tudo das outras cinco.
 
 **Marco verificável:** um texto seu foi citado ou usado por alguém que você não conhece.
+
+---
+
+## Biblioteca canônica · 20 obras para estudar, não apenas possuir
+
+Esta não é uma tabela de vendas absolutas — elas variam por país, edição e canal —, mas uma
+curadoria de obras com circulação internacional, impacto comprovado na prática e utilidade
+durável. A regra é simples: **nenhum destes livros é um fim em si**. Cada um entra no plano
+quando há uma pergunta de engenharia, um projeto ou uma decisão que ele ajuda a tornar melhor.
+
+### 1. Fundamentos, programação e pensamento computacional
+
+| Obra | Nível | Por que permanece | Conceitos-chave |
+|---|---|---|---|
+| [*The Pragmatic Programmer* (20th Anniversary Edition)](https://books.pragprog.com/titles/tpp20/the-pragmatic-programmer-20th-anniversary-edition/) — David Thomas & Andrew Hunt | Intermediário | O melhor ponto de entrada para uma prática deliberada: não ensina uma linguagem, ensina responsabilidade, feedback e adaptabilidade. | DRY, ortogonalidade, reversibilidade, depuração, estimativa, testes, aprendizagem contínua |
+| *The Algorithm Design Manual* — Steven Skiena | Intermediário | Liga estruturas de dados a problemas reais e ensina a escolher, não apenas memorizar, algoritmos. | complexidade, grafos, programação dinâmica, catálogo de problemas |
+| *Introduction to Algorithms* — Cormen, Leiserson, Rivest & Stein | Avançado | Referência formal para voltar quando a intuição não basta; é base de consulta, não uma maratona obrigatória. | provas, estruturas de dados, análise assintótica, algoritmos clássicos |
+| *Computer Systems: A Programmer’s Perspective* — Bryant & O’Hallaron | Intermediário | Faz a ponte entre código e máquina, explicando os limites concretos de memória, cache, processos e rede. | representação, memória, cache, linking, concorrência, I/O |
+
+### 2. Projeto, arquitetura e código que continua mudável
+
+| Obra | Nível | Por que permanece | Conceitos-chave |
+|---|---|---|---|
+| *A Philosophy of Software Design* — John Ousterhout | Intermediário | Uma tese clara sobre complexidade, profundidade de módulo e ocultação de informação; é o antídoto contra regra de estilo sem contexto. | complexidade, módulos profundos, interfaces, design estratégico |
+| [*Refactoring* (2ª ed.)](https://martinfowler.com/books/refactoring.html) — Martin Fowler, com Kent Beck | Intermediário | Transformações pequenas que preservam comportamento continuam sendo a maneira mais segura de melhorar um sistema vivo. | code smells, testes, extração, substituição, evolução incremental |
+| *Working Effectively with Legacy Code* — Michael Feathers | Avançado | Livro central para alterar sistemas sem testes: ensina a criar costuras e testes de caracterização antes de arriscar uma mudança. | legado, seams, testes de caracterização, dependências |
+| *Software Architecture: The Hard Parts* — Neal Ford, Mark Richards, Pramod Sadalage & Zhamak Dehghani | Avançado | Trata arquitetura como decisões difíceis e reversíveis, não como desenho bonito; excelente para decomposição e trade-offs. | acoplamento, granularidade, migração, dados distribuídos, trade-offs |
+| *Domain-Driven Design* — Eric Evans | Avançado | Continua sendo o vocabulário mais influente para ligar modelo de domínio, linguagem e fronteiras de sistema. | linguagem ubíqua, bounded contexts, agregados, contexto |
+
+### 3. Dados, sistemas distribuídos e infraestrutura
+
+| Obra | Nível | Por que permanece | Conceitos-chave |
+|---|---|---|---|
+| [*Designing Data-Intensive Applications* (2ª ed.)](https://www.oreilly.com/library/view/como-projetar-aplicativos/0642572336226/) — Martin Kleppmann & Chris Riccomini | Avançado | O mapa mais coeso para confiabilidade, escala e evolução de sistemas de dados; a edição atual incorpora o cenário cloud e local-first. | replicação, particionamento, transações, consenso, streams, consistência |
+| *Database Internals* — Alex Petrov | Avançado | Desce ao nível de armazenamento e replicação para que decisões de banco deixem de ser escolhas de produto por moda. | B-tree, LSM, WAL, compactação, replicação |
+| [*Site Reliability Engineering*](https://sre.google/books/) — Betsy Beyer, Chris Jones, Jennifer Petoff & Niall Richard Murphy (eds.) | Intermediário | Formaliza operação como engenharia: disponibilidade deixa de ser desejo e vira contrato, medida e aprendizado. | SLI, SLO, orçamento de erro, incidentes, automação, post-mortem |
+| *Continuous Delivery* — Jez Humble & David Farley | Intermediário | A obra fundadora sobre entrega frequente, reversível e segura; as ferramentas mudaram, os princípios de feedback continuam. | pipelines, deployment, testes, configuração, risco de mudança |
+
+### 4. Qualidade, fluxo e segurança
+
+| Obra | Nível | Por que permanece | Conceitos-chave |
+|---|---|---|---|
+| *Unit Testing: Principles, Practices, and Patterns* — Vladimir Khorikov | Intermediário | Troca a pergunta “quantos testes?” por “que confiança este teste compra?”, com rigor raro sobre valor e custo. | pirâmide de testes, mocks, acoplamento, testes de integração |
+| *Accelerate* — Nicole Forsgren, Jez Humble & Gene Kim | Intermediário | Base empírica para discutir fluxo, confiabilidade e desempenho organizacional sem recorrer a opinião ou ritual. | métricas DORA, fluxo, cultura, desempenho, capacidade de entrega |
+| [*Threat Modeling*](https://www.oreilly.com/library/view/threat-modeling/9781118810057/) — Adam Shostack | Intermediário | Segurança entra antes do incidente: o livro transforma ameaça em uma conversa de projeto repetível. | STRIDE, ativos, fronteiras de confiança, mitigação |
+| *Security Engineering* (3ª ed.) — Ross Anderson | Avançado | O tratado para entender segurança como economia, pessoas e sistemas sociotécnicos, além de controles técnicos. | autenticação, criptografia aplicada, incentivos, fraude, risco |
+
+### 5. Produto, experiência e influência técnica
+
+| Obra | Nível | Por que permanece | Conceitos-chave |
+|---|---|---|---|
+| *Don’t Make Me Think, Revisited* — Steve Krug | Iniciante | A porta de entrada mais direta para usabilidade: remove fricção e obriga o desenvolvedor a olhar pela perspectiva de quem usa. | carga cognitiva, navegação, teste de usabilidade, clareza |
+| *Lean UX* (3ª ed.) — Jeff Gothelf & Josh Seiden | Intermediário | Conecta hipótese, pesquisa e entrega para evitar que design seja apenas uma etapa de aprovação. | hipóteses, experimentos, colaboração, métricas de resultado |
+| *The Staff Engineer’s Path* — Tanya Reilly | Intermediário | Trata influência técnica como trabalho de sistema: escopo, patrocínio, comunicação e alavancagem sem depender de cargo gerencial. | liderança técnica, influência, alinhamento, carreira |
+
+## Ordem estratégica: o que começa agora
+
+**Primeiro livro: *The Pragmatic Programmer*.** Ele tem o maior retorno transversal e cria a
+linguagem de trabalho para todos os demais: responsabilidade, feedback, reversibilidade e
+aprendizado contínuo. Não o leia como lista de dicas. Leia em quatro semanas, aplicando uma
+ideia por semana no projeto atual e registrando o resultado.
+
+O percurso profundo não é “vinte livros em fila”. É uma sequência de seis ciclos, cada um
+terminando num artefato que pode ser revisado:
+
+| Ciclo | Duração | Livro-espinha | Produto de estudo |
+|---|---:|---|---|
+| 0 · Ativação | 4 semanas, em paralelo ao diagnóstico | *The Pragmatic Programmer* | diário de engenharia com quatro decisões reais, uma por semana |
+| 1 · Fundamentos | 5–6 meses | *The Algorithm Design Manual* | interpretador e análise de complexidade de código real |
+| 2 · Sistemas | 6 meses | *Designing Data-Intensive Applications* | serviço resiliente com falha injetada e previsão escrita |
+| 3 · Arquitetura | 6 meses | *A Philosophy of Software Design* | três ADRs e uma migração incremental de legado |
+| 4 · Qualidade | 4 meses | *Unit Testing* + *Refactoring* | módulo legado protegido por caracterização e refatorado |
+| 5 · Operação | 3–4 meses | *Site Reliability Engineering* | SLO, exercício de falha e post-mortem sem culpados |
+| 6 · Influência | contínuo | *The Staff Engineer’s Path* | capítulos, ADRs e textos do próprio Currículo Vivo |
+
+**Ritmo por livro-espinha:** uma sessão de leitura ativa, uma sessão de implementação ou
+análise e uma sessão curta de escrita por semana. Ao terminar um capítulo, responda: “que
+decisão do meu sistema isto mudaria?” Se não houver decisão, o capítulo vira consulta, não
+uma obrigação de leitura linear.
 
 ---
 
