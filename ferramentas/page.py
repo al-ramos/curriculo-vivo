@@ -355,12 +355,6 @@ for cam,nome,cor,n,hv in BANDS:
               f'<div class="hv">{hv}</div></div>')
 
 ROADMAP = [
- ("2","Geracional","15–20 anos",[
-   ("2.2","Dados e persistência","8 seções",0),
-   ("2.3","Sistemas distribuídos: fundamentos","7 seções",0),
-   ("2.4","Linguagens de programação","6 seções",0),
-   ("2.5","Requisitos, produto e IHC","7 seções",0),
-   ("2.6","Comportamento e carreira","7 seções",0)]),
  ("3","Cíclico","5–15 anos",[
    ("3.1","Arquitetura de software","10 seções",0),
    ("3.2","Processos e metodologias","erosão · 8 seções",0),
@@ -370,9 +364,9 @@ ROADMAP = [
    ("3.6","Contexto brasileiro","8 seções",0),
    ("3.7","Economia da decisão","6 seções",0)]),
  ("4","Sazonal","1–5 anos",[
-   ("4.1","Segurança e cadeia de suprimentos","~4 anos · 8 seções",0),
-   ("4.2","Ferramentas e infraestrutura","2–5 anos · 10 seções",0),
-   ("4.3","IA no ciclo de desenvolvimento","volátil · 1–2 anos",1)]),
+   ("4.1","Segurança e cadeia de suprimentos","~4 anos · 10 seções",0),
+   ("4.2","Ferramentas e infraestrutura","2–5 anos · 13 seções",0),
+   ("4.3","IA no ciclo de desenvolvimento","volátil · 13 seções",1)]),
 ]
 rm=""
 for num,nome,hv,itens in ROADMAP:
@@ -410,7 +404,7 @@ for _, tipo, idd, a, b in marcas:
 if em_sub: partes.append('</div>')
 if em_grupo: partes.append('</div>')
 partes.append('<div class="grp"><span>A escrever</span>'
-              '<a class="cap" href="#roteiro">Capítulos 2.2 a 4.3</a></div></nav>')
+              '<a class="cap" href="#roteiro">Capítulos 3.1 a 4.3</a></div></nav>')
 RAIL = ''.join(partes)
 
 HTML = HEAD + f"""
@@ -420,7 +414,7 @@ HTML = HEAD + f"""
       <div class="eyebrow"><a href="index.html">&larr; Portal</a> &nbsp;·&nbsp; volume um &nbsp;·&nbsp; <a href="estudos.html">Plano de estudos &rarr;</a></div>
       <h1 class="book">Engenharia de Software:<br><em>Envelhecimento Macro</em></h1>
       <p class="dek">Um currículo organizado por uma pergunta só — em quanto tempo cada
-      conhecimento envelhece. Vinte e um capítulos distribuídos em quatro camadas de
+      conhecimento envelhece. Vinte e dois capítulos distribuídos em quatro camadas de
       velocidade, cada seção com data de revisão e gatilho declarados.</p>
       <div class="ctrls">
         <div class="ctrl"><span>Tema</span>
@@ -451,8 +445,8 @@ HTML = HEAD + f"""
           </div></div>
       </div>
       <div class="status">
-        <span class="chip on">Camada 0, 1.1 a 1.4 e 2.1 escritos</span>
-        <span class="chip">~11.000 palavras</span>
+        <span class="chip on">Camadas 0 a 2 escritas · 11 de 22 capítulos</span>
+        <span class="chip">~21.000 palavras</span>
         <span class="chip">Índice v3</span>
         <span class="chip data" id="chip-data">—</span>
       </div>
@@ -461,7 +455,7 @@ HTML = HEAD + f"""
       <h2>Coluna estratigráfica</h2>
       {bands}
       <p class="note">A espessura de cada faixa é o número de capítulos. Três dos vinte e
-      um estão na camada sazonal: <b>a ansiedade que o mercado produz se concentra em 14%
+      dois estão na camada sazonal: <b>a ansiedade que o mercado produz se concentra em 14%
       do currículo.</b></p>
     </div>
   </div>
@@ -479,13 +473,18 @@ HTML = HEAD + f"""
      <a href="#c1-4">1.4 · Cognição e metacognição</a>
      <a href="#cFontes">Fontes</a>
      <a href="#c2-1">2.1 · Paradigmas de programação</a>
-     <a href="#roteiro">Capítulos 2.2 a 4.3 · a escrever</a>
+     <a href="#c2-2">2.2 · Dados e persistência</a>
+     <a href="#c2-3">2.3 · Sistemas distribuídos</a>
+     <a href="#c2-4">2.4 · Linguagens de programação</a>
+     <a href="#c2-5">2.5 · Requisitos, produto e IHC</a>
+     <a href="#c2-6">2.6 · Comportamento e carreira</a>
+     <a href="#roteiro">Capítulos 3.1 a 4.3 · a escrever</a>
    </details>
    {body}
    <div class="roadmap" id="roteiro">
      <h2 class="camada" style="border:0;padding:0;margin:0 0 .5rem">
-       <span class="cnum">A escrever</span><span class="cname">Capítulos 2.2 a 4.3</span></h2>
-     <p style="color:var(--muted);font-size:.95rem">Quinze capítulos com a ficha definida
+       <span class="cnum">A escrever</span><span class="cname">Capítulos 3.1 a 4.3</span></h2>
+     <p style="color:var(--muted);font-size:.95rem">Dez capítulos com a ficha definida
      e o texto pendente. A ordem de escrita segue a regra do plano: fichas antes de prosa.</p>
      {rm}
    </div>

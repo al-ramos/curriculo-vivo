@@ -6,13 +6,13 @@ O portal tinha três planos que não se falavam: o índice do livro, o plano té
 e o plano de estudos. Esta página os transforma em uma sequência só, e ela se apoia numa
 regra única:
 
-> **Cada capítulo do livro é escrito depois da trilha de estudo que o sustenta — nunca
-> antes. O capítulo é o entregável escrito da trilha.**
+> **Cada capítulo do livro é validado e revisto depois da trilha de estudo que o sustenta.
+> Quando a primeira redação já existe, ela funciona como hipótese pública a ser corrigida.**
 
 Isso resolve dois problemas ao mesmo tempo. O plano de estudos exige um texto público ao
-fim de cada trilha, e escrever esse texto some do orçamento de tempo porque ele já era o
-capítulo. E o livro deixa de ser opinião sobre assuntos estudados de véspera: cada
-capítulo chega depois de seis meses de leitura dirigida e um projeto entregue.
+fim de cada trilha, e a revisão desse texto já é o entregável. E o livro não congela opinião:
+cada capítulo atravessa leitura dirigida, projeto e confronto com fontes, mesmo quando sua
+primeira versão foi adiantada durante a construção editorial.
 
 Três consequências que valem declarar:
 
@@ -63,14 +63,14 @@ de paradigmas sem repetir manual.
 
 | Estudo | Livro | Portal |
 |---|---|---|
-| Trilha 2 — Kleppmann como espinha; Petrov, Winand e Nygard de apoio; serviço resiliente como projeto | **2.2 Dados e persistência** e **2.3 Sistemas distribuídos** | Radar de frescor e glossário vivo, gerados do frontmatter |
+| Trilha 2 — Kleppmann como espinha; Petrov, Winand e Nygard de apoio; serviço resiliente como projeto | Revisão crítica de **2.2 Dados e persistência** e **2.3 Sistemas distribuídos** | Radar de frescor e glossário vivo, gerados do frontmatter |
 
-Os dois capítulos mais valiosos do livro para o seu perfil, escritos no momento em que
-você acabou de provar as garantias em código. A seção "do campo" de 2.2 sai da sua
-experiência com Sybase e SQL Server em produção contínua.
+Os dois capítulos mais valiosos do livro para o seu perfil voltam à bancada no momento em
+que você acaba de provar as garantias em código. A seção "do campo" de 2.2 confronta sua
+experiência com Sybase e SQL Server em produção contínua com os experimentos da trilha.
 
-**Marco:** o livro passa a ter cinco capítulos escritos e um radar que aponta sozinho o
-que está vencendo.
+**Marco:** os capítulos 2.2 e 2.3 recebem revisão baseada em experimento, e o radar passa a
+apontar sozinho o que está vencendo.
 
 ---
 
@@ -122,7 +122,7 @@ base nele.
 
 | Estudo | Livro | Portal |
 |---|---|---|
-| Trilha 6 em regime contínuo — Brooks, DeMarco & Lister, Larson | **2.4 Linguagens**, **2.5 Requisitos e IHC**, **2.6 Carreira**, **3.2 Processos** | Verificação de todas as fontes primárias, com checagem de link na CI |
+| Trilha 6 em regime contínuo — Brooks, DeMarco & Lister, Larson | Revisão de **2.4 Linguagens**, **2.5 Requisitos e IHC**, **2.6 Carreira**; redação de **3.2 Processos** | Verificação de todas as fontes primárias, com checagem de link na CI |
 
 Quatro capítulos que dependem menos de estudo novo e mais de organizar o que você já viveu
 — trinta anos de linguagens, requisitos mal levantados, transições de carreira e a

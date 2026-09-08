@@ -27,6 +27,11 @@ fichas = {
  '1.3': ('sem erosão observada','permanente','teórico · meta','/perenidade'),
  '1.4': ('sem erosão observada','permanente','humano · cognitivo','/cognicao'),
  '2.1': ('15–20 anos','consolidado','técnico','/paradigmas'),
+ '2.2': ('15–20 anos','consolidado','técnico','/dados'),
+ '2.3': ('15–20 anos','consolidado','técnico','/distribuidos'),
+ '2.4': ('15–20 anos','consolidado','técnico','/linguagens'),
+ '2.5': ('15–20 anos','consolidado','humano · produto','/requisitos'),
+ '2.6': ('15–20 anos','consolidado','humano','/carreira'),
 }
 def ficha(num):
     if num not in fichas: return ''
@@ -81,8 +86,24 @@ for p in partes[1:]:
     saida.append(trecho + extra + '</div></details>' + p[corte:])
 body = ''.join(saida)
 
-body = body.replace('<hr />','</section>')
-body += '</section>'
+# fecha capítulos pela estrutura gerada. Antes havia um único capítulo por camada;
+# com a Camada 2 completa, depender apenas do <hr> deixaria capítulos irmãos aninhados.
+_tok = re.compile(r'(<h2 class="camada".*?</h2>|<section class="chapter">|<hr />)', re.S)
+_out = []; _pos = 0; _chapter_open = False
+for _m in _tok.finditer(body):
+    _out.append(body[_pos:_m.start()]); _t = _m.group(1)
+    if _t.startswith('<section class="chapter">'):
+        if _chapter_open: _out.append('</section>')
+        _out.append(_t); _chapter_open = True
+    elif _t.startswith('<h2 class="camada"'):
+        if _chapter_open: _out.append('</section>'); _chapter_open = False
+        _out.append(_t)
+    else:
+        if _chapter_open: _out.append('</section>'); _chapter_open = False
+    _pos = _m.end()
+_out.append(body[_pos:])
+if _chapter_open: _out.append('</section>')
+body = ''.join(_out)
 # guarda: aninhamento inválido quebrava o layout silenciosamente (menu sumia
 # no meio da página). Falha alto em vez de gerar HTML torto.
 from html.parser import HTMLParser

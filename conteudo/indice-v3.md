@@ -4,7 +4,7 @@
 > Classificação por **velocidade de envelhecimento**, eixo único. O assunto de cada
 > capítulo (técnico, humano, contextual) é etiqueta na ficha, não divisão estrutural.
 > Numeração decimal, sem letras. **22 capítulos** — 21 de conteúdo nas camadas 1 a 4,
-> mais a Camada 0, que é instrumento de leitura e não matéria — e ~160 seções.
+> mais a Camada 0, que é instrumento de leitura e não matéria — e ~173 seções.
 > URL canônica de cada capítulo é um slug estável; o número é apenas exibição.
 
 | Camada | Meia-vida | Capítulos | Fatia do conteúdo |
@@ -122,6 +122,8 @@ com o argumento.
 - **2.2.6** OLTP vs. OLAP; warehouse, lake, lakehouse
 - **2.2.7** Migração e versionamento de esquema
 - **2.2.8** *Do campo:* bases críticas em Sybase e SQL Server em produção contínua
+- **2.2.9** Bancos vetoriais, embeddings e busca híbrida
+- **2.2.10** Streaming de dados e contratos de dados
 
 ## 2.3 · Sistemas distribuídos: fundamentos
 `/distribuidos` · *etiquetas: técnico*
@@ -150,6 +152,7 @@ há cinquenta anos.
 - **2.4.4** Ecossistema e gerenciador de pacotes decidem mais que sintaxe
 - **2.4.5** Runtimes e interoperabilidade — JVM, CLR, WASM
 - **2.4.6** Como escolher uma linguagem sem escolher uma moda
+- **2.4.7** WebAssembly Component Model, runtimes portáveis e sandboxing
 
 ## 2.5 · Requisitos, produto e IHC
 `/requisitos` · *etiquetas: humano, produto*
@@ -277,6 +280,8 @@ há cinquenta anos.
 - **4.1.6** Cadeia de suprimentos — dependências, SBOM, assinatura de artefato
 - **4.1.7** Shift left e a fadiga de alerta
 - **4.1.8** *Do campo:* SonarQube e Veracode dentro de pipeline corporativo
+- **4.1.9** Proveniência de artefatos e builds reprodutíveis — SLSA e Sigstore
+- **4.1.10** Segurança de dependências e código gerado por IA
 
 ## 4.2 · Ferramentas e infraestrutura
 `/ferramentas` · *etiquetas: técnico, prática* · meia-vida 2–5 anos
@@ -291,6 +296,9 @@ há cinquenta anos.
 - **4.2.8** Post-mortem sem culpado
 - **4.2.9** Plataforma interna como produto — platform engineering
 - **4.2.10** O que sobra quando a ferramenta morre — o princípio por trás de cada uma
+- **4.2.11** OpenTelemetry e telemetria vendor-neutral
+- **4.2.12** Continuous profiling e eBPF
+- **4.2.13** Ambientes efêmeros para desenvolvimento
 
 ## 4.3 · IA no ciclo de desenvolvimento
 `/ia` · *etiquetas: técnico, humano* · **volátil: meia-vida 1–2 anos**
@@ -303,6 +311,11 @@ há cinquenta anos.
 - **4.3.6** LLMOps — versionamento de prompt, eval, guardrail, observabilidade
 - **4.3.7** O que a IA não deslocou — os invariantes da Camada 1, um a um
 - **4.3.8** O risco pedagógico: o atalho que remove o atrito que ensina
+- **4.3.9** Agentes autônomos e workflows duráveis
+- **4.3.10** Tool calling, MCP e interoperabilidade entre agentes
+- **4.3.11** Segurança de IA — prompt injection, exfiltração e permissões
+- **4.3.12** Avaliação contínua, tracing de agentes, custo e não-determinismo
+- **4.3.13** Modelos multimodais e geração de código
 
 ---
 
@@ -328,6 +341,11 @@ Cognição e Escrita técnica sobem para Permanente. Linguagens desce de sazonal
 geracional, com a justificativa incorporada ao capítulo. Slug estável por capítulo, para
 que renumerações futuras não quebrem links — um livro sobre envelhecimento não pode ter
 URL que apodrece.
+
+**Planejamento incremental (08/09/2026).** Inclusão de tópicos contemporâneos sem criar
+novas camadas: dados vetoriais e streaming; WebAssembly Component Model; proveniência e
+builds reprodutíveis; OpenTelemetry, profiling e eBPF; ambientes efêmeros; agentes,
+workflows duráveis, MCP, segurança de IA, avaliação de agentes e multimodalidade.
 
 **v2 (01/09/2026) — enriquecimento.** De ~60 para ~160 seções. Oito capítulos novos:
 teste de perenidade, dados e persistência, sistemas distribuídos, segurança e cadeia de

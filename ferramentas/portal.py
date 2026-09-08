@@ -1,6 +1,9 @@
 import markdown, re
+from pathlib import Path
 
-HEAD = open('_head.html').read().replace('<title>Currículo Vivo</title>',
+BASE = Path(__file__).resolve().parent
+
+HEAD = (BASE / '_head.html').read_text(encoding='utf-8').replace('<title>Currículo Vivo</title>',
     '<title>Currículo Vivo</title>')
 
 EXTRA = """<style>
@@ -68,7 +71,7 @@ def validar(html):
         raise SystemExit('HTML mal aninhado: %s | abertas: %s' % (v.erros[:3], v.pilha[:3]))
     return html
 
-md = open('linha-do-tempo.md').read()
+md = (BASE.parent / 'conteudo' / 'linha-do-tempo.md').read_text(encoding='utf-8')
 md = md.split('\n', 1)[1]
 body = markdown.markdown(md, extensions=['tables','smarty'])
 
@@ -95,7 +98,7 @@ PORTAS = """
     <h3>Engenharia de Software: Envelhecimento Macro</h3>
     <p>O livro. Vinte e dois capítulos organizados por velocidade de envelhecimento, cada
     seção com meia-vida, estado e data de revisão declarados.</p>
-    <span class="st">Camada 0, 1.1 a 1.4 e 2.1 · 6 de 22 capítulos</span>
+    <span class="st">Camadas 0 a 2 · 11 de 22 capítulos</span>
   </a>
   <a class="porta" href="estudos.html">
     <span class="k">O percurso</span>
@@ -127,13 +130,13 @@ HTML = HEAD + EXTRA + f"""
     <div class="strata">
       <h2>Onde o plano está</h2>
       <div class="band"><div class="lab">Escrito<em>capítulos</em></div>
-        <div class="bar" style="background:var(--s1);height:1.9rem"></div><div class="hv">6 de 22</div></div>
+        <div class="bar" style="background:var(--s1);height:1.9rem"></div><div class="hv">11 de 22</div></div>
       <div class="band"><div class="lab">Com ficha<em>capítulos</em></div>
         <div class="bar" style="background:var(--s2);height:1.6rem"></div><div class="hv">22 de 22</div></div>
       <div class="band"><div class="lab">Trilhas<em>concluídas</em></div>
         <div class="bar" style="background:var(--s4);height:1.5rem"></div><div class="hv">0 de 6</div></div>
-      <p class="note">O portal está na <b>Fase 0</b>. A próxima entrega é o diagnóstico de
-      duas semanas e as fichas dos 22 capítulos.</p>
+      <p class="note">O livro já concluiu as <b>camadas 0 a 2</b>. As trilhas continuam como
+      ciclos de prática, validação e revisão das conclusões publicadas.</p>
     </div>
   </div>
 </header>
@@ -176,10 +179,13 @@ HTML = HEAD + EXTRA + f"""
 <footer>
   <p><strong>Como ler este portal.</strong> O livro descreve o território; o plano de
   estudos descreve o percurso; esta página diz em que ordem as duas coisas acontecem. A
-  regra que as une é simples: nenhum capítulo é escrito antes da trilha que o sustenta.</p>
+  regra que as une é simples: cada capítulo é validado pela trilha que o sustenta.</p>
   <p>Conteúdo sob CC BY-SA 4.0, código sob MIT.
   Fonte em <a href="https://github.com/al-ramos/curriculo-vivo">github.com/al-ramos/curriculo-vivo</a>.</p>
 </footer>
 """
-open('portal.html','w').write(HTML)
+# Reutiliza os scripts já validados do livro (tema, progresso e histórico público).
+_livro = (BASE / 'curriculo-vivo.html').read_text(encoding='utf-8')
+HTML += '\n\n'.join(re.findall(r'<script>.*?</script>', _livro, re.S)) + '\n'
+(BASE / 'portal.html').write_text(HTML, encoding='utf-8')
 print(len(HTML))

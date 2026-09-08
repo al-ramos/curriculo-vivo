@@ -150,5 +150,157 @@
   "s2-1-7": [
     "Diferencie concorrência de paralelismo e cite as perguntas que todo modelo precisa responder.",
     "Concorrência estrutura atividades que progridem em períodos sobrepostos; paralelismo executa atividades simultaneamente. Todo modelo precisa declarar propriedade do estado, cancelamento, propagação de erro, ordem e controle da pressão entre produtor e consumidor."
+  ],
+  "s2-2-1": [
+    "Qual é o propósito da normalização e quando desnormalizar deixa de ser improviso?",
+    "Normalização organiza fatos segundo suas dependências para evitar anomalias de inserção, atualização e exclusão. Desnormalizar vira engenharia quando há uma carga medida e se declaram autoridade, sincronização, atraso tolerável e reconstrução das cópias."
+  ],
+  "s2-2-2": [
+    "Por que snapshot isolation não é sinônimo de serialização?",
+    "Porque uma fotografia coerente pode permitir write skew: transações concorrentes atualizam itens diferentes e, juntas, violam um invariante. O isolamento deve ser escolhido a partir das anomalias que o domínio não tolera."
+  ],
+  "s2-2-3": [
+    "O que permaneceu do movimento NoSQL e que promessa não resistiu?",
+    "Permaneceram modelos especializados, particionamento horizontal, replicação administrada e atenção a padrões de acesso e consistência. Não resistiu a oposição simples entre SQL e escala nem a ideia de que ausência de DDL elimina esquema."
+  ],
+  "s2-2-4": [
+    "Qual pergunta deve anteceder a escolha de um modelo de dados especializado?",
+    "Qual operação crítica ficará naturalmente mais barata, sob qual volume, consistência, retenção e padrão de acesso. Se essa vantagem não pode ser nomeada, a especialização provavelmente acrescenta custo sem remover o gargalo."
+  ],
+  "s2-2-5": [
+    "O que CAP realmente limita e por que consistência precisa de sobrenome?",
+    "Durante uma partição, não se pode garantir ao mesmo tempo resposta bem-sucedida de todos os lados e consistência linearizável. Consistência precisa de sobrenome porque linearizável, causal, read-your-writes e eventual oferecem observações diferentes."
+  ],
+  "s2-2-6": [
+    "Diferencie OLTP e OLAP e explique o limite do termo lakehouse.",
+    "OLTP otimiza muitas mudanças pequenas, concorrentes e de baixa latência; OLAP otimiza varreduras e agregações amplas. Lakehouse descreve uma convergência técnica útil, mas não elimina decisões de catálogo, semântica, motor, qualidade e propriedade."
+  ],
+  "s2-2-7": [
+    "Quais são as três etapas de expandir–migrar–contrair?",
+    "Primeiro adiciona-se uma forma compatível; depois movem-se dados, escritas e leituras com verificação; só então remove-se a forma antiga. A sequência permite convivência de versões e reduz a necessidade de rollback destrutivo."
+  ],
+  "s2-2-8": [
+    "Qual é a principal lição de operar bases críticas antigas em produção contínua?",
+    "Estabilidade e conhecimento operacional são ativos, não justificativas para imobilidade. Mudanças seguras isolam estrutura de dados, usam lotes e métricas, preservam invariantes e migram por fatias verificáveis."
+  ],
+  "s2-2-9": [
+    "Por que distância vetorial não deve ser tratada como verdade?",
+    "Porque ela expressa semelhança no espaço aprendido por um modelo e uma tarefa. Recuperação precisa ser avaliada por relevância, filtros, frescor, autorização e evidência, geralmente combinando sinais semânticos e lexicais."
+  ],
+  "s2-2-10": [
+    "O que um contrato de dados precisa declarar além do esquema?",
+    "Semântica, unidade, chave, tempo, significado de ausência, propriedade, compatibilidade, qualidade, atraso, retenção e sensibilidade. Um registro de esquema automatiza tipos; não detecta uma mudança de significado."
+  ],
+  "s2-3-1": [
+    "Para que servem as oito falácias da computação distribuída?",
+    "Elas expõem premissas falsas sobre confiabilidade, latência, banda, segurança, topologia, administração, custo e homogeneidade da rede, transformando conveniências implícitas em contratos e cenários testáveis."
+  ],
+  "s2-3-2": [
+    "Como latência, throughput e fila se relacionam?",
+    "Latência mede o tempo por operação e throughput a taxa concluída; aumentar concorrência melhora vazão só até a capacidade. Pela Lei de Little, concorrência média equivale à taxa vezes o tempo; quando chegada supera saída, timeout não cria capacidade e a fila cresce."
+  ],
+  "s2-3-3": [
+    "Por que um timeout produz incerteza e quais controles tornam retry seguro?",
+    "Sem resposta, o pedido pode não ter chegado, estar rodando ou ter concluído. Retry pede operação idempotente, deadline, backoff com jitter, limite de tentativas e um único nível responsável por repetir."
+  ],
+  "s2-3-4": [
+    "Qual é a diferença entre ordenação causal, quórum e consenso?",
+    "Ordenação causal preserva relações de influência; quórum consulta subconjuntos que se intersectam; consenso faz participantes não faltosos concordarem com uma decisão. Nenhum deles substitui automaticamente os demais."
+  ],
+  "s2-3-5": [
+    "Por que exactly-once precisa sempre declarar escopo?",
+    "Porque uma transação pode cobrir um log e seu estado, mas não necessariamente banco externo, e-mail ou mundo físico. Fora da fronteira, redelivery, idempotência e reconciliação continuam necessários."
+  ],
+  "s2-3-6": [
+    "Que falhas circuit breaker, bulkhead e backpressure procuram conter?",
+    "Circuit breaker evita insistir num destino degradado; bulkhead impede que uma carga consuma todos os recursos; backpressure faz a demanda respeitar a capacidade do consumidor. Os três precisam ser testados em conjunto com filas, timeouts e retries."
+  ],
+  "s2-3-7": [
+    "Por que fundamentos distribuídos são geracionais e estilos arquiteturais são cíclicos?",
+    "Topologias oscilam conforme custos e organizações; física, falha parcial, discordância de relógios e custo de coordenação permanecem. Aprender os limites permite avaliar cada nova forma sem confundi-la com garantia."
+  ],
+  "s2-4-1": [
+    "Por que as gerações de linguagem devem ser lidas como narrativa, não como substituição linear?",
+    "Porque a taxonomia varia e todas as gerações continuam coexistindo: assembly em fronteiras, linguagens de alto nível, SQL e lógica dentro dos mesmos sistemas. Cada salto muda o nível de abstração e a responsabilidade do tradutor."
+  ],
+  "s2-4-2": [
+    "Quais forças levam uma linguagem da emergência à manutenção?",
+    "Problema oportuno e implementação iniciam adoção; ferramentas, bibliotecas e comunidade permitem crescimento; compatibilidade domina o platô; novas cargas reduzem uso até nicho e manutenção. A base instalada governa o custo de saída."
+  ],
+  "s2-4-3": [
+    "O que a longevidade do COBOL ensina sobre linguagens atuais?",
+    "O valor está nas regras, dados, integrações e operação acumulados, não na sintaxe. Qualquer tecnologia pode virar legado; testes de comportamento, contratos e fronteiras interoperáveis reduzem o custo de sua futura troca."
+  ],
+  "s2-4-4": [
+    "Por que o gerenciador de pacotes faz parte da decisão de linguagem?",
+    "Porque ele importa um grafo de versões, manutenção, licença, proveniência e risco transitivo. Lockfiles ajudam reprodutibilidade, mas não provam segurança nem saúde futura do ecossistema."
+  ],
+  "s2-4-5": [
+    "Que valor e que limite runtimes como JVM, CLR e WASM compartilham?",
+    "Eles estabilizam uma máquina intermediária e ampliam portabilidade e interoperabilidade. Não apagam diferenças de sistema, tipos, recursos nativos, coleta, versões nem as garantias da fronteira entre componentes."
+  ],
+  "s2-4-6": [
+    "Como distinguir escolha de linguagem de escolha de moda?",
+    "A escolha de engenharia parte de restrições, pondera evidências de ecossistema e operação, testa o maior risco, contabiliza diversidade e registra gatilhos de revisão e saída. Moda substitui esse contexto por popularidade."
+  ],
+  "s2-4-7": [
+    "O que WIT e o modelo de capacidades acrescentam ao WebAssembly?",
+    "WIT descreve interfaces, imports, exports e mundos entre componentes; o hospedeiro concede capacidades específicas. Isso amplia composição e menor autoridade por padrão, mas não torna código confiável nem substitui toda a operação de contêineres."
+  ],
+  "s2-5-1": [
+    "Como descoberta separa problema, interpretação e solução?",
+    "Ela registra observações, formula explicações como hipóteses e testa propostas por valor, usabilidade, viabilidade e sustentabilidade. Assim, um pedido de solução deixa de ser confundido com a necessidade que o originou."
+  ],
+  "s2-5-2": [
+    "Como transformar um atributo de qualidade vago em requisito útil?",
+    "Nomeando fonte, estímulo, ambiente, artefato, resposta e medida. O cenário torna custo e conflito observáveis e permite aceitar ou testar, em vez de apenas desejar que o sistema seja rápido, seguro e disponível."
+  ],
+  "s2-5-3": [
+    "Qual é a fronteira entre história, critério de aceite e teste?",
+    "História convida à conversa sobre valor; critério delimita comportamento observável; testes produzem evidência em vários níveis. Um exemplo automatizado não substitui qualidade, segurança, desempenho nem usabilidade."
+  ],
+  "s2-5-4": [
+    "Por que as heurísticas de Nielsen não são uma certificação de boa experiência?",
+    "Porque são princípios gerais para orientar julgamento e encontrar violações prováveis. Usabilidade depende de pessoa, tarefa e contexto e precisa também de observação com usuários reais."
+  ],
+  "s2-5-5": [
+    "Por que acessibilidade e internacionalização não funcionam bem como retrofit?",
+    "Porque semântica, foco, teclado, conteúdo, plural, direção, datas e formatos são decisões estruturais. Incluí-las nos requisitos orienta componentes e arquitetura; uma camada tardia não reconstrói essas bases."
+  ],
+  "s2-5-6": [
+    "Que cuidados permitem a uma pessoa não designer fazer pesquisa útil?",
+    "Partir de pergunta de aprendizagem, recrutar o contexto certo, obter consentimento, perguntar por comportamento passado, evitar indução, separar observação de interpretação e limitar conclusões ao método e à amostra."
+  ],
+  "s2-5-7": [
+    "Por que conhecimento de negócio aumenta a longevidade profissional?",
+    "Porque permite reenquadrar necessidades em novas tecnologias, distinguir invariante de acidente histórico e conectar falha e qualidade ao impacto real. A ferramenta muda mais rápido que o fluxo de valor."
+  ],
+  "s2-6-1": [
+    "Em que sentido comportamento funciona como infraestrutura?",
+    "Confiança, clareza e responsabilidade sustentam circulação de informação, contestação e correção. Quando falham, riscos ficam ocultos e a capacidade coletiva cai, mesmo que a arquitetura formal permaneça."
+  ],
+  "s2-6-2": [
+    "O que diferencia conflito produtivo de conflito destrutivo?",
+    "O produtivo discute tarefa, evidência e trade-off sob critérios claros; o destrutivo atribui intenção ou valor à pessoa. Feedback específico sobre comportamento e efeito permite corrigir sem rotular identidade."
+  ],
+  "s2-6-3": [
+    "Como autonomia, propriedade e senioridade se relacionam sem produzir heroísmo?",
+    "Autonomia avança dentro de intenção e risco; propriedade cuida do resultado e o torna operável por outros; senioridade amplia consequências e capacidade coletiva. Heroísmo concentra conhecimento, enquanto senioridade reduz dependência."
+  ],
+  "s2-6-4": [
+    "Por que gestão não é a promoção natural da trilha técnica?",
+    "Porque gestão trabalha por contexto, equipe, alocação e desempenho; contribuição individual sênior cresce por profundidade, influência e escopo sem subordinados. São profissões paralelas, com movimentos possíveis entre elas."
+  ],
+  "s2-6-5": [
+    "Como fazer uma transição de carreira sem tratar experiência anterior como zero?",
+    "Decompondo a identidade em capacidades transferíveis, escolhendo movimentos adjacentes, construindo evidência e fechando lacunas delimitadas. O plano inclui também custo financeiro, status e tempo de adaptação."
+  ],
+  "s2-6-6": [
+    "Como distinguir fenômeno do impostor, lacuna real e ambiente excludente?",
+    "Evidência e feedback calibrado ajudam a testar competência; tarefas delimitam lacunas; padrões de critérios secretos, desvalorização ou humilhação apontam para o ambiente. Um único rótulo não deve esconder causas diferentes."
+  ],
+  "s2-6-7": [
+    "O que mudou e o que permaneceu no comportamento profissional entre 1990 e 2026?",
+    "Caiu a associação entre presença e contribuição; escrita, transparência e coordenação assíncrona ganharam valor, agora também diante de IA. Permaneceram confiança, contexto, conflito produtivo e responsabilidade pelo resultado."
   ]
 }

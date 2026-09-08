@@ -1,6 +1,7 @@
 _body.html
 ferramentas/_head.html
 ferramentas/curriculo-vivo.html
+ferramentas/portal.html
 __pycache__/
 *.pyc
 .DS_Store

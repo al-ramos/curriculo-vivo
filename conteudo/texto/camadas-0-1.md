@@ -1,5 +1,5 @@
 # Engenharia de Software: Envelhecimento Macro
-## Camadas 0 e 1 — texto integral
+## Camadas 0 a 2 — texto integral
 
 ---
 
@@ -1122,3 +1122,1017 @@ Languages*](https://web.stanford.edu/class/cs242/materials/old/siek06__gradual.p
 Luckham, D., *The Power of Events*, 2002 · [*The Reactive Manifesto*,
 v2](https://www.reactivemanifesto.org/), 2014 · Pike, R., [*Concurrency Is Not
 Parallelism*](https://go.dev/talks/2012/waza.slide), 2012.
+
+## 2.2 · Dados e persistência
+
+Dados não são o resíduo deixado pelo programa. Em sistemas duradouros, o programa costuma ser
+substituído várias vezes enquanto contratos, saldos, históricos e obrigações permanecem. A
+persistência é, portanto, uma decisão sobre significado, tempo e responsabilidade antes de ser
+uma escolha de produto.
+
+### 2.2.1 Modelagem relacional e normalização
+
+O modelo relacional de Edgar F. Codd separou duas coisas que sistemas anteriores confundiam: a
+forma lógica dos dados e o caminho físico usado para encontrá-los. Uma relação descreve fatos por
+tuplas e atributos; não é apenas uma planilha com linhas e colunas. Chaves identificam, chaves
+estrangeiras conectam, restrições excluem estados e consultas declaram o resultado sem prescrever
+o percurso de disco. Essa independência permitiu que índices, planos e armazenamento evoluíssem
+sem reescrever cada consumidor.
+
+Modelar começa por perguntar quais fatos existem e de que outros fatos eles dependem. Se o nome do
+cliente depende do cliente, e não do pedido, repeti-lo em toda linha de pedido cria mais que
+desperdício: cria a possibilidade de duas versões simultaneamente verdadeiras. As formas normais
+organizam esse raciocínio. A primeira trata valores atômicos no contexto do modelo; a segunda
+remove dependências parciais de uma chave composta; a terceira separa dependências transitivas.
+Boyce–Codd refina casos em que todo determinante deveria ser uma chave candidata. Decorar a lista
+é menos importante do que reconhecer a anomalia de inserção, atualização ou exclusão que ela evita.
+
+Normalização não é ritual nem obrigação de levar todo esquema à forma mais alta. É o ponto de
+partida que torna redundância uma decisão consciente. Desnormalizar pode reduzir junções, servir
+uma leitura crítica ou materializar uma visão; passa a ser engenharia quando se declara quem
+mantém as cópias coerentes, qual atraso é tolerável e como reconstruí-las. Sem isso, desempenho
+comprado hoje vira ambiguidade de dados amanhã.
+
+O modelo também não elimina o domínio. `NOT NULL`, `CHECK`, unicidade e integridade referencial
+protegem verdades locais; regras que atravessam tempo, serviços ou intenção exigem outras
+fronteiras. Um banco pode garantir que um valor é positivo. Só o negócio sabe se aquele crédito
+era permitido. O melhor esquema não reproduz a tela: preserva os invariantes que continuarão
+verdadeiros quando a tela desaparecer.
+
+### 2.2.2 Transações, ACID e níveis de isolamento
+
+Uma transação delimita uma mudança que o sistema deve tratar como unidade. **Atomicidade** evita
+efeitos pela metade; **consistência** leva o banco de um estado que satisfaz suas restrições a
+outro; **isolamento** controla o que transações concorrentes podem observar; **durabilidade**
+promete que o confirmado sobreviverá às falhas previstas pelo contrato. ACID não significa que o
+resultado faz sentido para o negócio, nem que toda execução equivale automaticamente a uma ordem
+serial.
+
+O nível de isolamento é uma escolha entre anomalias permitidas e custo de coordenação. Leitura
+suja observa trabalho ainda não confirmado. Leitura não repetível devolve versões diferentes da
+mesma linha. Fantasmas alteram o conjunto que satisfaz um predicado. Atualização perdida apaga o
+trabalho concorrente; *write skew* permite que duas decisões, válidas quando vistas isoladamente,
+violem juntas um invariante. Os nomes padronizados ajudam, mas implementações historicamente deram
+semânticas diferentes aos mesmos rótulos. É preciso testar o banco real.
+
+*Snapshot isolation* oferece a cada transação uma fotografia coerente e costuma evitar várias
+anomalias de leitura, mas não é sinônimo de serialização. Se dois médicos veem outro de plantão e
+ambos se retiram, linhas diferentes foram atualizadas e a regra “ao menos um” foi quebrada. Um
+nível serializável, um bloqueio explícito ou uma restrição que materialize o conflito pode ser
+necessário. A resposta nasce do invariante, não do nome do nível.
+
+A fronteira transacional merece o mesmo cuidado. Transações longas retêm versões, bloqueios e
+recursos; transações curtas demais podem dividir uma mudança que deveria ser indivisível. Quando a
+operação atravessa sistemas, um `commit` local não produz atomicidade global. *Outbox*, sagas,
+compensações e reconciliação tornam a incompletude observável e recuperável; não recriam ACID por
+vocabulário. A pergunta honesta é: depois de cada falha possível, que estado resta e quem o repara?
+
+### 2.2.3 O movimento NoSQL — o que era hype e o que ficou
+
+NoSQL cresceu no fim dos anos 2000 como reação a volumes, disponibilidade e formas de dados que
+pareciam pouco confortáveis em bancos relacionais da época. O rótulo reuniu produtos com modelos
+e garantias muito diferentes. A leitura publicitária opôs escala a SQL e declarou o esquema
+morto; a leitura que sobreviveu foi mais modesta e mais útil: cargas diferentes podem pedir
+representações, particionamento e contratos de consistência diferentes.
+
+Ficaram a distribuição horizontal como requisito comum, a replicação administrada, a atenção aos
+padrões de acesso e modelos como chave–valor, documento e famílias de colunas. Ficou também a
+noção de que disponibilidade pode exigir aceitar versões temporariamente divergentes e resolver
+conflitos depois. O que não ficou foi a ideia de que relações deixaram de importar. Muitos bancos
+NoSQL ganharam consultas, índices secundários, transações e validação de esquema; bancos SQL
+ganharam JSON, replicação global e particionamento. As famílias aprenderam umas com as outras.
+
+“Sem esquema” quase sempre significa “esquema imposto pelos leitores”. Se um produtor muda
+`valor` de número para texto, o contrato existe mesmo que nenhum DDL o tenha registrado. Nesse
+caso, ele está espalhado por aplicações, com migração e validação mais difíceis. Flexibilidade é
+valiosa quando a forma realmente varia; não isenta o sistema de definir compatibilidade.
+
+Persistência poliglota também cobra juros. Cada tecnologia acrescenta operação, segurança,
+backup, observabilidade, biblioteca, conhecimento e uma nova fronteira de consistência. Adotar um
+banco especializado porque ele reduz um custo dominante pode ser excelente. Adotá-lo porque uma
+entidade cabe num exemplo de cinco linhas é trocar simplicidade local por complexidade sistêmica.
+O padrão sensato é começar com a opção capaz mais simples e especializar quando a carga demonstrar
+o motivo.
+
+### 2.2.4 Modelos além do relacional — documento, chave-valor, grafo, colunar, série temporal
+
+Um modelo de dados é uma aposta sobre as operações que precisam ser baratas. **Chave–valor**
+favorece acesso direto por identidade e escala previsível; o valor pode ser opaco ao banco, o que
+reduz consultas secundárias. **Documento** preserva agregados hierárquicos e permite evolução
+local de forma, mas relações entre documentos continuam existindo e podem reaparecer como junções
+na aplicação.
+
+**Grafos** tornam adjacência e travessias de múltiplos saltos operações centrais. São adequados
+quando o caminho — fraude conectada, dependência, autorização, recomendação — é parte da pergunta.
+Não tornam automaticamente rápida qualquer consulta sobre dados relacionados. O modelo, os
+índices e a cardinalidade da travessia ainda governam o custo.
+
+“Colunar” nomeia duas famílias que não devem ser confundidas. Bancos analíticos armazenam valores
+de uma coluna juntos para comprimir e varrer apenas os atributos consultados. Bancos de famílias
+de colunas distribuem linhas esparsas por uma chave de partição e uma ordenação interna, como em
+Bigtable. Ambos podem ter colunas; otimizam problemas diferentes. Bancos de **série temporal**
+acrescentam retenção, compressão, agregação por janela e escrita ordenada para fatos indexados por
+tempo.
+
+A seleção começa com um caderno de cargas: volume e taxa de escrita, consultas críticas,
+cardinalidade, tamanho do conjunto ativo, necessidade de transação, atraso aceitável, retenção e
+recuperação. Só depois vem a matriz de produtos. Um modelo especializado torna uma pergunta
+natural e outras deliberadamente difíceis. Se ninguém consegue dizer qual pergunta ficou mais
+barata, a escolha provavelmente foi estética.
+
+### 2.2.5 Consistência, replicação e CAP — o teorema mais mal citado da computação
+
+Replicar é manter mais de uma cópia para tolerar falhas, aproximar leituras ou aumentar capacidade.
+No instante em que existem cópias, surgem duas perguntas: em que ordem recebem mudanças e quando
+uma leitura pode acreditar que viu a versão mais nova. Replicação síncrona coordena mais antes de
+confirmar; assíncrona reduz o caminho crítico, mas admite atraso e, em certas falhas, perda do que
+parecia aceito.
+
+O teorema CAP não diz “escolha duas entre consistência, disponibilidade e particionamento” em
+qualquer situação. Sob uma partição de rede, um sistema não pode garantir simultaneamente
+respostas bem-sucedidas de todos os lados e consistência linearizável. Como redes reais podem
+particionar, a decisão é o comportamento durante esse intervalo: rejeitar ou atrasar operações
+para preservar uma única ordem, ou responder e aceitar divergência. Fora da partição, latência e
+consistência continuam em tensão — observação frequentemente resumida por PACELC.
+
+“Consistência” precisa de sobrenome. Linearizabilidade faz cada operação parecer instantânea entre
+chamada e resposta. Consistência causal preserva causa antes de efeito. *Read-your-writes* impede
+que o próprio usuário volte no tempo; leituras monotônicas impedem que veja uma versão mais antiga
+depois de uma nova. Consistência eventual promete convergência quando cessam atualizações, mas não
+define quanto demora nem o que o usuário vê no percurso.
+
+Quóruns ajudam quando conjuntos de leitura e escrita se intersectam, mas a fórmula `R + W > N`
+não encerra o assunto. Relógios, nós lentos, réplicas transitórias, reparo, conflitos concorrentes
+e o significado de “última” escrita alteram a garantia. O projeto correto liga cada decisão a um
+invariante: saldo talvez prefira recusar; contador de visualizações pode convergir; carrinho pode
+preservar adições concorrentes. CAP é um limite de projeto, não uma etiqueta de produto.
+
+### 2.2.6 OLTP vs. OLAP; warehouse, lake, lakehouse
+
+**OLTP** serve muitas mudanças pequenas e concorrentes sobre o estado operacional: registrar um
+pagamento, reservar um item, alterar um cadastro. Busca baixa latência, isolamento e índices
+seletivos, frequentemente com armazenamento orientado a linhas. **OLAP** percorre grandes
+conjuntos para comparar períodos, segmentos e tendências. Favorece varredura colunar, compressão,
+agregação e consultas que leem muito e escrevem em lotes. Tentar satisfazer os dois perfis no mesmo
+caminho crítico faz um deles pagar a conta do outro.
+
+O *data warehouse* integra dados curados sob modelos e semântica comuns. Sua força é a confiança:
+“receita”, “cliente ativo” e “mês” precisam significar a mesma coisa para áreas diferentes. O
+*data lake* reduziu o custo de guardar dados brutos e variados, inclusive antes de conhecer todos
+os usos. Sem catálogo, propriedade, qualidade e política de retenção, porém, o lago vira apenas um
+depósito cuja abundância mascara a dificuldade de encontrar verdade.
+
+O *lakehouse* procura combinar armazenamento aberto e econômico do lago com transações,
+governança e desempenho analítico associados ao warehouse. Formatos de tabela sobre objetos
+passaram a manter metadados, versões e alterações atômicas. A convergência é tecnicamente real;
+o nome comercial não elimina as escolhas sobre camada semântica, motor, catálogo, custo de
+consulta e responsabilidade pelos dados.
+
+Arquiteturas modernas aproximam análise do tempo real, mas frescor não é qualidade. Uma decisão
+atualizada em segundos pode estar baseada num evento duplicado e numa dimensão atrasada. O
+pipeline precisa declarar linhagem, janela, reconciliação, expectativa de qualidade e tempo de
+disponibilidade. Dados analíticos são um produto quando possuem consumidores, contrato e dono;
+sem esses elementos, são cópias com esperança.
+
+### 2.2.7 Migração e versionamento de esquema
+
+Um esquema em produção é uma API compartilhada no tempo. A versão nova da aplicação convive com
+instâncias antigas, tarefas em fila, relatórios, integrações e réplicas. Por isso, uma alteração
+segura raramente é uma instrução única. O padrão **expandir–migrar–contrair** primeiro adiciona uma
+forma compatível, depois move escrita e leitura, verifica e reconcilia os dados, e só então remove
+a forma anterior.
+
+Adicionar uma coluna opcional costuma ser compatível; torná-la obrigatória exige preencher o
+passado e atualizar produtores. Renomear pode ser implementado como adicionar, copiar, mudar os
+leitores e remover. Dividir uma tabela pede estratégia para identidade e sincronização. Em bases
+grandes, até um DDL conceitualmente simples pode bloquear, reescrever páginas ou multiplicar logs.
+A migração deve ser ensaiada com distribuição e volume representativos, não apenas com o esquema.
+
+Escrita dupla é especialmente traiçoeira: entre dois destinos há um instante em que o processo
+pode falhar. Transação comum, *outbox*, captura de mudanças ou reconciliação periódica oferecem
+contratos diferentes. O plano precisa nomear a autoridade enquanto coexistem versões, como medir
+divergência e como retomar. “Rodar novamente” só é seguro se a migração for idempotente.
+
+Rollback de aplicação não garante rollback de dados. Depois que clientes novos gravaram um valor
+que a versão antiga não entende, voltar binários pode ampliar a falha. Migrações maduras preferem
+compatibilidade reversa, ativação gradual, observação e *roll-forward*. Cada etapa deve ter
+pré-condição, pós-condição e critério de aborto. O objetivo de “zero downtime” não é fazer a
+mudança invisível; é preservar o serviço e tornar a transição controlável.
+
+### 2.2.8 Do campo: bases críticas em Sybase e SQL Server em produção contínua
+
+Na experiência com Sybase e SQL Server em ambientes que não podiam simplesmente parar, aprendi
+que banco legado não é sinônimo de banco abandonado. Ele permanece porque concentra história,
+integrações e regras que já atravessaram fechamentos, auditorias e incidentes. Uma tabela de nome
+ruim pode ser mais conhecida operacionalmente que um modelo novo e elegante; substituí-la exige
+reconstruir também esse conhecimento.
+
+Nessas bases, o trabalho importante raramente é “modernizar a sintaxe”. É entender plano de
+execução, contenção, duração de transação, crescimento de log, estatísticas e janela de mudança.
+Uma consulta correta no ambiente de teste pode disputar páginas quentes em produção. Um índice
+que acelera a leitura acrescenta custo a toda escrita. Uma conversão de tipo aparentemente
+inofensiva pode impedir o uso do índice. A evidência vem de métricas e do plano real, não da
+aparência do SQL.
+
+Produção contínua muda o método. Primeiro se identifica o invariante e o caminho de reversão;
+depois se separa alteração estrutural de movimentação de dados, limita-se o lote, observa-se log e
+bloqueio, e valida-se por contagens e reconciliação. A janela de GMUD não transforma uma mudança
+grande em pequena. Ela apenas concentra o tempo em que hipóteses precisam estar explícitas.
+
+O ensinamento geracional é que estabilidade é um ativo e também uma dívida de conhecimento. Não
+se preserva tudo por medo, nem se substitui tudo por idade. Preserva-se o que tem contrato e valor;
+isola-se o que impede mudança; migra-se por fatias verificáveis. O banco crítico ensina uma forma
+de humildade: os dados já sobreviveram a mais versões da arquitetura do que o código que hoje os
+interpreta.
+
+### 2.2.9 Bancos vetoriais, embeddings e busca híbrida
+
+Um *embedding* representa um objeto — texto, imagem, áudio ou entidade — como vetor aprendido, de
+modo que proximidade geométrica possa aproximar alguma noção de semelhança. O vetor não contém o
+significado como uma definição de dicionário e distância não mede verdade. Ela expressa padrões do
+modelo, da tarefa e dos dados usados para produzi-lo. Trocar o modelo muda o espaço; vetores de
+versões incompatíveis não devem ser misturados sem avaliação.
+
+Bancos vetoriais organizam armazenamento, filtros e busca por vizinhos. Como comparar uma consulta
+com todos os vetores custa caro, índices de vizinhança aproximada, como HNSW, trocam exatidão por
+latência e memória. Parâmetros de construção e consulta alteram *recall*, custo e tempo. A medida
+relevante não é apenas “responde em 50 ms”, mas “recupera evidência útil nesse tempo, sob este
+filtro e esta distribuição”.
+
+Busca semântica também não revoga busca lexical. Nomes próprios, códigos, números e termos raros
+frequentemente favorecem correspondência por palavras; paráfrases favorecem vetores. A busca
+**híbrida** combina candidatos lexicais e semânticos, aplica filtros estruturados e pode
+reordená-los com outro modelo. Fusão, diversidade e limite por fonte precisam ser avaliados com um
+conjunto de perguntas reais, juízos de relevância e casos adversos.
+
+Num sistema de recuperação para IA, a unidade de corte, os metadados, a versão da fonte e a
+autorização importam tanto quanto o índice. Conteúdo revogado precisa desaparecer das respostas;
+permissões devem filtrar antes de expor; a citação precisa apontar para a evidência vigente.
+Embeddings podem vazar relações sensíveis e têm custo de reprocessamento. O fundamento durável é
+tratar recuperação como sistema de informação mensurável — não como memória infalível do modelo.
+
+### 2.2.10 Streaming de dados e contratos de dados
+
+Streaming trata dados como uma sequência potencialmente ilimitada de fatos, e não como um arquivo
+que ficou pronto. A mudança principal é temporal. **Tempo do evento** registra quando o fato
+ocorreu; **tempo de processamento**, quando o sistema o viu. Atraso e desordem tornam os dois
+diferentes. Janelas agrupam uma sequência infinita; *watermarks* representam uma estimativa de até
+onde o tempo do evento avançou; políticas de atraso decidem quando corrigir resultados.
+
+O fluxo não elimina lote. Replay de um log limitado é um lote; materializar estado incremental é
+uma forma de evitar recalcular tudo. A arquitetura precisa declarar retenção, posição do
+consumidor, particionamento e ordem. Ordem global custa coordenação e raramente é necessária; ordem
+por chave costuma expressar melhor o domínio. Reprocessar exige efeitos idempotentes ou um modo de
+separar cálculo de publicação.
+
+Um **contrato de dados** torna explícitos esquema, semântica, proprietário e expectativas
+operacionais. Tipo e obrigatoriedade são apenas o começo: unidade, fuso, significado de ausência,
+chave, política de exclusão, compatibilidade, qualidade, atraso máximo e classificação de
+sensibilidade também mudam consumidores. Registro de esquema automatiza parte da compatibilidade;
+não descobre que “receita” mudou de bruto para líquido.
+
+Contratos não devem virar uma fila de aprovações central. O produtor continua responsável pelo
+significado, consumidores tornam impacto visível, e a plataforma automatiza validação, catálogo e
+linhagem. A mudança madura oferece período de convivência e telemetria de adoção. Em dados como em
+APIs, o problema não é impedir evolução: é permitir que ela aconteça sem transformar cada
+consumidor numa investigação forense.
+
+**Fontes primárias do capítulo.** Codd, E. F., [*A Relational Model of Data for Large Shared Data
+Banks*](https://dl.acm.org/doi/10.1145/362384.362685), 1970 · Berenson, H. et al., [*A Critique of
+ANSI SQL Isolation Levels*](https://www.microsoft.com/en-us/research/publication/a-critique-of-ansi-sql-isolation-levels/),
+1995 · Gilbert, S. e Lynch, N., *Brewer's Conjecture and the Feasibility of Consistent, Available,
+Partition-Tolerant Web Services*, 2002, DOI 10.1145/564585.564601 · DeCandia, G. et al.,
+[*Dynamo: Amazon's Highly Available Key-value Store*](https://www.amazon.science/publications/dynamo-amazons-highly-available-key-value-store),
+2007 · Chang, F. et al., [*Bigtable: A Distributed Storage System for Structured
+Data*](https://research.google/pubs/bigtable-a-distributed-storage-system-for-structured-data/),
+2006 · Armbrust, M. et al., [*Lakehouse: A New Generation of Open Platforms that Unify Data
+Warehousing and Advanced Analytics*](https://www.vldb.org/cidrdb/papers/2021/cidr2021_paper17.pdf),
+2021 · Malkov, Y. e Yashunin, D., [*Efficient and Robust Approximate Nearest Neighbor Search Using
+Hierarchical Navigable Small World Graphs*](https://arxiv.org/abs/1603.09320), 2016.
+
+## 2.3 · Sistemas distribuídos: fundamentos
+
+Um sistema distribuído é aquele em que componentes independentes coordenam por uma rede que pode
+atrasar, duplicar, reordenar ou perder mensagens, enquanto cada componente também pode falhar.
+Distribuir não remove limites de uma máquina: acrescenta estados nos quais participantes honestos
+possuem visões diferentes da realidade. O fundamento está em projetar essa incerteza sem fingir
+que ela é uma chamada local um pouco mais lenta.
+
+### 2.3.1 As oito falácias da computação distribuída
+
+As falácias atribuídas a Peter Deutsch e outros observadores da Sun são premissas falsas que o
+projeto adota por omissão: **a rede é confiável; a latência é zero; a largura de banda é infinita;
+a rede é segura; a topologia não muda; há um só administrador; o custo de transporte é zero; a
+rede é homogênea**. Elas não afirmam que toda rede falha sempre. Alertam que o programa precisa
+continuar correto quando cada conveniência deixa de valer.
+
+Se a rede não é confiável, uma ausência de resposta não revela se o pedido chegou. Se a latência
+não é zero, uma cadeia de dependências soma tempos e multiplica caudas. Se banda e transporte têm
+custo, serialização, compressão e granularidade viram decisões econômicas. Se topologia muda,
+endereços, liderança e descoberta não podem ser fatos eternos. Se há vários administradores,
+versões, políticas e prioridades divergem.
+
+Segurança e heterogeneidade atravessam as demais. Confiança de rede não substitui identidade,
+autorização e proteção da mensagem. Dois serviços “iguais” podem rodar versões diferentes durante
+uma implantação, interpretar datas de forma distinta ou impor limites incompatíveis. A fronteira
+remota precisa validar mais, não menos, que a função local.
+
+Uma revisão prática percorre cada dependência e pergunta: qual é o limite de tempo e tamanho, quem
+autentica, que versões coexistem, o que muda de endereço, quem opera cada lado e qual estado fica
+quando a resposta não volta? O valor das oito falácias não está em recitá-las. Está em transformar
+suposições invisíveis em contratos testáveis.
+
+### 2.3.2 Latência e throughput — as ordens de grandeza que todo dev deveria saber de cor
+
+Latência é o tempo de uma operação; *throughput* é a quantidade concluída por unidade de tempo.
+Melhorar um não garante melhorar o outro. Lotes maiores podem aumentar vazão enquanto atrasam o
+primeiro item; mais concorrência pode ocupar melhor o recurso até criar fila e piorar a cauda. A
+capacidade útil termina antes da utilização de 100%, porque variabilidade precisa de folga.
+
+As ordens de grandeza formam uma hierarquia durável: registradores e caches são medidos em
+nanosegundos; memória principal, em dezenas ou centenas delas; armazenamento local rápido, em
+microssegundos; chamadas de rede próximas, em frações ou poucos milissegundos; regiões distantes,
+em dezenas ou centenas de milissegundos. Os números exatos envelhecem. A diferença entre tocar
+memória e atravessar uma rede, não.
+
+Médias escondem o usuário que esperou. Em uma página que depende de vinte chamadas, basta uma cair
+na cauda para dominar o total. Por isso se observam percentis p50, p95, p99 e, em grande escala,
+p99,9, sempre acompanhados de janela, volume e erro. Um percentil por instância não pode ser
+somado ingenuamente nem agregado pela média; histogramas compatíveis preservam a distribuição.
+
+A Lei de Little relaciona concorrência média, taxa de chegada e tempo no sistema: `L = λW`. Se um
+serviço sustenta 1.000 requisições por segundo com 200 ms de tempo médio, cerca de 200 estão em
+andamento. Essa conta dimensiona conexões e filas, mas supõe estabilidade. Quando a chegada supera
+a saída, a fila cresce sem limite; timeout não cria capacidade. O hábito transferível é estimar a
+ordem de grandeza antes e medir a distribuição depois.
+
+### 2.3.3 Falha parcial: timeout, retry, backoff, idempotência
+
+Na falha parcial, alguns componentes continuam enquanto outros pararam ou ficaram inacessíveis. O
+chamador não recebe uma verdade ternária simples. Depois de um timeout, a operação pode não ter
+chegado, estar executando ou ter sido concluída com a resposta perdida. Tratar “não sei” como
+“falhou” é a origem de pagamentos duplicados e ações repetidas.
+
+Todo acesso remoto precisa de um limite. Timeout curto demais converte lentidão aceitável em falha;
+longo demais retém recursos e propaga espera. O orçamento deve nascer do prazo fim a fim e ser
+repassado como *deadline*: cada salto conhece o tempo restante. Um serviço interno não deveria
+usar sozinho os cinco segundos prometidos ao usuário e entregar o fracasso ao próximo salto.
+
+Retry só ajuda falhas transitórias e operações seguras para repetição. Tentativas imediatas e
+sincronizadas aumentam a carga justamente quando o destino está frágil. *Backoff* exponencial
+espaça; *jitter* dispersa clientes; limite de tentativas e orçamento de retries impedem
+amplificação. Decidir em qual camada repetir evita que três níveis, cada um com três tentativas,
+produzam vinte e sete chamadas.
+
+Idempotência faz repetições observáveis equivalerem a uma só aplicação. Pode vir da própria
+operação, de uma chave de idempotência vinculada ao resultado, de deduplicação ou de uma máquina
+de estados que rejeita transições repetidas. Guardar a chave sem tornar atômicos registro e efeito
+apenas desloca a janela de falha. E idempotência não significa resposta idêntica para sempre: o
+contrato precisa definir escopo, validade e conflito de payload.
+
+### 2.3.4 Relógios, ordenação, quórum e consenso
+
+Relógios físicos não oferecem uma linha universal perfeita. Eles derivam, são ajustados e chegam
+com incerteza; dois eventos próximos em máquinas diferentes podem receber marcas invertidas.
+Leslie Lamport mostrou que, em sistemas distribuídos, a relação causal é mais fundamental: se A
+pode ter influenciado B, A “aconteceu antes”. Relógios lógicos preservam essa ordem parcial sem
+fingir medir o tempo do mundo; relógios vetoriais também ajudam a reconhecer concorrência.
+
+Ordenação total é útil para um log ou uma decisão, mas custa coordenação e precisa de escopo. Um
+contador por cliente pode exigir ordem por cliente, não entre todos os clientes do planeta.
+Sequenciadores, termos de liderança e números de versão devem continuar comparáveis após reinício;
+hora da parede sozinha é uma base frágil para “última escrita vence”.
+
+Quórum significa obter respostas de subconjuntos que se intersectam, permitindo que alguma
+evidência da escrita seja encontrada. Isso não é consenso. **Consenso** faz participantes não
+faltosos concordarem com uma decisão apesar de falhas previstas. Paxos e Raft tratam eleição,
+termos e replicação de log; não fazem operação de negócio automaticamente idempotente nem tornam
+clientes conscientes da decisão.
+
+O resultado de Fischer, Lynch e Paterson demonstra que, num modelo assíncrono, nenhum algoritmo
+determinístico garante terminar consenso se até um processo puder falhar. Sistemas reais progridem
+adicionando relógios, detectores imperfeitos de falha e suposições de sincronia eventual. Isso não
+“refuta” FLP; explicita em que hipótese a disponibilidade depende. Consenso é uma ferramenta cara
+para as decisões que realmente exigem uma única ordem, não um tempero de arquitetura.
+
+### 2.3.5 Garantias de entrega — at-most-once, at-least-once e o mito do exactly-once
+
+**At-most-once** evita redelivery e aceita que uma mensagem se perca. **At-least-once** repete até
+obter confirmação e aceita duplicatas. As duas descrições são de protocolo, não do resultado de
+negócio. Se o consumidor confirma antes do efeito, pode perder; se efetua antes de confirmar, pode
+repetir. O intervalo entre efeito e confirmação não desaparece por configuração.
+
+“Exactly-once” é válido dentro de fronteiras precisas. Um sistema de streaming pode consumir,
+atualizar estado e publicar em tópicos sob uma transação coordenada. Um produtor pode impedir que
+reenvios gravem duplicatas no mesmo log. Mas, quando o processamento envia e-mail, chama um banco
+externo ou aciona o mundo físico, aquela transação já não cobre tudo. A expressão sem escopo é uma
+promessa impossível de auditar.
+
+O desenho robusto aceita redelivery e torna o efeito idempotente, ou registra entrada e saída no
+mesmo limite atômico para publicar depois. Identificadores estáveis, caixa de entrada processada,
+*outbox* e reconciliação são mecanismos comuns. Deduplicação tem retenção e cardinalidade: depois
+que o identificador expira, uma repetição antiga volta a ser nova.
+
+Ordem também é limitada. Brokers costumam garantir sequência apenas dentro de uma partição, e
+retries podem permitir que uma mensagem posterior termine antes. Se o domínio exige transições
+ordenadas, a chave de partição, a versão esperada e o comportamento diante de lacuna fazem parte
+do contrato. Entrega correta é o efeito combinado de transporte, consumidor e domínio.
+
+### 2.3.6 Padrões de resiliência — circuit breaker, bulkhead, backpressure
+
+Resiliência é preservar uma função aceitável e recuperar, não impedir toda falha. Um **circuit
+breaker** observa erros ou lentidão e interrompe temporariamente chamadas que provavelmente
+falhariam. Isso protege recursos e dá tempo ao destino, mas requer janela, limiar, estado
+semiaberto e sinalização. Um circuito que abre por erro do cliente ou mascara falha com dados
+incorretos piora o sistema.
+
+**Bulkheads** separam recursos para que uma carga não afunde as demais: pools, filas, processos ou
+limites por locatário. O isolamento reduz eficiência aparente em períodos calmos, comprando
+contenção na crise. O tamanho deve refletir prioridade e capacidade; vinte pools enormes ainda
+competem pela mesma CPU e não são isolamento real.
+
+**Backpressure** permite ao consumidor controlar quanto recebe. Pode bloquear, reduzir demanda,
+limitar concorrência ou rejeitar. Quando não é possível esperar, *load shedding* descarta trabalho
+por uma política explícita: prioridade, idade, amostragem ou valor. Fila ilimitada não é
+backpressure; é um atraso que transforma sobrecarga breve em indisponibilidade prolongada.
+
+Timeouts, breakers, filas e retries interagem. Um timeout abaixo da latência saudável abre o
+circuito; retries ampliam a taxa; uma fila interna esconde o colapso até consumir memória. Testes
+de falha precisam observar o conjunto e verificar degradação, recuperação e telemetria. Fallback
+só é resiliente se o resultado reduzido ainda for verdadeiro. Servir preço antigo como atual não
+é disponibilidade: é corrupção com boa latência.
+
+### 2.3.7 Por que este capítulo é geracional e o 3.1 é cíclico
+
+Topologias arquiteturais oscilam. A indústria centraliza, distribui, redescobre modularidade,
+aproxima computação dos dados e volta a separar quando equipes e escala pressionam. Monólito,
+SOA, microsserviços, funções e borda são respostas históricas a custos e organizações específicos.
+Por isso pertencem à camada cíclica.
+
+Os limites deste capítulo não oscilam da mesma forma. Luz continua levando tempo para viajar; uma
+mensagem perdida continua sem revelar se o efeito ocorreu; relógios independentes continuam
+discordando; coordenação continua cobrando latência e disponibilidade. Hardware e plataformas
+alteram números, não removem a física nem a incerteza.
+
+Essa separação melhora decisões. “Microsserviços permitem escala” é uma afirmação arquitetural
+incompleta. O fundamento pergunta que dimensão escala, como o estado é particionado, que
+consistência o domínio exige, qual é a cauda de latência e como falhas ficam contidas. A forma só
+deve ser escolhida depois dessas respostas.
+
+Também melhora o currículo. Quem aprende uma receita associa confiabilidade a um produto. Quem
+aprende falha parcial, ordem, idempotência e pressão reconhece o mesmo problema num broker novo,
+numa API antiga ou num agente de IA. A arquitetura da década pode mudar; a pergunta “qual garantia
+existe nesta fronteira?” continua transferível.
+
+**Fontes primárias do capítulo.** Lamport, L., [*Time, Clocks, and the Ordering of Events in a
+Distributed System*](https://dl.acm.org/doi/10.1145/359545.359563), 1978 · Fischer, M., Lynch, N. e
+Paterson, M., [*Impossibility of Distributed Consensus with One Faulty
+Process*](https://groups.csail.mit.edu/tds/papers/Lynch/jacm85.pdf), 1985 · Lamport, L., [*Paxos
+Made Simple*](https://lamport.azurewebsites.net/pubs/paxos-simple.pdf), 2001 · Dean, J. e Barroso,
+L., [*The Tail at Scale*](https://research.google/pubs/the-tail-at-scale/), 2013 · Amazon Builders'
+Library, [*Timeouts, Retries, and Backoff with
+Jitter*](https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/) ·
+Apache Kafka, [*Design: Delivery Semantics*](https://kafka.apache.org/documentation/#semantics) ·
+Reactive Streams, [*Specification 1.0*](https://www.reactive-streams.org/).
+
+## 2.4 · Linguagens de programação
+
+Linguagens parecem sazonais porque nomes sobem e descem em pesquisas de popularidade. O fenômeno
+mais durável está por baixo: cada linguagem nasce para reduzir um custo dominante, cresce junto de
+um ecossistema, encontra limites, estabiliza e passa a conviver com sucessoras. A sintaxe é a parte
+mais visível; semântica, runtime, bibliotecas, ferramentas e base instalada decidem sua vida real.
+
+### 2.4.1 Linha do tempo por geração (1ª a 6ª)
+
+A classificação por gerações é uma narrativa didática, não uma taxonomia científica sem disputa.
+Na **primeira geração**, instruções e dados são codificados na linguagem da máquina. Na **segunda**,
+assembly oferece símbolos, rótulos e macros ainda vinculados à arquitetura. Na **terceira**,
+FORTRAN, COBOL, ALGOL e descendentes elevam o programa a expressões, estruturas e tipos que um
+compilador traduz para diferentes máquinas.
+
+A **quarta geração** reuniu linguagens mais declarativas e específicas de domínio: SQL descreve
+qual relação se deseja; geradores de relatório, ambientes RAD e DSLs comprimem tarefas inteiras.
+A promessa era produtividade por elevação de abstração, mas o rótulo abrange tecnologias
+heterogêneas. A **quinta geração** foi associada a lógica, restrições e IA simbólica, em que se
+declaram relações ou objetivos e um mecanismo procura a solução.
+
+“Sexta geração” não possui consenso equivalente. Já nomeou programação visual, síntese e, mais
+recentemente, código gerado por modelos. Convém tratá-la como hipótese: instruções em linguagem
+natural podem elevar a intenção, mas o artefato executável ainda precisa de especificação,
+verificação e operação. Se o humano não consegue explicar a garantia, a abstração apenas ocultou
+o trabalho.
+
+A linha histórica não é uma substituição ordenada. Assembly permanece em fronteiras críticas;
+SQL convive com código de terceira geração; lógica e restrições aparecem dentro de ferramentas.
+Gerações se acumulam. Cada salto move o foco da máquina para o problema e transfere responsabilidade
+ao tradutor — junto com uma nova necessidade de confiar e inspecionar esse tradutor.
+
+### 2.4.2 O padrão de envelhecimento — adoção, platô, nicho, manutenção
+
+Uma linguagem emerge quando combina ideia, implementação e problema oportuno. Os primeiros
+adotantes toleram ferramentas incompletas em troca de uma vantagem específica. O crescimento
+acontece quando instalação, documentação, diagnóstico, bibliotecas, contratação e implantação
+deixam de exigir heroísmo. O ecossistema transforma capacidade técnica em capacidade social.
+
+No platô, a linguagem é menos notícia e mais infraestrutura. Compatibilidade passa a valer mais;
+mudanças precisam respeitar milhões de linhas, ferramentas e hábitos. A inovação migra para
+bibliotecas, runtime e versões incrementais. Esse aparente conservadorismo é um sinal de sucesso:
+o custo de quebrar usuários superou o benefício de pureza.
+
+Depois, novas cargas e comunidades escolhem alternativas. A linguagem pode encolher para um nicho
+em que sua base instalada, semântica ou integração ainda é superior. Manutenção não significa
+imobilidade: há correções de segurança, interoperabilidade e modernização gradual. O risco cresce
+quando compiladores, pacotes e especialistas deixam de existir antes do sistema.
+
+Popularidade é uma variável inadequada para prever obsolescência de uma aplicação. Migração custa
+reescrever comportamento tácito, dados, operação e interfaces; o valor futuro precisa superar
+esse custo e o risco da transição. A pergunta geracional não é “esta linguagem morreu?”, mas “em
+qual fase está seu ecossistema, e quem sustentará cada dependência durante o horizonte do sistema?”.
+
+### 2.4.3 Por que COBOL não morreu, e o que isso ensina sobre o resto
+
+COBOL foi projetado para processamento de dados de negócio e legibilidade relativamente próxima
+do domínio administrativo. Tornou-se parte de sistemas cujo valor não está nas linhas da linguagem,
+mas nas décadas de regras, dados e integração ao redor delas. Um programa estável que fecha o
+livro corretamente todos os dias compete não com uma linguagem moderna isolada, mas com o risco
+de reconstruir todo esse comportamento.
+
+Compatibilidade de mainframes, processamento transacional, ferramentas e processos operacionais
+estendeu sua vida. A escassez de profissionais aumenta custo e risco, porém também cria incentivo
+para encapsular, documentar e modernizar por partes. Reescrever tudo promete eliminar uma dívida
+visível e frequentemente recria defeitos que o sistema antigo já aprendeu a evitar.
+
+A lição não é preservar COBOL para sempre. Dependências sem suporte, conhecimento concentrado,
+tempos de mudança e acoplamento podem tornar a continuidade economicamente pior. A decisão pede
+inventário: quais capacidades têm valor, quais regras são verificadas, quais interfaces podem ser
+estranguladas e que parcela admite substituição reversível.
+
+Isso vale para qualquer linguagem atual. A tecnologia “moderna” de hoje pode ser o legado de 2040
+se guardar um processo essencial. Código ganha longevidade quando possui testes de comportamento,
+contratos, observabilidade, dados migráveis e fronteiras interoperáveis. A melhor proteção contra
+obsolescência não é adivinhar o vencedor; é reduzir o custo de uma troca futura.
+
+### 2.4.4 Ecossistema e gerenciador de pacotes decidem mais que sintaxe
+
+Sintaxe determina minutos do dia; o ecossistema determina meses do projeto. Drivers, bibliotecas,
+frameworks, depurador, formatador, análise estática, documentação, integração ao sistema e
+profissionais disponíveis definem se uma linguagem consegue habitar a organização. Uma gramática
+elegante não compensa autenticação sem manutenção ou diagnóstico opaco em produção.
+
+O gerenciador de pacotes torna reutilização cotidiana e, com ela, importa um grafo de confiança.
+Resolução de versões precisa conciliar intervalos, variantes e plataformas. *Lockfiles* registram
+uma solução concreta; hashes e repositórios imutáveis ajudam reprodutibilidade; nenhum deles prova
+que o pacote é seguro ou que continuará mantido. Versionamento semântico comunica intenção, mas
+não consegue detectar todo impacto comportamental.
+
+Dependências transitivas multiplicam superfície de ataque e abandono. Avaliar um pacote inclui
+proveniência, licença, frequência e qualidade de manutenção, política de segurança, capacidade de
+substituição e tamanho real do que será importado. “Não reinventar a roda” não obriga instalar uma
+fábrica para obter um parafuso.
+
+O ecossistema também cria aprisionamento positivo: padrões conhecidos, bibliotecas maduras e
+integração reduzem risco. A decisão não deve penalizar maturidade como falta de novidade. Deve
+registrar onde a aplicação depende da linguagem, do runtime e de um fornecedor, e manter fronteiras
+para componentes de maior volatilidade. Escolher tecnologia é escolher a comunidade e a cadeia de
+suprimentos que participarão de cada incidente futuro.
+
+### 2.4.5 Runtimes e interoperabilidade — JVM, CLR, WASM
+
+Um runtime estabiliza uma máquina abstrata entre linguagem e plataforma. A JVM e a CLR recebem
+representações intermediárias, verificam e carregam código, gerenciam memória e podem compilá-lo
+durante a execução. Isso permitiu que várias linguagens compartilhassem bibliotecas, ferramentas e
+implantação. Portabilidade não significa comportamento idêntico sem esforço: sistema operacional,
+codificação, relógio, recursos nativos e versões ainda atravessam a abstração.
+
+JIT otimiza com evidência do programa em execução; AOT troca parte dessa adaptação por inicialização
+e previsibilidade. Coleta de lixo reduz classes de erro de memória, mas introduz ciclos, pausas e
+pressão que precisam ser observados. Nenhuma estratégia é universal: serviço de baixa latência,
+função efêmera e processamento longo têm perfis diferentes.
+
+Interoperabilidade dentro do runtime costuma ser mais rica que uma FFI nativa, mas tipos,
+exceções, nulidade, concorrência e modelo de propriedade nem sempre se alinham. Na fronteira, uma
+lista pode virar cópia, um callback pode atravessar uma thread inesperada e uma exceção perder
+semântica. Contratos simples, formatos explícitos e testes entre versões valem mais do que a
+promessa de “qualquer linguagem”.
+
+WebAssembly acrescenta um formato binário verificável e portátil com execução isolável, primeiro
+no navegador e depois em outros hospedeiros. Ele complementa runtimes e código nativo; não oferece
+sozinho sistema operacional, rede ou modelo de componente. O hospedeiro decide capacidades e
+interfaces. O padrão comum é durável: uma camada intermediária amplia portabilidade ao definir
+claramente o que o programa pode supor da máquina.
+
+### 2.4.6 Como escolher uma linguagem sem escolher uma moda
+
+A escolha começa por restrições: plataforma de destino, latência, vazão, memória, segurança,
+integração, bibliotecas obrigatórias, prazo, horizonte de manutenção e experiência da equipe.
+Depois vêm critérios ponderados. Uma linguagem pode ser tecnicamente superior para o núcleo e
+organizacionalmente inviável porque ninguém consegue operá-la às três da manhã.
+
+Uma matriz útil compara evidências, não adjetivos: tempo de inicialização medido; maturidade do
+driver crítico; política de versões; qualidade da telemetria; pool de contratação; suporte da
+plataforma; custo de build; risco da cadeia; interoperabilidade e estratégia de saída. Protótipos
+devem testar o trecho de maior risco, não um CRUD que toda opção resolve.
+
+Uniformidade tem valor. Uma linguagem adicional cria mais pipelines, políticas, bibliotecas e
+plantões. Mas padronização absoluta também cobra: forçar uma plataforma inadequada pode concentrar
+complexidade no código. Uma política madura mantém um conjunto preferencial, permite exceções com
+uma vantagem mensurável e exige dono e plano de vida.
+
+A decisão deve ser reversível na proporção da incerteza. Isolar um componente experimental atrás
+de contrato é diferente de gravar todo o domínio em tipos exclusivos de um framework. Registre por
+que a escolha vence agora, o que a invalidaria e quando revisar. Moda é escolher pelo movimento da
+multidão; engenharia é transformar contexto em critério e deixar uma trilha para quem herdará a
+consequência.
+
+### 2.4.7 WebAssembly Component Model, runtimes portáveis e sandboxing
+
+O Component Model procura tornar módulos WebAssembly componentes compostos por interfaces
+tipadas, em vez de unidades que trocam estruturas apenas por memória compartilhada. WIT, a
+linguagem de interfaces, descreve tipos, importações, exportações e “mundos”: o que um componente
+oferece e aquilo de que depende. Adaptadores gerados ligam linguagens diferentes a uma ABI comum.
+
+Isso muda a unidade de portabilidade. Um componente pode declarar que precisa de relógio, arquivos
+ou HTTP sem pressupor todo um sistema operacional. WASI fornece interfaces padronizadas, e o
+runtime concede apenas capacidades escolhidas pelo hospedeiro. A segurança nasce da combinação de
+isolamento de memória, validação, interface estreita e concessão explícita; executar em Wasm não
+torna código automaticamente confiável nem impede abuso de uma capacidade ampla.
+
+Componentes são promissores para plugins, funções, extensões de produto, execução de código de
+terceiros e serviços pequenos que valorizam inicialização e distribuição portável. Eles não
+substituem contêineres por definição. Contêineres empacotam processos e ambiente de sistema;
+componentes descrevem código e capacidades num runtime. Redes, armazenamento, identidade,
+observabilidade e atualização continuam necessários.
+
+Em 2026, especificação e ferramentas seguem evoluindo, enquanto conjuntos como WASI 0.2 oferecem
+uma base estável para certos usos. Isso pede adoção proporcional: contrato WIT pequeno, runtime
+intercambiável, testes entre linguagens e medição de maturidade das interfaces exigidas. O tema é
+geracional porque revive uma busca antiga — binário portátil, interoperabilidade e menor autoridade
+por padrão — numa fronteira moderna. A versão é sazonal; o princípio de capacidades é durável.
+
+**Fontes primárias do capítulo.** Backus, J. et al., [*The FORTRAN Automatic Coding
+System*](https://archive.computerhistory.org/resources/text/Fortran/102663113.05.01.acc.pdf), 1957 ·
+CODASYL, [*COBOL Journal of Development
+1968*](https://nvlpubs.nist.gov/nistpubs/Legacy/hb/nbshandbook106.pdf), 1969 · Lindholm, T. et al., [*The Java Virtual Machine
+Specification*](https://docs.oracle.com/javase/specs/jvms/se25/html/), edição Java SE 25 · ECMA,
+[*ECMA-335: Common Language Infrastructure*](https://ecma-international.org/publications-and-standards/standards/ecma-335/) ·
+WebAssembly Community Group, [*Core Specification*](https://webassembly.github.io/spec/core/) ·
+Bytecode Alliance, [*The WebAssembly Component Model*](https://component-model.bytecodealliance.org/)
+e [*WIT Reference*](https://component-model.bytecodealliance.org/design/wit.html).
+
+## 2.5 · Requisitos, produto e IHC
+
+Software só cria valor quando altera a capacidade de alguém agir. Requisitos conectam essa
+mudança desejada a um sistema possível; produto decide qual mudança merece investimento; interação
+humano–computador examina se pessoas reais conseguem realizá-la. Separar completamente essas
+disciplinas produz especificações corretas para problemas irrelevantes e interfaces bonitas para
+fluxos impossíveis.
+
+### 2.5.1 Levantamento e descoberta — o problema atrás do pedido
+
+Um pedido já contém uma solução: “crie um painel”, “automatize a aprovação”, “adicione IA”. Se a
+equipe o aceita como problema, herda todas as suposições de quem pediu. Descoberta recua um passo:
+quem tenta obter qual resultado, em que contexto, com que frequência, por que o caminho atual
+falha e qual consequência merece mudança?
+
+Levantamento não é apenas perguntar o que usuários querem. Entrevistas revelam linguagem,
+objetivos e exceções; observação mostra atalhos e trabalho invisível; documentos e dados mostram
+volume e obrigação; suporte e operação expõem onde o sistema já cobra. Cada fonte tem viés. Pessoas
+descrevem uma versão racional do comportamento; métricas registram o que o instrumento consegue
+ver, não necessariamente intenção.
+
+Uma formulação boa separa fato, interpretação e hipótese. “Quarenta por cento dos casos voltam
+para correção” é observação; “o formulário é confuso” é explicação a testar; “pré-validar reduzirá
+retrabalho” é hipótese de solução. Critério de sucesso e sinal de dano devem ser definidos antes
+da implementação, ou qualquer resultado será contado como vitória.
+
+Descoberta não precisa virar uma fase longa antes de entregar. Riscos de valor, usabilidade,
+viabilidade e sustentabilidade podem ser testados com protótipo, amostra de dados, simulação ou
+*spike* técnico. O objetivo é comprar informação na ordem mais barata. Descobrir cedo que a regra
+legal impede a ideia é progresso; construir rápido o produto errado não é velocidade.
+
+### 2.5.2 Requisito funcional, não funcional e atributo de qualidade
+
+Requisito funcional descreve comportamento ou capacidade: calcular, registrar, autorizar,
+notificar. O rótulo “não funcional” reúne coisas muito diferentes — qualidade, restrição, interface,
+operação e conformidade — e por isso frequentemente vira uma gaveta de frases vagas como “deve
+ser rápido e seguro”. **Atributos de qualidade** tornam essas expectativas discutíveis e
+mensuráveis.
+
+Um cenário de qualidade nomeia fonte, estímulo, ambiente, artefato, resposta e medida. Em vez de
+“alta disponibilidade”: “durante a perda de uma zona, requisições de consulta continuam com taxa
+de sucesso de 99,9% e p95 abaixo de 800 ms; escrita pode ser suspensa por até cinco minutos”. A
+especificidade revela custo e permite teste. ISO/IEC 25010:2023 organiza qualidades de produto em
+nove características, um mapa útil para perguntar o que ficou esquecido, não uma lista a maximizar.
+
+Qualidades entram em conflito. Cifrar e auditar acrescenta trabalho; consistência forte pode cobrar
+latência; flexibilidade pode reduzir previsibilidade; acessibilidade pode contestar uma estética.
+A decisão precisa registrar prioridade por cenário. “Tudo é crítico” apenas transfere a escolha
+para quem estiver sob maior pressão durante a entrega.
+
+Restrições também devem dizer sua origem: lei, contrato, plataforma, política ou decisão revogável.
+Uma tecnologia obrigatória não é qualidade; é uma limitação que talvez satisfaça ou prejudique
+qualidades. Requisitos maduros descrevem resultados e fronteiras, mantêm rastreabilidade suficiente
+para mudança e evitam congelar detalhes que a equipe ainda pode decidir melhor.
+
+### 2.5.3 Histórias, critérios de aceite e a fronteira com teste
+
+Uma história de usuário é um convite compacto para conversar sobre valor, não uma especificação
+miniaturizada. Papel, capacidade e benefício ajudam a manter propósito, mas a fórmula não torna o
+item compreendido. Exemplos concretos revelam regras: dados um cliente, um limite e uma data,
+quando a operação ocorre, qual resultado e qual registro devem existir?
+
+Critérios de aceite delimitam condições observáveis para aceitar aquele incremento. Devem cobrir o
+caminho esperado, fronteiras e erros significativos sem prescrever desnecessariamente a
+implementação. Técnicas como mapeamento de exemplos organizam regras, exemplos, dúvidas e novos
+itens. Uma pergunta aberta visível é mais segura que uma frase ambígua tratada como acordo.
+
+Critério e teste não são idênticos. O critério expressa o contrato de negócio; testes fornecem
+evidência em níveis diferentes. Um exemplo de aceite automatizado pode verificar uma regra, mas
+não substitui testes de unidade, integração, propriedades, segurança, desempenho ou exploração.
+Também não prova usabilidade. Automatizar uma frase vaga apenas executa a ambiguidade com
+consistência.
+
+O refinamento termina quando há entendimento suficiente para o próximo passo, não quando toda
+incerteza do futuro foi removida. Itens menores reduzem distância entre hipótese e feedback. Ainda
+assim, fatiar por camada técnica — banco agora, API depois, tela no fim — adia valor e integração.
+Uma boa fatia atravessa o sistema para produzir um comportamento verificável, ainda que estreito.
+
+### 2.5.4 Fundamentos de IHC e usabilidade — heurísticas de Nielsen
+
+Usabilidade é qualidade no encontro entre pessoa, tarefa e contexto. Não reside apenas na tela.
+Uma interface pode ser fácil para o especialista e impossível para quem a usa uma vez por ano;
+pode funcionar em escritório e falhar sob ruído, pressa ou mobilidade. Eficácia, eficiência,
+aprendizado, prevenção de erro e satisfação precisam ser lidos para a população real.
+
+As dez heurísticas de Jakob Nielsen condensam problemas recorrentes: visibilidade do estado;
+correspondência com o mundo; controle e liberdade; consistência; prevenção de erro; reconhecimento
+em vez de lembrança; flexibilidade; desenho minimalista; ajuda para reconhecer e recuperar erros;
+ajuda e documentação. São heurísticas porque orientam julgamento, não porque conformidade produza
+automaticamente uma experiência boa.
+
+Feedback reduz incerteza: a ação foi recebida, está em curso ou terminou? Correspondência usa a
+linguagem e o modelo do usuário, não a estrutura interna do banco. Reconhecimento poupa memória de
+trabalho; padrões consistentes transferem aprendizado. Prevenção evita estados perigosos, mas não
+deve transformar todo passo num pedido de confirmação ignorado. Desfazer costuma oferecer mais
+controle que perguntar “tem certeza?” repetidamente.
+
+Avaliação heurística encontra violações prováveis; teste com usuários encontra dificuldades reais.
+As duas se complementam. Severidade combina frequência, impacto e persistência, e precisa incluir
+o custo de negócio. O fundamento de IHC é tratar erro humano como dado de projeto. Se muitas
+pessoas cometem o mesmo “erro”, há um sistema ensinando ou permitindo esse caminho.
+
+### 2.5.5 Acessibilidade (WCAG) e internacionalização como requisito, não retrofit
+
+Acessibilidade permite que pessoas com diferentes capacidades percebam, operem e compreendam o
+produto, inclusive por tecnologias assistivas. WCAG 2.2 organiza critérios sob quatro princípios:
+conteúdo **perceptível, operável, compreensível e robusto**. Conformidade é testável por níveis,
+mas não cobre toda necessidade humana nem substitui teste com pessoas com deficiência.
+
+Semântica correta, ordem de foco, operação por teclado, nome e estado acessíveis, contraste,
+redimensionamento, alternativas textuais, legendas e mensagens de erro são decisões estruturais.
+Um *overlay* adicionado ao fim não reconstrói um componente sem semântica nem corrige um fluxo que
+exige arrastar. Automação detecta parte dos problemas; navegação manual, leitor de tela e avaliação
+humana continuam indispensáveis.
+
+Internacionalização prepara software e conteúdo para idiomas e regiões; localização produz uma
+adaptação específica. Texto cresce, ordem de palavras muda, plural não é sempre singular/plural,
+escrita pode ser bidirecional e nomes não cabem num molde ocidental. Datas, números, moeda e fuso
+precisam de tipos e contexto, não concatenação de strings. Chaves de tradução estáveis e mensagens
+completas preservam a capacidade de reordenar a frase.
+
+As duas disciplinas revelam a mesma falha: assumir que o autor é o usuário universal. Incluí-las
+nos requisitos permite escolher componentes, arquitetura de conteúdo, métricas e critérios de
+aceite adequados. Além de obrigação ética e frequentemente legal, elas aumentam robustez geral:
+teclado ajuda o usuário avançado, legenda ajuda no ruído, linguagem clara reduz suporte. Inclusão
+não é acabamento; é parte da definição de pronto.
+
+### 2.5.6 Pesquisa com usuário para quem não é designer
+
+Uma pessoa desenvolvedora pode fazer pesquisa útil se respeitar método e limite. Começa por uma
+pergunta de aprendizagem, não pela vontade de validar a própria ideia. Recruta participantes que
+vivem o contexto relevante, explica consentimento e uso dos dados, evita coletar informação
+sensível sem necessidade e prepara um roteiro que favoreça histórias concretas.
+
+Em entrevista, “conte a última vez em que...” produz evidência melhor que “você usaria...?”.
+Perguntas abertas vêm antes de opções; silêncio dá espaço; opinião do pesquisador fica para depois.
+Em teste de usabilidade, oferece-se uma tarefa e observa-se, sem ensinar o caminho. Pensar em voz
+alta revela expectativa, mas também altera o comportamento, por isso notas devem distinguir fala,
+ação e interpretação.
+
+Poucos participantes por rodada podem revelar problemas evidentes, mas não sustentam percentuais
+populacionais. Iterações pequenas servem para encontrar e corrigir; estudos quantitativos exigem
+amostra e desenho compatíveis. Saturação não é desculpa para entrevistar apenas colegas. Casos de
+borda relevantes — deficiência, baixa conectividade, domínio raro — podem ser mais valiosos que o
+perfil médio.
+
+Síntese agrupa padrões sem apagar contradições. Cada conclusão deve voltar a evidências e registrar
+confiança. A pesquisa informa decisão; não governa sozinha. Estratégia, viabilidade, ética e dados
+operacionais também pesam. O ganho para quem constrói é profundo: deixa de discutir preferências
+imaginárias e passa a testar modelos do comportamento humano.
+
+### 2.5.7 Por que quem entende o negócio envelhece mais devagar
+
+Frameworks mudam; a organização continua precisando liquidar, entregar, diagnosticar, ensinar ou
+proteger. Quem entende o fluxo de valor, a linguagem do domínio, os incentivos e as obrigações
+consegue reenquadrar a mesma necessidade em tecnologias novas. Quem conhece apenas a implementação
+espera que alguém traduza o problema em tarefa.
+
+Entender negócio não significa aceitar toda regra atual como natural. Significa saber por que ela
+existe, quem ganha e perde, qual risco controla e que evidência permitiria mudá-la. Processos
+carregam acidentes históricos ao lado de invariantes legítimos. O conhecimento valioso distingue
+os dois e impede automatizar desperdício com maior velocidade.
+
+Esse entendimento aparece em modelos, exemplos e perguntas. Uma pessoa sênior reconhece que
+“cliente”, “pedido concluído” ou “receita” mudam entre contextos; procura o evento que torna o fato
+verdadeiro e o momento em que pode ser desfeito. Ela conecta falha técnica a impacto, escolhe
+telemetria que o negócio compreende e negocia qualidade pelo risco real.
+
+O domínio também envelhece, mas em ritmo diferente e por forças visíveis: legislação, estratégia,
+mercado e comportamento. Manter proximidade com usuários e operação atualiza esse mapa. A carreira
+fica menos dependente do nome da ferramenta porque entrega uma capacidade mais rara: transformar
+ambiguidade humana em sistema verificável sem perder o significado no caminho.
+
+**Fontes primárias do capítulo.** ISO/IEC/IEEE, [*29148:2018 — Requirements
+Engineering*](https://www.iso.org/standard/72089.html) · ISO/IEC, [*25010:2023 — Product Quality
+Model*](https://www.iso.org/standard/78176.html) · Nielsen, J., [*10 Usability Heuristics for User
+Interface Design*](https://www.nngroup.com/articles/ten-usability-heuristics/), 1994, revisão 2024 ·
+W3C, [*Web Content Accessibility Guidelines 2.2*](https://www.w3.org/TR/WCAG22/), Recomendação
+2024 · W3C, [*Internationalization Best Practices for Spec
+Developers*](https://www.w3.org/TR/international-specs/) · Agile Alliance, [*Manifesto for Agile
+Software Development*](https://agilemanifesto.org/) e [*Principles*](https://agilemanifesto.org/principles.html),
+2001.
+
+## 2.6 · Comportamento e carreira
+
+Comportamento não é o verniz social aplicado depois da competência técnica. É o meio pelo qual
+informação circula, erro aparece, decisão ganha contestação e uma equipe consegue operar algo maior
+que a memória de uma pessoa. Carreira, por sua vez, é a manutenção dessa capacidade ao longo de
+mudanças de tecnologia, organização e vida.
+
+### 2.6.1 Por que comportamento é infraestrutura
+
+Infraestrutura sustenta trabalho de muitos e costuma ser percebida quando falha. O mesmo ocorre
+com confiança, clareza e responsabilidade. Se dúvidas são punidas, riscos ficam ocultos; se decisões
+não têm dono, trabalho duplica; se desacordo vira ataque, a alternativa tecnicamente melhor deixa
+de ser apresentada. A arquitetura formal continua de pé, mas a capacidade do sistema social cai.
+
+Segurança psicológica, na formulação de Amy Edmondson, é a crença compartilhada de que o grupo é
+seguro para riscos interpessoais como perguntar, admitir erro ou discordar. Não é conforto
+permanente, ausência de cobrança ou licença para trabalho ruim. Com padrões altos, ela permite que
+problemas apareçam cedo o bastante para serem corrigidos.
+
+Comportamentos precisam de mecanismos. Revisões com contexto e critério, decisões registradas,
+retrospectivas com ações, post-mortems sem caça a culpado e canais claros para escalada reduzem a
+dependência de personalidade. “Comunique melhor” é conselho fraco; dizer quem precisa saber o quê,
+em qual momento e por qual artefato cria uma interface.
+
+Essa infraestrutura também se desgasta. Incentivos contraditórios, urgência contínua e líderes que
+punem a primeira má notícia ensinam silêncio, independentemente dos valores na parede. Cultura é o
+comportamento que recebe recompensa, tolerância ou correção. Por isso se observa em incidentes,
+promoções e decisões difíceis — não em slogans.
+
+### 2.6.2 Competências — colaboração, conflito produtivo, feedback
+
+Colaboração não é concordância. É coordenar especialidades para um resultado comum, tornar
+dependências visíveis e permitir que o melhor argumento sobreviva ao status de quem fala. Uma
+equipe sem conflito pode estar alinhada ou apenas calada. O conflito produtivo discute tarefa,
+evidência e trade-off; o destrutivo atribui intenção, identidade ou valor à pessoa.
+
+Antes de debater, convém declarar a decisão, os critérios e quem a toma. Dados, protótipos e
+experimentos reduzem disputas de gosto. *Steelman* — formular a versão mais forte do argumento
+contrário — testa compreensão. Divergir exige tempo delimitado; depois da decisão, compromisso não
+apaga o registro de riscos nem impede revisão quando surge evidência nova.
+
+Feedback útil é específico, próximo e orientado a efeito e próximo passo. “Na reunião, quando a
+explicação foi interrompida duas vezes, perdemos a resposta sobre migração; na próxima, registre a
+dúvida e espere o fechamento” oferece comportamento observável e impacto. Rótulos como “pouco
+sênior” não oferecem ação. Feedback positivo também precisa nomear o que repetir.
+
+Receber feedback não obriga concordância imediata. Ouvir, pedir exemplo, resumir e decidir depois
+protege aprendizado sem terceirizar julgamento. Relações maduras admitem reparo: reconhecer efeito,
+assumir parte, corrigir e verificar. Competência social não é carisma; é confiabilidade nas
+interfaces humanas do trabalho.
+
+### 2.6.3 Autonomia, propriedade e senioridade — o que o mercado de fato compra
+
+Autonomia não é trabalhar sem contexto nem supervisão. É avançar com independência proporcional
+ao risco, procurar informação, expor incerteza e escalar antes que a reversibilidade termine. A
+organização precisa fornecer intenção, limites e acesso; exigir autonomia sem eles é transferir
+culpa por um sistema confuso.
+
+Propriedade significa cuidar do resultado ao longo do ciclo: entender consumidor, negociar
+qualidade, entregar, observar, corrigir e deixar o sistema operável por outros. Não significa estar
+disponível sempre, impedir contribuições ou virar o único que sabe. O proprietário saudável reduz
+sua indispensabilidade por documentação, automação e compartilhamento.
+
+Senioridade aparece na amplitude e na qualidade das consequências. A pessoa lida com ambiguidade
+maior, antecipa riscos, escolhe o nível certo de solução, melhora decisões de outros e evita custo
+desnecessário. Conhecimento profundo continua essencial, mas velocidade individual tem teto;
+alavancagem por interfaces, padrões, mentoria e diagnóstico alcança o sistema.
+
+O mercado compra redução de incerteza e aumento de capacidade. Títulos variam entre empresas;
+tempo de casa é evidência incompleta. Um portfólio convincente mostra contexto, decisão, alternativas,
+resultado e aprendizado, incluindo o que a pessoa decidiu não construir. Heroísmo pode salvar um
+incidente; uma carreira sênior remove as condições que exigem o mesmo herói toda semana.
+
+### 2.6.4 Trilha técnica vs. gestão, e o mito da escada única
+
+Gestão não é a promoção natural de quem programa bem. É outra profissão: formar equipe, definir
+contexto, alocar atenção, lidar com desempenho, conflito, contratação e saúde do sistema. A
+gratificação vem menos do artefato próprio e mais da capacidade criada nos outros. Fazer a mudança
+apenas porque a trilha técnica terminou costuma produzir um gerente frustrado e uma referência
+técnica ausente.
+
+Uma trilha de contribuição individual madura cresce em escopo sem exigir subordinados. Pessoas
+staff podem aprofundar um domínio, atravessar equipes, orientar arquitetura ou atacar problemas
+exploratórios. Influência sem autoridade pede escrita, confiança e capacidade de conectar decisão
+técnica a objetivo. Não é uma gestão clandestina: responsabilidades e instrumentos são distintos.
+
+As trilhas devem ter reconhecimento comparável, critérios explícitos e possibilidade de movimento.
+O “pêndulo” entre gestão e técnica pode ampliar repertório se não for tratado como fracasso. Uma
+experiência de liderança melhora contexto do IC; retorno à gestão pode levar maior respeito pela
+realidade do trabalho.
+
+A escolha é uma combinação de energia, aptidão e desenho organizacional. Perguntas úteis são: que
+tipo de problema quero resolver toda semana, qual feedback me alimenta, quanto desejo atuar em
+conflito e pessoas, e que oportunidades reais esta empresa oferece? Não existe trilha superior.
+Existe desalinhamento entre trabalho cotidiano e identidade imaginada.
+
+### 2.6.5 A transição de carreira e a reinvenção por década
+
+Transição não começa do zero. Experiência anterior contém ativos transferíveis: domínio, relação
+com risco, comunicação, operação, análise, liderança e padrões de falha já vividos. O primeiro
+passo é decompor a identidade “sou tecnologia X” em capacidades demonstráveis e mapear quais têm
+valor no destino.
+
+Movimentos adjacentes reduzem risco. Um projeto de fronteira combina competência antiga e nova;
+uma contribuição interna cria evidência; estudo deliberado fecha lacuna específica. Certificado
+pode organizar percurso, mas portfólio com decisão e resultado prova melhor. A narrativa não deve
+pedir desculpa pelo passado: mostra por que ele aumenta a capacidade de aprender e entregar agora.
+
+Reinvenção por década não significa trocar tudo a cada dez anos. Significa revisar o portfólio:
+fundamentos, domínio, ferramentas, rede, saúde e condições de vida. Algumas habilidades merecem
+profundidade; outras, fluência suficiente para colaboração; parte deve ser abandonada para liberar
+atenção. O custo de oportunidade é parte do currículo.
+
+Há também perdas reais: status local, velocidade, salário temporário ou sensação de domínio.
+Planejar reserva, prazo e apoio torna a mudança menos dependente de motivação. A carreira viva
+alterna exploração e consolidação. A meta não é permanecer eternamente iniciante, mas conservar a
+capacidade de voltar a sê-lo sem negar a experiência acumulada.
+
+### 2.6.6 Síndrome do impostor e obsolescência percebida
+
+Clance e Imes descreveram em 1978 o fenômeno do impostor em mulheres de alto desempenho que não
+internalizavam evidências de competência e atribuíam sucesso a sorte ou esforço excessivo. O
+conceito se popularizou como “síndrome”, embora não seja por si um diagnóstico clínico e a amostra
+original tenha limites. Usá-lo como rótulo universal pode ocultar ambientes que realmente excluem
+ou desvalorizam.
+
+Tecnologia intensifica a sensação: sempre existe uma ferramenta desconhecida e pessoas publicam o
+resultado sem mostrar a curva. Obsolescência percebida mistura três coisas: lacuna real, comparação
+sem contexto e identidade presa a um repertório anterior. Cada uma pede resposta diferente — plano
+de estudo, recalibração de referência ou reconstrução da narrativa profissional.
+
+Um antídoto prático é manter evidência: decisões tomadas, incidentes resolvidos, feedback,
+resultados e temas aprendidos. Procure avaliação de pessoas que conhecem o trabalho e transforme
+“não sei nada de X” numa lacuna delimitada por tarefa. Competência não é saber tudo; é reconhecer
+limites, aprender e produzir resultado verificável sem esconder risco.
+
+Nem toda dúvida é distorção. Às vezes o papel cresceu e falta habilidade; admitir isso é precisão,
+não impostura. Da mesma forma, confiança individual não corrige preconceito, critérios secretos ou
+humilhação. A resposta madura combina responsabilidade pessoal com análise do ambiente. Quando o
+sofrimento é persistente ou compromete a vida, apoio profissional é mais adequado que conselho de
+carreira.
+
+### 2.6.7 O envelhecimento do comportamento — de 1990 a 2026, remoto e assíncrono
+
+O comportamento valorizado acompanha o meio de coordenação. Em organizações presenciais dos anos
+1990, acesso à informação e influência passavam fortemente por proximidade, reuniões e memória
+local. E-mail, ferramentas colaborativas, código distribuído e trabalho global deslocaram valor
+para escrita, transparência e capacidade de decidir sem compartilhar lugar ou horário.
+
+Remoto não é reunião presencial por vídeo. Comunicação síncrona oferece largura emocional e
+resolução rápida; custa interrupção, fuso e exclusão de quem não estava. Assíncrona dá tempo para
+pensar, cria registro e amplia participação; custa demora e exige contexto melhor. Equipes maduras
+escolhem o canal pela ambiguidade, urgência, sensibilidade e necessidade de memória.
+
+Documentar decisão não é transcrever conversa. É registrar contexto, opções, escolha, consequência
+e próximo passo num lugar encontrável. Estados de trabalho visíveis reduzem pedidos de atualização;
+acordos de resposta evitam que “assíncrono” signifique abandono. Inclusão exige alternar horários,
+permitir contribuição escrita e não premiar presença digital contínua.
+
+Em 2026, colaboradores de IA acrescentam outra interface: produzem rascunhos e código em grande
+escala, mas não possuem responsabilidade pelo resultado. Clareza de intenção, decomposição,
+verificação e autoria de decisão ficam mais valiosas. Mudou o instrumento, não o fundamento. De
+1990 a 2026, envelheceu a associação entre visibilidade e contribuição; permaneceu a necessidade
+de confiança, contexto, conflito produtivo e compromisso verificável.
+
+**Fontes primárias do capítulo.** Edmondson, A., [*Psychological Safety and Learning Behavior in
+Work Teams*](https://web.mit.edu/curhan/www/docs/Articles/15341_Readings/Organizational_Learning_and_Change/Edmondson_1999_Psychological_safety.pdf),
+1999 · Clance, P. e Imes, S., [*The Impostor Phenomenon in High Achieving Women: Dynamics and
+Therapeutic Intervention*](https://paulineroseclance.com/pdf/ip_high_achieving_women.pdf), 1978 ·
+Deci, E. e Ryan, R., [*The “What” and “Why” of Goal Pursuits: Human Needs and the Self-Determination
+of Behavior*](https://selfdeterminationtheory.org/SDT/documents/2000_DeciRyan_PIWhatWhy.pdf), 2000 ·
+Olson, G. e Olson, J., *Distance Matters*, 2000, DOI 10.1207/S15327051HCI1523_4 · Forsgren, N.,
+Storey, M.-A., Maddila, C. et al., [*The SPACE of Developer
+Productivity*](https://queue.acm.org/detail.cfm?id=3454124), 2021.
