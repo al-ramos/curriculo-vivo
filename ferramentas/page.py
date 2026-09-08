@@ -198,11 +198,15 @@ aside.lado .vazio{font-size:.78rem;color:var(--faint);font-style:italic}
 
 /* sincronização */
 .sinc-fundo{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;
-  align-items:center;justify-content:center;padding:1.2rem;z-index:50}
+  align-items:flex-start;justify-content:center;padding:1.2rem;z-index:50;overflow:auto}
 .sinc-fundo.aberto{display:flex}
 .sinc{background:var(--surface);border:1px solid var(--rule);border-radius:3px;
-  padding:1.4rem;max-width:22rem;width:100%;text-align:center}
+  padding:1.4rem;max-width:22rem;width:100%;text-align:center;position:relative;margin:auto}
 .sinc h3{font-family:"Newsreader",serif;font-size:1.25rem;font-weight:500;margin:0 0 .5rem}
+.sinc-fechar-top{position:absolute;top:.55rem;right:.55rem;width:2rem;height:2rem;padding:0;
+  border:1px solid var(--rule);border-radius:2px;background:var(--surface);color:var(--muted);
+  font:1.25rem/1 "IBM Plex Mono",monospace;cursor:pointer}
+.sinc-fechar-top:hover{color:var(--accent);border-color:var(--accent)}
 .sinc p{margin:0 0 1rem;font-size:.86rem;color:var(--muted);line-height:1.5}
 .sinc .qr{display:flex;justify-content:center;margin-bottom:1rem;min-height:12rem;
   align-items:center;background:#fff;padding:.8rem;border-radius:2px}
@@ -639,6 +643,7 @@ HTML = HEAD + f"""
 
 <div class="sinc-fundo" id="sinc-fundo" role="dialog" aria-modal="true" aria-label="Sincronizar progresso">
   <div class="sinc">
+    <button type="button" class="sinc-fechar-top" id="sinc-fechar-top" aria-label="Fechar sincronização">×</button>
     <h3>Sincronizar com o celular</h3>
     <p>Aponte a câmera do celular para o código. Ele abre o livro já com as seções que
     você marcou como lidas. As anotações não vão por aqui — só o progresso.</p>
@@ -1260,8 +1265,15 @@ PROG = r"""
   })();
 
   var fundo = document.getElementById('sinc-fundo');
+  var focoAntesSinc = null;
+  function fecharQR(){
+    if(!fundo) return;
+    fundo.classList.remove('aberto');
+    if(focoAntesSinc && focoAntesSinc.focus) focoAntesSinc.focus();
+  }
   function abrirQR(){
     if(!fundo) return;
+    focoAntesSinc = document.activeElement;
     var payload = montarSinc();
     var url = location.origin + location.pathname + '#sinc=' + encodeURIComponent(payload);
     var caixa = document.getElementById('sinc-qr');
@@ -1281,16 +1293,20 @@ PROG = r"""
       }
     }
     fundo.classList.add('aberto');
+    var fecharTopo = document.getElementById('sinc-fechar-top');
+    if(fecharTopo) fecharTopo.focus();
   }
   var bQR = document.getElementById('ap-qr');
   if(bQR) bQR.addEventListener('click', abrirQR);
   var bFechar = document.getElementById('sinc-fechar');
-  if(bFechar) bFechar.addEventListener('click', function(){ fundo.classList.remove('aberto'); });
+  if(bFechar) bFechar.addEventListener('click', fecharQR);
+  var bFecharTopo = document.getElementById('sinc-fechar-top');
+  if(bFecharTopo) bFecharTopo.addEventListener('click', fecharQR);
   if(fundo) fundo.addEventListener('click', function(e){
-    if(e.target === fundo) fundo.classList.remove('aberto');
+    if(e.target === fundo) fecharQR();
   });
   document.addEventListener('keydown', function(e){
-    if(e.key === 'Escape' && fundo && fundo.classList.contains('aberto')) fundo.classList.remove('aberto');
+    if(e.key === 'Escape' && fundo && fundo.classList.contains('aberto')) fecharQR();
   });
   var bCopiarLink = document.getElementById('sinc-copiar');
   if(bCopiarLink) bCopiarLink.addEventListener('click', function(){
