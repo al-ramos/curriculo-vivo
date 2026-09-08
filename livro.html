@@ -82,6 +82,8 @@ h1.book em{font-style:italic;color:var(--accent)}
 .seg button:last-child{border-right:0}
 .seg button:hover{color:var(--ink)}
 .seg button[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent)}
+.preferencias-status{margin:.85rem 0 0;font-family:"IBM Plex Mono",monospace;font-size:.62rem;
+  letter-spacing:.04em;line-height:1.6;color:var(--muted)}
 body.sem-ficha .ficha{display:none}
 body.largo{--maxw:45rem}
 
@@ -450,7 +452,7 @@ footer p{margin:0 0 .6rem;max-width:44rem}
           </div></div>
         <div class="ctrl"><span>Tema</span>
           <div class="seg" role="group" aria-label="Tema">
-            <button type="button" data-tema="auto">Auto</button>
+            <button type="button" data-tema="auto">Automático</button>
             <button type="button" data-tema="light">Claro</button>
             <button type="button" data-tema="dark">Escuro</button>
           </div></div>
@@ -474,7 +476,7 @@ footer p{margin:0 0 .6rem;max-width:44rem}
             <button type="button" data-ficha="on">Mostrar</button>
             <button type="button" data-ficha="off">Ocultar</button>
           </div></div>
-      </div></details>
+      </div><p class="preferencias-status" id="preferencias-status" aria-live="polite"></p></details>
       <div class="status">
         <span class="chip on">Camadas 0 a 2 e 3.1–3.2 escritas · 13 de 22 capítulos</span>
         <span class="chip">~34.000 palavras</span>
@@ -3135,6 +3137,22 @@ Geral</em></a>, a partir de 2003.</p><div class="recup"><h5>Recuperação</h5><p
   var raiz=document.documentElement, corpo=document.body;
   function ler(k,p){ try{ return localStorage.getItem(k)||p; }catch(e){ return p; } }
   function salvar(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
+  function resumoPreferencias(){
+    var el=document.getElementById('preferencias-status');
+    if(!el) return;
+    var caminho='cv-'+(location.pathname.split('/').pop() || 'index');
+    var nomes={
+      tema:{auto:'automático',light:'claro',dark:'escuro'},
+      fonte:{menor:'menor',padrao:'padrão',maior:'maior',"extra-grande":'extra grande'},
+      "tipo-fonte":{serifada:'serifada',"sem-serifa":'sem serifa',mono:'mono'},
+      larg:{normal:'normal',largo:'larga'},
+      secs:{abertas:'abertas',fechadas:'recolhidas'}
+    };
+    function nome(grupo,chave,padrao){ return nomes[grupo][ler(chave,padrao)] || nomes[grupo][padrao]; }
+    el.textContent='Ativo: tema '+nome('tema','cv-tema','auto')+' · texto '+nome('fonte','cv-fonte','padrao')+
+      ' · letra '+nome('tipo-fonte','cv-tipo-fonte','serifada')+' · coluna '+nome('larg','cv-larg','normal')+
+      ' · seções '+nome('secs',caminho+'-secs','abertas')+'.';
+  }
   function marcar(attr,valor){
     [].forEach.call(document.querySelectorAll('button[data-'+attr+']'),function(b){
       b.setAttribute('aria-pressed', b.getAttribute('data-'+attr)===valor ? 'true':'false');
@@ -3142,14 +3160,14 @@ Geral</em></a>, a partir de 2003.</p><div class="recup"><h5>Recuperação</h5><p
   }
   function tema(v){
     if(v==='auto'){ raiz.removeAttribute('data-theme'); } else { raiz.setAttribute('data-theme',v); }
-    marcar('tema',v); salvar('cv-tema',v);
+    marcar('tema',v); salvar('cv-tema',v); resumoPreferencias();
   }
-  function fonte(v){ raiz.setAttribute('data-fonte',v); marcar('fonte',v); salvar('cv-fonte',v); }
+  function fonte(v){ raiz.setAttribute('data-fonte',v); marcar('fonte',v); salvar('cv-fonte',v); resumoPreferencias(); }
   function tipoFonte(v){
     if(v==='serifada'){ raiz.removeAttribute('data-tipo-fonte'); } else { raiz.setAttribute('data-tipo-fonte',v); }
-    marcar('tipo-fonte',v); salvar('cv-tipo-fonte',v);
+    marcar('tipo-fonte',v); salvar('cv-tipo-fonte',v); resumoPreferencias();
   }
-  function largura(v){ corpo.classList.toggle('largo', v==='largo'); marcar('larg',v); salvar('cv-larg',v); }
+  function largura(v){ corpo.classList.toggle('largo', v==='largo'); marcar('larg',v); salvar('cv-larg',v); resumoPreferencias(); }
   function fichas(v){ corpo.classList.toggle('sem-ficha', v==='off'); marcar('ficha',v); salvar('cv-ficha',v); }
   function recup(v){ corpo.classList.toggle('sem-recup', v==='off'); marcar('recup',v); salvar('cv-recup',v); }
 
@@ -3159,6 +3177,8 @@ Geral</em></a>, a partir de 2003.</p><div class="recup"><h5>Recuperação</h5><p
   largura(ler('cv-larg','normal'));
   fichas(ler('cv-ficha','on'));
   recup(ler('cv-recup','on'));
+  resumoPreferencias();
+  document.addEventListener('cv:secoes', resumoPreferencias);
 
   document.addEventListener('click',function(e){
     var b=e.target.closest && e.target.closest('button[data-fonte],button[data-tipo-fonte],button[data-tema],button[data-larg],button[data-ficha],button[data-recup]');
@@ -3347,6 +3367,7 @@ Geral</em></a>, a partir de 2003.</p><div class="recup"><h5>Recuperação</h5><p
       b.setAttribute('aria-pressed', b.getAttribute('data-secs') === v ? 'true' : 'false');
     });
     salvar('secs', v);
+    document.dispatchEvent(new Event('cv:secoes'));
   }
   secoes(ler('secs','abertas'));
   document.addEventListener('click', function(e){
