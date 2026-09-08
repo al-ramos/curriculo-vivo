@@ -15,11 +15,14 @@
   --rule:#DCE1D8; --rule-soft:#E8EBE4; --accent:#33604F; --accent-soft:#E2ECE5;
   --s1:#22403A; --s2:#3E6B5B; --s3:#6F9481; --s4:#A9C0B0; --alert:#9A6B22;
   --maxw:38rem; --fonte-ajuste:2px;
+  --fonte-leitura:"Source Serif 4",Georgia,"Times New Roman",serif;
 }
 :root[data-fonte="menor"]{--fonte-ajuste:2px}
 :root[data-fonte="padrao"]{--fonte-ajuste:4px}
 :root[data-fonte="maior"]{--fonte-ajuste:6px}
 :root[data-fonte="extra-grande"]{--fonte-ajuste:8px}
+:root[data-tipo-fonte="sem-serifa"]{--fonte-leitura:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+:root[data-tipo-fonte="mono"]{--fonte-leitura:"IBM Plex Mono",ui-monospace,SFMono-Regular,Consolas,monospace}
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
     --ground:#0F1312; --surface:#161B19; --ink:#DCE3DB; --muted:#98A19A; --faint:#79827C;
@@ -35,7 +38,7 @@
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%;font-size:calc(16px + var(--fonte-ajuste))}
 body{background:var(--ground);color:var(--ink);margin:0;
-  font-family:"Source Serif 4",Georgia,"Times New Roman",serif;
+  font-family:var(--fonte-leitura);
   font-size:calc(16.5px + var(--fonte-ajuste));line-height:1.68;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 @media(min-width:40rem){body{font-size:calc(17.5px + var(--fonte-ajuste));line-height:1.72}}
 @media(min-width:90rem){body{font-size:calc(18px + var(--fonte-ajuste))}}
@@ -159,7 +162,7 @@ body.so-nao-lidas details.sec.lida{display:none}
 .nota.aberta{display:block}
 .nota textarea{width:100%;min-height:5.5rem;resize:vertical;background:var(--surface);
   color:var(--ink);border:1px solid var(--rule);border-radius:2px;padding:.6rem .7rem;
-  font-family:"Source Serif 4",serif;font-size:.92rem;line-height:1.5}
+  font-family:var(--fonte-leitura);font-size:.92rem;line-height:1.5}
 .nota textarea:focus{outline:none;border-color:var(--accent)}
 .nota .dica{font-family:"IBM Plex Mono",monospace;font-size:.58rem;color:var(--faint);
   letter-spacing:.06em;margin-top:.25rem}
@@ -247,7 +250,7 @@ aside.lado .vazio{font-size:.78rem;color:var(--faint);font-style:italic}
 .band .hv{font-size:.62rem;color:var(--faint);white-space:nowrap}
 @media(min-width:40rem){.band .hv{font-size:.66rem}}
 .strata .note{margin-top:.9rem;padding-top:.8rem;border-top:1px solid var(--rule-soft);
-  font-family:"Source Serif 4",serif;font-size:.85rem;color:var(--muted);line-height:1.5}
+  font-family:var(--fonte-leitura);font-size:.85rem;color:var(--muted);line-height:1.5}
 .strata .note b{color:var(--ink);font-weight:600}
 
 /* ---------- corpo ---------- */
@@ -302,7 +305,7 @@ section.chapter h3{display:flex;gap:.85rem;align-items:baseline;margin-bottom:.9
 section.chapter h3 .num{font-size:.82rem;color:var(--accent);flex:none;padding-top:.2rem}
 section.chapter h3 .ttl{font-size:clamp(1.28rem,1rem + 1.4vw,1.55rem);font-weight:500;letter-spacing:-.01em;line-height:1.2}
 h4{margin:2.4rem 0 .7rem;font-size:1.08rem;font-weight:600;color:var(--ink);
-  font-family:"Source Serif 4",serif}
+  font-family:var(--fonte-leitura)}
 h4 .snum{color:var(--faint);font-size:.78rem;margin-right:.45rem;font-weight:400}
 article p{margin:0 0 1.15rem}
 article p strong{font-weight:600}
@@ -438,6 +441,12 @@ footer p{margin:0 0 .6rem;max-width:44rem}
             <button type="button" data-fonte="padrao">Padrão</button>
             <button type="button" data-fonte="maior">Maior</button>
             <button type="button" data-fonte="extra-grande">Extra grande</button>
+          </div></div>
+        <div class="ctrl"><span>Tipo de letra</span>
+          <div class="seg" role="group" aria-label="Tipo de letra para leitura">
+            <button type="button" data-tipo-fonte="serifada">Serifada</button>
+            <button type="button" data-tipo-fonte="sem-serifa">Sem serifa</button>
+            <button type="button" data-tipo-fonte="mono">Mono</button>
           </div></div>
         <div class="ctrl"><span>Tema</span>
           <div class="seg" role="group" aria-label="Tema">
@@ -3136,20 +3145,26 @@ Geral</em></a>, a partir de 2003.</p><div class="recup"><h5>Recuperação</h5><p
     marcar('tema',v); salvar('cv-tema',v);
   }
   function fonte(v){ raiz.setAttribute('data-fonte',v); marcar('fonte',v); salvar('cv-fonte',v); }
+  function tipoFonte(v){
+    if(v==='serifada'){ raiz.removeAttribute('data-tipo-fonte'); } else { raiz.setAttribute('data-tipo-fonte',v); }
+    marcar('tipo-fonte',v); salvar('cv-tipo-fonte',v);
+  }
   function largura(v){ corpo.classList.toggle('largo', v==='largo'); marcar('larg',v); salvar('cv-larg',v); }
   function fichas(v){ corpo.classList.toggle('sem-ficha', v==='off'); marcar('ficha',v); salvar('cv-ficha',v); }
   function recup(v){ corpo.classList.toggle('sem-recup', v==='off'); marcar('recup',v); salvar('cv-recup',v); }
 
   tema(ler('cv-tema','auto'));
   fonte(ler('cv-fonte','padrao'));
+  tipoFonte(ler('cv-tipo-fonte','serifada'));
   largura(ler('cv-larg','normal'));
   fichas(ler('cv-ficha','on'));
   recup(ler('cv-recup','on'));
 
   document.addEventListener('click',function(e){
-    var b=e.target.closest && e.target.closest('button[data-fonte],button[data-tema],button[data-larg],button[data-ficha],button[data-recup]');
+    var b=e.target.closest && e.target.closest('button[data-fonte],button[data-tipo-fonte],button[data-tema],button[data-larg],button[data-ficha],button[data-recup]');
     if(!b)return;
     if(b.hasAttribute('data-fonte')) fonte(b.getAttribute('data-fonte'));
+    if(b.hasAttribute('data-tipo-fonte')) tipoFonte(b.getAttribute('data-tipo-fonte'));
     if(b.hasAttribute('data-tema'))  tema(b.getAttribute('data-tema'));
     if(b.hasAttribute('data-larg'))  largura(b.getAttribute('data-larg'));
     if(b.hasAttribute('data-ficha')) fichas(b.getAttribute('data-ficha'));
