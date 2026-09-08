@@ -387,7 +387,7 @@ footer p{margin:0 0 .6rem;max-width:44rem}
   .roadmap{margin-top:3.5rem}
   footer{padding-bottom:7.2rem}
   .leitura-nav{position:fixed;z-index:80;left:0;right:0;bottom:0;display:grid;
-    grid-template-columns:repeat(4,minmax(0,1fr));gap:.2rem;padding:.42rem .5rem;
+    grid-template-columns:repeat(5,minmax(0,1fr));gap:.16rem;padding:.42rem .4rem;
     padding-bottom:calc(.42rem + env(safe-area-inset-bottom));background:var(--surface);
     border-top:1px solid var(--rule);box-shadow:0 -.55rem 1.6rem color-mix(in srgb,var(--ground) 82%,transparent)}
   .leitura-nav button{appearance:none;border:0;background:transparent;color:var(--muted);
@@ -398,6 +398,23 @@ footer p{margin:0 0 .6rem;max-width:44rem}
   .leitura-nav .ico{font-family:"Source Serif 4",serif;font-size:1.18rem;line-height:1}
   .leitura-nav .rot{font-size:.56rem;line-height:1.2;letter-spacing:.06em;text-transform:uppercase;
     white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+  .leitura-fundo{position:fixed;z-index:90;inset:0;background:color-mix(in srgb,#000 46%,transparent);
+    display:none;align-items:flex-end;padding:0}
+  .leitura-fundo.aberto{display:flex}
+  .leitura-acoes{width:100%;max-height:78vh;overflow:auto;background:var(--surface);border-top:1px solid var(--rule);
+    border-radius:.8rem .8rem 0 0;padding:1.05rem 1rem calc(1rem + env(safe-area-inset-bottom));box-shadow:0 -1rem 3rem rgba(0,0,0,.18)}
+  .leitura-acoes-cab{display:flex;align-items:center;justify-content:space-between;margin-bottom:.85rem}
+  .leitura-acoes h2{font-family:"Newsreader",serif;font-size:1.25rem;font-weight:500;margin:0}
+  .leitura-fechar{border:1px solid var(--rule);background:none;color:var(--muted);border-radius:.2rem;min-width:2.2rem;min-height:2.2rem;font-size:1.25rem}
+  .leitura-resumo{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.4rem;margin-bottom:.9rem}
+  .leitura-resumo div{padding:.5rem .35rem;background:var(--ground);border:1px solid var(--rule-soft);text-align:center}
+  .leitura-resumo b{display:block;font-family:"IBM Plex Mono",monospace;font-size:.75rem;color:var(--ink);margin-top:.15rem}
+  .leitura-resumo span{display:block;font-family:"IBM Plex Mono",monospace;font-size:.54rem;color:var(--faint);letter-spacing:.05em;text-transform:uppercase}
+  .leitura-atalhos{display:grid;grid-template-columns:1fr 1fr;gap:.45rem}
+  .leitura-atalhos button{min-height:2.7rem;padding:.45rem;border:1px solid var(--rule);border-radius:.2rem;background:transparent;
+    color:var(--muted);font-family:"IBM Plex Mono",monospace;font-size:.64rem;line-height:1.25;letter-spacing:.04em;text-transform:uppercase}
+  .leitura-atalhos button:first-child{grid-column:1/-1;color:var(--accent);border-color:var(--accent)}
+  .leitura-atalhos button:active{background:var(--accent-soft);color:var(--accent)}
 }
 @media(min-width:40rem){.preferencias:not([open])>.ctrls{display:flex}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
@@ -473,6 +490,7 @@ HTML = HEAD + f"""
   <button type="button" id="ler-anterior"><span class="ico" aria-hidden="true">←</span><span class="rot">Anterior</span></button>
   <button type="button" id="ler-audio" aria-pressed="false"><span class="ico" aria-hidden="true">▶</span><span class="rot">Ouvir</span></button>
   <button type="button" id="ler-proxima"><span class="ico" aria-hidden="true">→</span><span class="rot">Próxima</span></button>
+  <button type="button" id="ler-mais" aria-expanded="false"><span class="ico" aria-hidden="true">•••</span><span class="rot">Mais</span></button>
 </nav>
 <header class="masthead">
   <div class="mast-in">
@@ -588,6 +606,24 @@ HTML = HEAD + f"""
     </div>
   </aside>
  </div>
+</div>
+
+<div class="leitura-fundo" id="ler-fundo" hidden>
+  <section class="leitura-acoes" role="dialog" aria-modal="true" aria-labelledby="ler-acoes-titulo">
+    <div class="leitura-acoes-cab"><h2 id="ler-acoes-titulo">Nesta leitura</h2><button class="leitura-fechar" type="button" id="ler-fechar" aria-label="Fechar ações de leitura">×</button></div>
+    <div class="leitura-resumo" aria-label="Resumo da leitura">
+      <div><span>Lidas</span><b id="lm-lidas">0 / 0</b></div>
+      <div><span>Restante</span><b id="lm-tempo">—</b></div>
+      <div><span>Notas</span><b id="lm-notas">0</b></div>
+    </div>
+    <div class="leitura-atalhos">
+      <button type="button" data-atalho="ap-filtro">Mostrar só as não lidas</button>
+      <button type="button" data-atalho="ap-exportar">Exportar notas</button>
+      <button type="button" data-atalho="ap-qr">Sincronizar com o celular</button>
+      <button type="button" data-atalho="ap-backup">Baixar backup</button>
+      <button type="button" data-atalho="ap-restaurar">Restaurar backup</button>
+    </div>
+  </section>
 </div>
 
 <div class="sinc-fundo" id="sinc-fundo" role="dialog" aria-modal="true" aria-label="Sincronizar progresso">
@@ -918,6 +954,10 @@ PROG = r"""
         ? Math.floor(restante/60) + ' h ' + (restante%60) + ' min'
         : restante + ' min';
     if(el = document.getElementById('ap-notas')) el.textContent = String(notas);
+    [['ap-lidas','lm-lidas'],['ap-tempo','lm-tempo'],['ap-notas','lm-notas']].forEach(function(p){
+      var origem = document.getElementById(p[0]), destino = document.getElementById(p[1]);
+      if(origem && destino) destino.textContent = origem.textContent;
+    });
     revisar();
   }
   var pintarAntes = pintar;
@@ -984,6 +1024,31 @@ PROG = r"""
   var navAnterior = document.getElementById('ler-anterior');
   var navAudio = document.getElementById('ler-audio');
   var navProxima = document.getElementById('ler-proxima');
+  var navMais = document.getElementById('ler-mais');
+  var fundoLeitura = document.getElementById('ler-fundo');
+  var fecharLeitura = document.getElementById('ler-fechar');
+
+  function fecharAcoesLeitura(){
+    if(fundoLeitura){ fundoLeitura.classList.remove('aberto'); fundoLeitura.hidden = true; }
+    if(navMais) navMais.setAttribute('aria-expanded','false');
+  }
+  if(navMais) navMais.addEventListener('click', function(){
+    if(!fundoLeitura) return;
+    fundoLeitura.hidden = false;
+    fundoLeitura.classList.add('aberto');
+    navMais.setAttribute('aria-expanded','true');
+    if(fecharLeitura) fecharLeitura.focus();
+  });
+  if(fecharLeitura) fecharLeitura.addEventListener('click', fecharAcoesLeitura);
+  if(fundoLeitura) fundoLeitura.addEventListener('click', function(e){ if(e.target === fundoLeitura) fecharAcoesLeitura(); });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && fundoLeitura && !fundoLeitura.hidden) fecharAcoesLeitura(); });
+  document.addEventListener('click', function(e){
+    var atalho = e.target.closest && e.target.closest('[data-atalho]');
+    if(!atalho) return;
+    var acao = document.getElementById(atalho.getAttribute('data-atalho'));
+    fecharAcoesLeitura();
+    if(acao) acao.click();
+  });
 
   function secaoAtual(){
     var visiveis = secs.filter(function(d){ return d.offsetParent !== null; });
