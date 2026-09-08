@@ -102,6 +102,8 @@ details.sec>summary:hover::before{color:var(--accent)}
 details.sec>summary h4{margin:0;flex:1}
 details.sec:not([open])>summary{margin-bottom:.3rem}
 .sec-corpo{padding-left:1.4rem;border-left:1px solid var(--rule-soft)}
+.audio-ativa{background:var(--accent-soft);box-shadow:0 0 0 .18rem var(--accent-soft);
+  border-radius:2px;scroll-margin-block:24vh;transition:background .18s ease,box-shadow .18s ease}
 .copiar{flex:none;align-self:center;font-family:"IBM Plex Mono",monospace;font-size:.6rem;
   letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:var(--surface);
   border:1px solid var(--rule);border-radius:2px;padding:.18rem .45rem;cursor:pointer;
@@ -1126,7 +1128,7 @@ PROG = r"""
   if(navProxima) navProxima.addEventListener('click', function(){ ir(1); });
 
   var sintetizador = ('speechSynthesis' in window && 'SpeechSynthesisUtterance' in window) ? window.speechSynthesis : null;
-  var filaFala = [], posFala = 0, estadoFala = 'parado', versaoFala = 0;
+  var filaFala = [], posFala = 0, estadoFala = 'parado', versaoFala = 0, alvoFalado = null;
   function rotuloAudio(estado){
     if(!navAudio) return;
     var ico = navAudio.querySelector('.ico');
@@ -1145,28 +1147,50 @@ PROG = r"""
     versaoFala++;
     filaFala = []; posFala = 0;
     if(sintetizador) sintetizador.cancel();
+    if(alvoFalado) alvoFalado.classList.remove('audio-ativa');
+    alvoFalado = null;
     rotuloAudio('parado');
   }
-  function textoFalado(d){
-    if(!d) return '';
-    var corpo = d.querySelector('.sec-corpo');
-    if(!corpo) return '';
-    var copia = corpo.cloneNode(true);
-    [].forEach.call(copia.querySelectorAll('.nota,.recup,button,textarea'),function(n){ n.remove(); });
-    return (d.getAttribute('data-num') + '. ' + d.getAttribute('data-tit') + '. ' + copia.textContent)
-      .replace(/\s+/g,' ').trim();
-  }
-  function dividirFala(txt){
-    var frases = txt.match(/[^.!?]+[.!?]+|[^.!?]+$/g) || [txt];
-    var partes = [], atual = '';
+  function frasesDoTexto(txt){
+    var frases = (txt.match(/[^.!?]+[.!?]+|[^.!?]+$/g) || [txt]), partes = [];
     frases.forEach(function(frase){
       frase = frase.trim();
-      if(!frase) return;
-      if(atual && (atual.length + frase.length + 1 > 240)){ partes.push(atual); atual = frase; }
-      else atual += (atual ? ' ' : '') + frase;
+      while(frase.length > 240){
+        var corte = frase.lastIndexOf(' ', 240);
+        if(corte < 80) corte = 240;
+        partes.push(frase.slice(0,corte)); frase = frase.slice(corte).trim();
+      }
+      if(frase) partes.push(frase);
     });
-    if(atual) partes.push(atual);
     return partes;
+  }
+  function montarFilaFala(d){
+    if(!d) return [];
+    var fila = [], titulo = d.querySelector('summary h4');
+    function adicionar(alvo, texto){
+      frasesDoTexto((texto || '').replace(/\s+/g,' ').trim()).forEach(function(frase){
+        fila.push({texto:frase, alvo:alvo});
+      });
+    }
+    if(titulo) adicionar(titulo, d.getAttribute('data-num') + '. ' + d.getAttribute('data-tit'));
+    var corpo = d.querySelector('.sec-corpo');
+    if(!corpo) return fila;
+    [].forEach.call(corpo.querySelectorAll('p,li,blockquote,td,th'),function(alvo){
+      if(alvo.closest('.nota,.recup') || (alvo.tagName === 'BLOCKQUOTE' && alvo.querySelector('p'))) return;
+      adicionar(alvo, alvo.textContent);
+    });
+    return fila;
+  }
+  function acompanharAudio(item){
+    if(!item || !item.alvo) return;
+    if(alvoFalado && alvoFalado !== item.alvo) alvoFalado.classList.remove('audio-ativa');
+    alvoFalado = item.alvo;
+    alvoFalado.classList.add('audio-ativa');
+    var caixa = alvoFalado.getBoundingClientRect();
+    var margem = Math.max(90, window.innerHeight * .22);
+    if(caixa.top < margem || caixa.bottom > window.innerHeight - margem){
+      alvoFalado.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',block:'center'});
+    }
   }
   function vozPortugues(){
     if(!sintetizador || !sintetizador.getVoices) return null;
@@ -1177,7 +1201,9 @@ PROG = r"""
   function falarProxima(versao){
     if(!sintetizador || versao !== versaoFala || estadoFala === 'parado') return;
     if(posFala >= filaFala.length){ pararAudio(); return; }
-    var fala = new window.SpeechSynthesisUtterance(filaFala[posFala++]);
+    var item = filaFala[posFala++];
+    acompanharAudio(item);
+    var fala = new window.SpeechSynthesisUtterance(item.texto);
     fala.lang = 'pt-BR'; fala.rate = .95;
     var voz = vozPortugues(); if(voz) fala.voice = voz;
     fala.onend = function(){ if(versao === versaoFala && estadoFala === 'falando') falarProxima(versao); };
@@ -1186,12 +1212,14 @@ PROG = r"""
   }
   function iniciarAudio(){
     var a = secaoAtual();
-    var txt = textoFalado(a.sec);
-    if(!txt) return;
+    var fila = montarFilaFala(a.sec);
+    if(!fila.length) return;
     if(a.sec) a.sec.open = true;
     versaoFala++;
     sintetizador.cancel();
-    filaFala = dividirFala(txt); posFala = 0;
+    if(alvoFalado) alvoFalado.classList.remove('audio-ativa');
+    alvoFalado = null;
+    filaFala = fila; posFala = 0;
     rotuloAudio('falando');
     falarProxima(versaoFala);
   }
